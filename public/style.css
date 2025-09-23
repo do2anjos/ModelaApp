@@ -1,0 +1,1572 @@
+/* ==========================================================================
+   1. Design System (CSS Variables)
+   ========================================================================== */
+:root {
+  /* Tech & Clean Color Palette */
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(210 24% 16%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(210 24% 16%);
+  --primary: hsl(217 91% 60%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(160 84% 39%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(220 14% 96%);
+  --muted-foreground: hsl(210 24% 16%);
+  --accent: hsl(21 94% 64%);
+  --accent-foreground: hsl(0 0% 100%);
+  --border: hsl(220 14% 96%);
+  --radius: 0.75rem;
+
+  /* Custom gradients & Shadows */
+  --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(160 84% 39%));
+  --gradient-accent: linear-gradient(135deg, hsl(21 94% 64%), hsl(217 91% 60%));
+  --shadow-soft: 0 4px 6px -1px hsl(210 24% 16% / 0.1);
+  --shadow-medium: 0 10px 15px -3px hsl(210 24% 16% / 0.1);
+
+  /* Typography */
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+}
+
+/* ==========================================================================
+   2. Global Styles & Resets
+   ========================================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+.container { width: 90%; max-width: 1200px; margin: 0 auto; }
+section { padding: 5rem 0; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+h1, h2, h3 { font-family: var(--font-heading); font-weight: 700; }
+h1 { font-size: 3.5rem; line-height: 1.1; }
+h2 { font-size: 2.5rem; }
+h3 { font-size: 1.25rem; }
+
+/* ==========================================================================
+   3. Reusable Components (Buttons, etc.)
+   ========================================================================== */
+.button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  text-align: center;   
+}
+.button-primary { background-color: var(--primary); color: var(--primary-foreground); }
+.button-primary:hover { opacity: 0.9; }
+.button-accent { background-color: var(--accent); color: var(--accent-foreground); }
+.button-accent:hover { opacity: 0.9; }
+.button-ghost { background-color: transparent; color: var(--foreground); }
+.button-ghost:hover { background-color: var(--muted); }
+.button-outline { border-color: var(--primary); color: var(--primary); }
+.button-outline:hover { background-color: var(--primary); color: var(--primary-foreground); }
+.button-light { background-color: var(--background); color: var(--foreground); }
+.button-light:hover { opacity: 0.9; }
+.button-outline-light { border-color: hsla(0, 0%, 100%, 0.3); color: var(--accent-foreground); }
+.button-outline-light:hover { background-color: hsla(0, 0%, 100%, 0.1); }
+.gradient-text { background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.dot { width: 8px; height: 8px; background-color: var(--secondary); border-radius: 50%; }
+
+/* ==========================================================================
+   4. Page Sections
+   ========================================================================== */
+/* Header */
+.main-header {
+  position: sticky; 
+  top: 0; 
+  z-index: 50; 
+  width: 100%;
+  border-bottom: 1px solid var(--border);
+  background-color: hsla(0, 0%, 100%, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex; 
+  height: 4rem; 
+  align-items: center; 
+  justify-content: space-between;
+}
+
+.logo img { 
+  height: 7rem; 
+}
+
+/* Estilos para a navegação unificada */
+.main-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Estilo para links que NÃO são botões */
+.main-nav ul a:not(.button) {
+  font-weight: 500;
+  color: var(--muted-foreground);
+  transition: color 0.2s;
+}
+.main-nav ul a:not(.button):hover {
+  color: var(--foreground);
+}
+
+/* Estilo para o link "Cadastre-se" */
+.nav-link-secondary {
+  font-size: 0.9rem;
+}
+
+/* Regra específica para garantir que o botão de login tenha texto branco */
+.main-nav .button.button-primary {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+    color: var(--primary-foreground); /* Garante o texto branco */
+}
+
+.main-nav .button.button-primary:hover {
+    color: var(--primary-foreground); /* Mantém o texto branco no hover */
+    opacity: 0.9;
+}
+
+/* Hero */
+.hero { display: flex; align-items: center; min-height: 90vh; background: linear-gradient(to bottom right, var(--background), var(--muted), hsla(217, 91%, 60%, 0.05)); }
+.hero-container { display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: center; }
+@media (min-width: 1024px) { .hero-container { grid-template-columns: 1fr 1fr; } }
+.hero-text { display: flex; flex-direction: column; gap: 2rem; }
+.hero-text .subtitle { font-size: 1.1rem; color: var(--muted-foreground); max-width: 500px; }
+.hero-buttons { display: flex; flex-wrap: wrap; gap: 1rem; }
+.hero-features { display: flex; gap: 1rem; font-size: 0.9rem; color: var(--muted-foreground); }
+.hero-features span { display: flex; align-items: center; gap: 0.5rem; }
+.hero-img-element { width: 100%; height: auto; border-radius: 1rem; box-shadow: var(--shadow-medium); }
+
+/* About */
+.about-container { display: grid; grid-template-columns: 1fr; gap: 4rem; align-items: center; }
+@media (min-width: 1024px) { .about-container { grid-template-columns: 1fr 1fr; } }
+.about-text { display: flex; flex-direction: column; gap: 2rem; }
+.about-text ul { display: flex; flex-direction: column; gap: 0.75rem; }
+.about-text li { display: flex; align-items: flex-start; gap: 0.75rem; }
+.about-text li .dot { margin-top: 0.5rem; }
+.about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.stat-card { background: var(--gradient-primary); color: var(--primary-foreground); border-radius: var(--radius); text-align: center; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; box-shadow: var(--shadow-soft); }
+.stat-card strong { font-size: 2rem; font-weight: 700; }
+.stat-card span { font-size: 0.9rem; opacity: 0.9; }
+
+/* Features */
+.features { background-color: hsla(220, 14%, 96%, 0.3); }
+.section-title { text-align: center; max-width: 700px; margin: 0 auto 4rem auto; }
+.section-title p { font-size: 1.1rem; color: var(--muted-foreground); margin-top: 1rem; }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+.feature-card {
+  background-color: var(--card); border: 0; box-shadow: var(--shadow-soft);
+  border-radius: var(--radius); text-align: center; padding: 2rem;
+  transition: all 0.3s ease;
+}
+.feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-medium); }
+.feature-card span { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+.feature-card h3 { margin-bottom: 0.5rem; }
+.feature-card p { color: var(--muted-foreground); }
+
+/* CTA */
+.cta { background: var(--gradient-accent); padding: 5rem 0; text-align: center; color: var(--accent-foreground); }
+.cta-container { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem; }
+.cta p { opacity: 0.9; }
+.cta-buttons { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+
+/* Footer */
+.main-footer { background-color: var(--foreground); color: var(--background); padding: 4rem 0; font-size: 0.9rem; }
+.footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+.footer-col h3 { font-weight: 600; margin-bottom: 1rem; }
+.footer-col p, .footer-col a { color: hsla(0, 0%, 100%, 0.8); }
+.footer-col ul { display: flex; flex-direction: column; gap: 0.5rem; }
+.footer-col a:hover { color: var(--background); transition: color 0.2s; }
+.footer-bottom { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid hsla(0, 0%, 100%, 0.2); text-align: center; color: hsla(0, 0%, 100%, 0.6); }
+
+/* ==========================================================================
+   7. Login & Redefinir Senha Page Styles
+   ========================================================================== */
+.login-body {
+  background-color: var(--muted);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.login-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 960px;
+  background-color: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .login-card {
+    grid-template-columns: 45fr 55fr;
+  }
+}
+
+.login-form-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-logo {
+  margin-bottom: 2rem;
+  text-align: center; /* Garante que o logo fique sempre centralizado */
+}
+
+.login-logo img {
+  height: 6rem; /* Tamanho ajustado para um visual mais limpo */
+}
+
+.login-header {
+  margin-bottom: 1.5rem;
+}
+
+.login-header h1 {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  color: var(--foreground);
+}
+
+.login-header p {
+  color: var(--muted-foreground);
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+  text-align: left; /* Mantém labels sempre à esquerda */
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.15);
+}
+
+.button.full-width {
+  width: 100%;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.login-footer a {
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+  transition: color 0.2s ease;
+}
+
+.login-footer a:hover {
+  color: var(--primary);
+}
+
+.login-image-container {
+  display: none;
+  background-color: hsla(220, 14%, 96%, 0.4);
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .login-image-container {
+    display: flex;
+  }
+}
+
+.login-image-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Modificador para centralizar o conteúdo do formulário em redefinir.html */
+.login-form-content.text-center {
+  text-align: center;
+}
+
+.login-form-content.text-center .login-header,
+.login-form-content.text-center .login-form,
+.login-form-content.text-center .login-footer {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ==========================================================================
+   8. Dashboard Styles (Estrutura Principal) - ATUALIZADO
+   ========================================================================== */
+.dashboard-body { background-color: var(--muted); }
+.dashboard-wrapper { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.dashboard-sidebar {
+  background-color: var(--card); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; padding: 1.5rem;
+}
+.sidebar-logo img { height: 5rem; margin-bottom: 2rem; }
+.sidebar-nav { flex-grow: 1; }
+.sidebar-nav ul { display: flex; flex-direction: column; gap: 0.75rem; }
+.sidebar-nav a {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+  border-radius: var(--radius); font-weight: 500;
+  color: var(--foreground) !important; /* Correção definitiva de cor */
+  transition: all 0.2s ease;
+}
+.sidebar-nav a:hover {
+  background-color: var(--muted);
+  color: var(--primary) !important;
+}
+.sidebar-nav a.active {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+.sidebar-nav svg { stroke: currentColor; flex-shrink: 0; }
+.sidebar-footer { margin-top: auto; }
+.sidebar-footer a { display: flex; align-items: center; gap: 0.75rem; font-weight: 500; color: var(--muted-foreground); padding: 0.75rem 1rem; }
+.dashboard-main { padding: 2rem; overflow-y: auto; }
+
+/* REGRA DE HEADER CORRIGIDA PARA ALINHAMENTO */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Alinha os itens no topo */
+  margin-bottom: 2rem;
+}
+.dashboard-header h1 {
+  font-size: 2rem;
+}
+.header-actions {
+  display: flex;
+  flex-direction: column; /* Coloca os itens em coluna */
+  align-items: flex-end;   /* Alinha a coluna à direita */
+  gap: 0.75rem;
+}
+.user-avatar {
+  width: 40px; height: 40px; border-radius: 50%; background-color: var(--primary);
+  color: var(--primary-foreground); display: flex; justify-content: center;
+  align-items: center; font-family: var(--font-heading); font-weight: 700;
+}
+.dashboard-content { display: grid; gap: 1.5rem; }
+.dashboard-card { background-color: var(--card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-soft); }
+/* ... (resto da seção 8 - stats-grid, etc., continua igual) ... */
+
+.dashboard-card.full-width {
+    grid-column: 1 / -1; /* Faz o card ocupar a largura total se necessário */
+}
+
+.continue-learning {
+  border-left: 5px solid var(--primary);
+}
+
+.continue-learning .card-subtitle {
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.continue-learning h3 {
+  margin: 0.25rem 0;
+}
+
+.progress-bar {
+  background-color: var(--muted);
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.progress-fill {
+  background-color: var(--secondary); /* Verde-água para o progresso */
+  height: 100%;
+  border-radius: 99px;
+}
+
+.card-progress span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.continue-learning .button {
+  margin-top: 1rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Adiciona um fundo escuro ao card */
+.stat-card {
+  background-color: var(--foreground); /* Cinza escuro */
+  padding: 1.5rem;
+  border-radius: var(--radius);
+}
+
+/* Muda a cor do título (h4) para branco */
+.stat-card h4 {
+  color: var(--background); /* Branco */
+  /* Leve transparência para hierarquia */
+}
+
+/* Muda a cor do número (p) para branco */
+.stat-card p {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  color: var(--background); /* Branco */
+}
+
+/* Course List (Alinhado à Esquerda) */
+ol.course-list {
+  list-style: none;
+  counter-reset: course-counter;
+  padding-left: 0;
+}
+
+.course-list li {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.course-list li::before {
+  counter-increment: course-counter;
+  content: counter(course-counter) ".";
+  font-weight: 700;
+  font-family: var(--font-heading);
+  color: var(--foreground);
+}
+
+/* Adicionado para controlar o título */
+.course-list li span {
+  padding: 0 1.5rem; /* Espaçamento entre o número e o botão */
+  margin-right: auto; /* Empurra o botão para a direita */
+}
+
+.course-list li:last-of-type {
+  border-bottom: none;
+}
+
+/* ==========================================================================
+   9. Lesson Page (aulas.html) Styles
+   ========================================================================== */
+.lesson-body {
+  background-color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.lesson-header {
+  background-color: #000000;
+  color: var(--background);
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.lesson-header .header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lesson-header .logo img {
+  height: 5rem;
+  margin-left: -4rem; 
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.lesson-page-wrapper {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  flex-grow: 1;
+}
+
+/* Sidebar de Tópicos */
+.lesson-sidebar {
+  background-color: var(--card);
+  border-right: 1px solid var(--border);
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.sidebar-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.lesson-sidebar h3 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+  margin-bottom: 0;
+}
+
+/* ATUALIZADO: Estilo para o botão voltar como um botão de texto */
+.sidebar-back-button {
+  padding: 0.4rem 1rem; /* Padding menor para caber no cabeçalho */
+  font-size: 0.85rem;
+}
+
+.topic-accordion summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: background-color 0.2s ease;
+}
+.topic-accordion summary::-webkit-details-marker {
+  display: none;
+}
+.topic-accordion summary:hover {
+  background-color: var(--muted);
+}
+.topic-accordion[open] > summary {
+  background-color: hsl(217 91% 60% / 0.1);
+  color: var(--primary);
+}
+.topic-accordion .topic-progress {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.lesson-list {
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.lesson-list a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem;
+  border-radius: calc(var(--radius) - 2px);
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+  color: var(--muted-foreground);
+}
+.lesson-list a:hover {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+.lesson-list a.active {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.lesson-list a .lesson-duration {
+  margin-left: auto;
+  font-size: 0.8rem;
+}
+
+/* Área do Player de Vídeo */
+.lesson-main-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
+}
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+.player-controls .button {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.video-player-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #000;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+/* Estilos de Interatividade (9.1) */
+.button.completed {
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+  border-color: var(--secondary);
+  cursor: default;
+}
+.lesson-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-size: 10px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.lesson-icon.todo {
+  border: 2px solid #cbd5e1;
+}
+.lesson-icon.play {
+  background-color: white;
+  border: 2px solid var(--primary-foreground);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%232563EB' stroke='%232563EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='5 3 19 12 5 21 5 3'%3E%3C/polygon%3E%3C/svg%3E");
+}
+.lesson-icon.completed {
+  border: none;
+  background-color: var(--secondary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+/* Estilos do Conteúdo de Leitura (9.2) */
+.lesson-reading-content {
+  margin-top: 2rem;
+  background-color: var(--card);
+  padding: 2rem 2.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+.lesson-reading-content h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.lesson-reading-content h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+.lesson-reading-content p {
+  font-family: var(--font-body);
+  line-height: 1.7;
+  color: var(--muted-foreground);
+  margin-bottom: 1rem;
+}
+.additional-resources {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 1.5rem;
+}
+.additional-resources a {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+/* ==========================================================================
+   10. Learning Path (conteudos.html) Styles - REFINADO
+   ========================================================================== */
+.learning-path {
+  position: relative;
+  max-width: 800px;
+}
+
+/* A linha vertical foi removida para um design mais limpo */
+
+.path-module-accordion {
+  position: relative;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--card);
+  transition: all 0.2s ease;
+}
+.path-module-accordion:hover {
+  border-color: #d1d5db; /* Borda levemente mais escura no hover */
+}
+
+.path-module-accordion summary {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  cursor: pointer;
+}
+.path-module-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.module-info {
+  flex-grow: 1;
+}
+.module-info h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem; /* Título um pouco maior */
+  color: var(--foreground);
+  margin: 0;
+  font-weight: 700;
+}
+.module-info p {
+  font-size: 1rem; /* Descrição um pouco maior */
+  color: var(--muted-foreground);
+  margin-top: 0.25rem;
+}
+
+/* Ícone de status (fora da linha do tempo agora) */
+.module-status-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Estilos de estado */
+.path-module-accordion.is-completed {
+  border-left: 4px solid var(--secondary); /* Verde-água */
+}
+.path-module-accordion.is-completed .module-status-icon {
+  background-color: var(--secondary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.path-module-accordion.is-current {
+  border-left: 4px solid var(--primary); /* Azul */
+  box-shadow: var(--shadow-soft);
+}
+.path-module-accordion.is-current .module-status-icon {
+  background-color: var(--primary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='5 3 19 12 5 21 5 3'%3E%3C/polygon%3E%3C/svg%3E");
+}
+
+/* Botões */
+.path-module-accordion .button {
+  min-width: 160px;
+  font-weight: 500;
+}
+ 
+/* Lista de Aulas dentro do Acordeão */
+.module-lesson-list {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  margin-left: 76px; /* 40px (ícone) + 1.5rem (gap) + 1.5rem (padding) - padding */
+}
+.module-lesson-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   11. Forum Pages (forum.html) Styles - ATUALIZADO E ORGANIZADO
+   ========================================================================== */
+
+/* --- Classes de Controle (JS) --- */
+.hidden {
+  display: none !important;
+}
+
+/* --- Visualização da LISTA DE TÓPICOS --- */
+.forum-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.forum-header p {
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.forum-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.topic-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease;
+}
+
+.topic-item:hover {
+  background-color: var(--muted);
+}
+
+.topic-item:last-child {
+  border-bottom: none;
+}
+
+.topic-main {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.topic-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.topic-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.topic-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--foreground);
+  text-decoration: none;
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.topic-title:hover {
+  color: var(--primary);
+}
+
+.topic-meta {
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.topic-stats,
+.topic-last-post {
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+  text-align: right;
+}
+
+.topic-stats span {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.topic-last-post p {
+  margin: 0.25rem 0;
+}
+
+.topic-last-post p:first-child {
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+/* --- Visualização de TÓPICO ESPECÍFICO --- */
+.topic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.topic-header h1 {
+  font-size: 1.75rem;
+  line-height: 1.3;
+  margin: 0;
+  flex: 1;
+}
+
+.topic-card {
+  padding: 0;
+  margin-bottom: 2rem;
+}
+
+.post-item {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 768px) {
+  .post-item {
+    grid-template-columns: 200px 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.post-item:last-child {
+  border-bottom: none;
+}
+
+.post-item.is-op {
+  background-color: hsl(220, 14%, 96%);
+}
+
+.post-item.is-instructor {
+  background-color: hsl(217, 91%, 60%, 0.05);
+}
+
+.post-item.is-instructor .author-info strong {
+  color: var(--primary);
+}
+
+.post-author {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .post-author {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+.post-author img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.author-name-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.author-info strong {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--foreground);
+}
+
+.author-info span {
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+}
+
+.instructor-tag {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 99px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.post-body {
+  line-height: 1.7;
+  color: var(--foreground);
+}
+
+.post-body p {
+  margin: 0 0 1rem 0;
+}
+
+.post-body p:last-child {
+  margin-bottom: 0;
+}
+
+.post-body strong {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* --- Formulário de Resposta --- */
+.reply-form {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.reply-form h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.reply-form textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  resize: vertical;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reply-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.15);
+}
+
+/* --- Formulário de Criar Tópico --- */
+#create-topic-view {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--foreground);
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.15);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 150px;
+  line-height: 1.5;
+}
+
+.form-actions {
+  margin-top: 2rem;
+  text-align: right;
+}
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+  .topic-item {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    text-align: left;
+  }
+  
+  .topic-stats,
+  .topic-last-post {
+    text-align: left;
+  }
+  
+  .topic-stats span {
+    display: inline-block;
+    margin-right: 1rem;
+  }
+  
+  .topic-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .topic-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .forum-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+}
+/* ==========================================================================
+   13. Exercises Page (exercicios.html) Styles
+   ========================================================================== */
+/* --- Classes de Controle (JS) --- */
+.hidden {
+  display: none !important;
+}
+
+/* --- Abas dos Módulos --- */
+.tabs-nav {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+
+.tab-link {
+  padding: 0.75rem 0.25rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tab-link:not([data-tab="uml"]) {
+  cursor: not-allowed;
+  color: #9ca3af;
+}
+
+.tab-link .lock-icon {
+  stroke: currentColor;
+}
+
+.tab-link.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* --- Lista de Exercícios (com espaçamento corrigido) --- */
+.tab-pane {
+    display: none;
+}
+.tab-pane.active {
+    display: block;
+}
+
+.exercise-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  background-color: var(--card);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 1.5rem; /* ADICIONADO: Restaura o espaçamento vertical */
+}
+
+/* Remove a margem do último card para evitar espaço extra */
+.exercise-card:last-child {
+    margin-bottom: 0;
+}
+
+.exercise-info h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+}
+
+.exercise-info p {
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+  margin-top: 0.25rem;
+}
+
+.exercise-status {
+  min-width: 110px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.exercise-status.completed {
+  background-color: hsl(160 84% 39% / 0.1);
+  color: var(--secondary);
+}
+
+.exercise-status.in-progress {
+  background-color: hsl(217 91% 60% / 0.1);
+  color: var(--primary);
+}
+
+.exercise-status.todo {
+  background-color: hsl(220 14% 96% / 0.8);
+  color: var(--muted-foreground);
+}
+
+.exercise-card .button {
+    min-width: 140px;
+    text-align: center;
+}
+
+/* ==========================================================================
+   14. Activity Detail View (Dentro da exercicios.html)
+   ========================================================================== */
+.header-actions { display: flex; align-items: center; gap: 1rem; }
+.activity-wrapper { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+@media (min-width: 1024px) { .activity-wrapper { grid-template-columns: 1.5fr 1fr; } }
+.activity-instructions h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 1.5rem; }
+.activity-instructions ul { padding-left: 1.5rem; list-style: disc; }
+
+/* Toggles de Submissão */
+.submission-toggles { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+.submission-toggle-btn { padding: 0.5rem 1rem; font-weight: 500; color: var(--muted-foreground); background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent; }
+.submission-toggle-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+/* Editor de Código */
+#code-editor { width: 100%; height: 350px; border-radius: var(--radius); border: 1px solid var(--border); }
+
+/* Envio de Arquivo */
+.file-upload-wrapper { position: relative; }
+.file-input-hidden { display: none; }
+.file-input-label { border: 2px dashed var(--border); border-radius: var(--radius); padding: 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+.file-input-label:hover { background-color: hsl(220, 14%, 98%); border-color: var(--primary); }
+.file-input-label svg { width: 32px; height: 32px; stroke: var(--primary); margin-bottom: 0.75rem; }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Adicionado para padronizar o tamanho dos botões da lista de exercícios */
+.button-exercise {
+  min-width: 130px;
+  text-align: center;
+  flex-shrink: 0; /* Impede que o botão encolha */
+}
+
+/* ==========================================================================
+   Componente: Menu Dropdown do Usuário (FONTES E MARGENS CORRIGIDAS)
+   ========================================================================== */
+.user-profile-menu {
+  position: relative;
+}
+
+/* ✅ EXCEÇÃO APENAS PARA A PÁGINA DE AULAS - MESMO TAMANHO DA HOME */
+.lesson-body .user-profile-menu {
+  margin-left: auto;
+  margin-right: -4rem; /* ✅ VALOR IDEAL ENCONTRADO */
+}
+
+/* ✅ MANTÉM EXATAMENTE O MESMO ESTILO DA HOME.HTML */
+.lesson-body .user-avatar-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem; /* ✅ MESMO TAMANHO DA HOME */
+}
+
+.lesson-body .dropdown-menu {
+  width: 240px; /* ✅ MESMA LARGURA DA HOME */
+}
+
+.lesson-body .dropdown-header {
+  padding: 1rem; /* ✅ MESMO PADDING DA HOME */
+}
+
+.lesson-body .dropdown-header .user-name {
+  color: #000000 !important;
+  font-family: var(--font-heading);
+  font-weight: 600; /* ✅ MESMO PESO DA HOME */
+  font-size: 1rem; /* ✅ MESMO TAMANHO DA HOME */
+}
+
+.lesson-body .dropdown-header .user-email {
+  font-family: var(--font-body);
+  font-size: 0.85rem; /* ✅ MESMO TAMANHO DA HOME */
+  color: var(--muted-foreground);
+}
+
+.lesson-body .dropdown-menu ul {
+  padding: 0.5rem; /* ✅ MESMO PADDING DA HOME */
+}
+
+.lesson-body .dropdown-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem; /* ✅ MESMO PADDING DA HOME */
+  border-radius: calc(var(--radius) - 4px);
+  font-size: 0.9rem; /* ✅ MESMO TAMANHO DA HOME */
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.lesson-body .dropdown-menu li a:hover {
+  background-color: var(--muted);
+}
+
+.lesson-body .dropdown-menu li a svg {
+  width: 16px; /* ✅ MESMO TAMANHO DA HOME */
+  height: 16px;
+  stroke: var(--muted-foreground);
+}
+
+.lesson-body .dropdown-menu .separator {
+  height: 1px;
+  background-color: var(--border);
+  margin: 0.5rem 0; /* ✅ MESMA MARGEM DA HOME */
+}
+
+/* Estilos gerais (para outras páginas) */
+.user-avatar-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  width: 240px;
+  z-index: 50;
+  overflow: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dropdown-menu.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.dropdown-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown-header .user-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1rem;
+}
+.dropdown-header .user-email {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+}
+
+.dropdown-menu ul {
+  padding: 0.5rem;
+}
+
+.dropdown-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: calc(var(--radius) - 4px);
+  font-size: 0.9rem;
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.dropdown-menu li a:hover {
+  background-color: var(--muted);
+}
+
+.dropdown-menu li a svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--muted-foreground);
+}
+
+.dropdown-menu .separator {
+  height: 1px;
+  background-color: var(--border);
+  margin: 0.5rem 0;
+}
+
+/* ==========================================================================
+   15. Estilos da Página de Certificados (certificados.html)
+   ========================================================================== */
+
+/* Container principal formatado como lista vertical */
+.certificates-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; 
+}
+
+/* Estilo de cada card como um item da lista */
+.certificate-card {
+    display: flex;
+    flex-direction: row; 
+    align-items: center;  
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    transition: all 0.2s ease;
+}
+
+/* Ícone do certificado */
+.cert-icon {
+    font-size: 2rem;
+    color: var(--foreground);
+}
+
+/* Área de informações do certificado (título e carga horária) */
+.cert-info {
+    flex-grow: 1; /* Faz esta div ocupar o espaço restante */
+}
+
+.cert-info h3 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--foreground);
+}
+
+.cert-info p {
+    margin: 0.25rem 0 0 0;
+    font-size: 0.9rem;
+    color: var(--muted-foreground);
+}
+
+/* Ajuste para o botão dentro do card não ocupar a largura toda */
+.certificate-card .button {
+    width: auto;
+    white-space: nowrap; 
+}
+
+/* Modificador para o estado "bloqueado" */
+.certificate-card.is-locked {
+    background-color: var(--muted);
+}
+
+.certificate-card.is-locked .cert-info h3,
+.certificate-card.is-locked .cert-info p,
+.certificate-card.is-locked .cert-icon,
+.certificate-card.is-locked .cert-icon svg {
+    color: #9ca3af;
+    stroke: #9ca3af; /* Garante que a cor do contorno do SVG também mude */
+}

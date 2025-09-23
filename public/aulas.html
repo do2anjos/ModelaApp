@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aula | Modela+</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="lesson-body">
+
+    <header class="lesson-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="#">
+                    <img src="/Modela+p.png" alt="Logo da Modela+">
+                </a>
+            </div>
+            <div class="user-profile-menu">
+                <button class="user-avatar-button" id="user-menu-button" aria-label="Abrir menu do usuário">
+                    MD
+                </button>
+                <div class="dropdown-menu hidden" id="user-dropdown">
+                    <div class="dropdown-header">
+                            <p class="user-name">Matheus dos Anjos </p>
+                            <p class="user-email">mdap.lic20@uea.edu.br</p>
+                        </div>
+                        <ul>
+                    <li><a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Meu Perfil
+                    </a></li>
+                    <li><a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg>
+                        Configurações
+                    </a></li>
+                    <li><a href="/login.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                        Sair
+                    </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="lesson-page-wrapper">
+        <aside class="lesson-sidebar">
+            <div class="sidebar-title-wrapper" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Tópicos do Curso</h3>
+            <a href="/home.html" class="back-button" style="display: flex; align-items: center; gap: 4px; font-size: 0.85rem; text-decoration: none; color: inherit;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m15 18-6-6 6-6"/>
+                </svg>
+                <span>Voltar</span>
+            </a>
+            </div>
+
+            <nav class="lesson-topics-nav">
+                <details class="topic-accordion" open>
+                    <summary>
+                        <span>Modelagem com UML</span>
+                        <span class="topic-progress">1/9</span>
+                    </summary>
+                    <ul class="lesson-list">
+                        <li><a href="#" class="active" data-video-id="s_n92_gB1sU"><span class="lesson-icon play"></span><span>Conceitos e História da UML</span><span class="lesson-duration">09:12</span></a></li>
+                        <li><a href="#" data-video-id="9nW-hZ5p-1Q"><span class="lesson-icon todo"></span><span>Relacionamentos: Associação e Agregação</span><span class="lesson-duration">11:45</span></a></li>
+                        <li><a href="#" data-video-id="GFNEhV2nL-4"><span class="lesson-icon todo"></span><span>Diagrama de Casos de Uso</span><span class="lesson-duration">14:30</span></a></li>
+                        <li><a href="#" data-video-id="j1a_wr5h2V0"><span class="lesson-icon todo"></span><span>Diagrama de Classes</span><span class="lesson-duration">18:55</span></a></li>
+                        <li><a href="#" data-video-id="pI_8A-I86nI"><span class="lesson-icon todo"></span><span>Diagrama de Sequência</span><span class="lesson-duration">16:10</span></a></li>
+                        <li><a href="#" data-video-id="7-qg2GTQn_g"><span class="lesson-icon todo"></span><span>Diagrama de Atividades</span><span class="lesson-duration">12:05</span></a></li>
+                        <li><a href="#" data-video-id="0D-3jY-3MYQ"><span class="lesson-icon todo"></span><span>Diagrama de Estados</span><span class="lesson-duration">10:20</span></a></li>
+                        <li><a href="#" data-video-id="qJm-F56P4sE"><span class="lesson-icon todo"></span><span>Diagrama de Componentes</span><span class="lesson-duration">08:50</span></a></li>
+                        <li><a href="#" data-video-id="yCoGArb-YdU"><span class="lesson-icon todo"></span><span>Estudo de Caso Prático</span><span class="lesson-duration">22:40</span></a></li>
+                    </ul>
+                </details>
+                
+                <details class="topic-accordion">
+                    <summary>
+                        <span>Engenharia de Requisitos</span>
+                        <span class="topic-progress">0/7</span>
+                    </summary>
+                    <ul class="lesson-list">
+                        <li><a href="#" data-video-id="exv-rs_a1m0"><span class="lesson-icon todo"></span><span>Introdução à Engenharia de Requisitos</span><span class="lesson-duration">10:05</span></a></li>
+                        <li><a href="#" data-video-id="xJ9WTbgAv4c"><span class="lesson-icon todo"></span><span>Requisitos Funcionais e Não-Funcionais</span><span class="lesson-duration">12:30</span></a></li>
+                        <li><a href="#" data-video-id="15p5-gI5b4A"><span class="lesson-icon todo"></span><span>Elicitação de Requisitos</span><span class="lesson-duration">17:50</span></a></li>
+                        <li><a href="#" data-video-id="33pyaVnIq2M"><span class="lesson-icon todo"></span><span>Análise e Negociação de Requisitos</span><span class="lesson-duration">13:25</span></a></li>
+                        <li><a href="#" data-video-id="mYw-NS2a-ZQ"><span class="lesson-icon todo"></span><span>Validação e Verificação</span><span class="lesson-duration">11:40</span></a></li>
+                        <li><a href="#" data-video-id="zL5y-P5tTzI"><span class="lesson-icon todo"></span><span>Documentação de Requisitos</span><span class="lesson-duration">15:00</span></a></li>
+                        <li><a href="#" data-video-id="Z7UvNQbK024"><span class="lesson-icon todo"></span><span>Rastreabilidade de Requisitos</span><span class="lesson-duration">09:18</span></a></li>
+                    </ul>
+                </details>
+
+                <details class="topic-accordion">
+                    <summary>
+                        <span>Arquitetura de Sistemas</span>
+                        <span class="topic-progress">0/6</span>
+                    </summary>
+                     <ul class="lesson-list">
+                        <li><a href="#" data-video-id="lSAk215-m-8"><span class="lesson-icon todo"></span><span>Fundamentos da Arquitetura de Software</span><span class="lesson-duration">15:00</span></a></li>
+                        <li><a href="#" data-video-id="Oa-aLi8-n0c"><span class="lesson-icon todo"></span><span>Atributos de Qualidade Arquitetural</span><span class="lesson-duration">19:30</span></a></li>
+                        <li><a href="#" data-video-id="mo_235g6SoA"><span class="lesson-icon todo"></span><span>Padrões Arquiteturais (N-Tier, MVC)</span><span class="lesson-duration">18:20</span></a></li>
+                        <li><a href="#" data-video-id="r2QjkM-bU-s"><span class="lesson-icon todo"></span><span>Arquitetura de Microsserviços</span><span class="lesson-duration">25:10</span></a></li>
+                        <li><a href="#" data-video-id="IAG-UW11FBc"><span class="lesson-icon todo"></span><span>Documentação com Visões 4+1</span><span class="lesson-duration">16:45</span></a></li>
+                        <li><a href="#" data-video-id="vyr8mUzoz_A"><span class="lesson-icon todo"></span><span>Avaliação de Arquiteturas (ATAM)</span><span class="lesson-duration">14:00</span></a></li>
+                    </ul>
+                </details>
+
+                <details class="topic-accordion">
+                    <summary>
+                        <span>Padrões de Projeto</span>
+                        <span class="topic-progress">0/8</span>
+                    </summary>
+                     <ul class="lesson-list">
+                        <li><a href="#" data-video-id="aJAS_a8h-y8"><span class="lesson-icon todo"></span><span>Introdução a Design Patterns</span><span class="lesson-duration">08:45</span></a></li>
+                        <li><a href="#" data-video-id="j1xxWfP_b-g"><span class="lesson-icon todo"></span><span>Padrões Criacionais: Singleton</span><span class="lesson-duration">09:55</span></a></li>
+                        <li><a href="#" data-video-id="E-_Y4gW0h3M"><span class="lesson-icon todo"></span><span>Padrões Criacionais: Factory Method</span><span class="lesson-duration">14:10</span></a></li>
+                        <li><a href="#" data-video-id="nJvV30kQ"><span class="lesson-icon todo"></span><span>Padrões Estruturais: Adapter</span><span class="lesson-duration">11:20</span></a></li>
+                        <li><a href="#" data-video-id="AR-mOFtq_o4"><span class="lesson-icon todo"></span><span>Padrões Estruturais: Decorator</span><span class="lesson-duration">13:00</span></a></li>
+                        <li><a href="#" data-video-id="QkRj1-wrc-A"><span class="lesson-icon todo"></span><span>Padrões Comportamentais: Observer</span><span class="lesson-duration">15:30</span></a></li>
+                        <li><a href="#" data-video-id="MU_E-xlKRew"><span class="lesson-icon todo"></span><span>Padrões Comportamentais: Strategy</span><span class="lesson-duration">12:15</span></a></li>
+                        <li><a href="#" data-video-id="9PSA8A932iQ"><span class="lesson-icon todo"></span><span>Quando e como usar Padrões de Projeto</span><span class="lesson-duration">10:50</span></a></li>
+                    </ul>
+                </details>
+            </nav>
+        </aside>
+
+        <main class="lesson-main-content">
+            <div class="player-header">
+                <a href="#" class="back-button">
+                    <span id="lesson-title-header">Conceitos e História da UML</span>
+                </a>
+                <div class="player-controls">
+                    <a href="#" class="button button-primary" id="complete-lesson-btn">Marcar como concluído</a>
+                </div>
+            </div>
+
+            <div class="video-player-wrapper">
+                </div>
+            
+            <section class="lesson-reading-content">
+                <h2>Conteúdo da Aula</h2>
+                <h3 id="reading-title">Conceitos e História da UML</h3>
+                <div id="reading-text">
+                    <p>
+                        A Linguagem de Modelagem Unificada (UML - Unified Modeling Language) é uma linguagem de modelagem visual de propósito geral no campo da engenharia de software, que se destina a fornecer uma maneira padrão de visualizar o design de um sistema.
+                    </p>
+                    <p>
+                        Criada por Grady Booch, Ivar Jacobson e James Rumbaugh (os "Três Amigos") na Rational Software durante a década de 1990, a UML foi concebida para unificar as notações de modelagem orientada a objetos que existiam na época. A sua padronização pelo Object Management Group (OMG) em 1997 consolidou-a como a linguagem de modelagem padrão da indústria.
+                    </p>
+                </div>
+                <div class="additional-resources">
+                    <h4>Recursos Adicionais</h4>
+                    <a href="#">Baixar material em PDF</a>
+                    <a href="#">Link para documentação oficial</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- SCRIPT CONSOLIDADO PARA A PÁGINA DE AULAS ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- LÓGICA DA PÁGINA DE AULAS ---
+            const lessonLinks = document.querySelectorAll('.lesson-list a');
+            const videoWrapper = document.querySelector('.video-player-wrapper');
+            const lessonTitleHeader = document.getElementById('lesson-title-header');
+            const completeButton = document.getElementById('complete-lesson-btn');
+            const readingTitle = document.getElementById('reading-title');
+            const readingText = document.getElementById('reading-text');
+
+            const readingMaterials = { "Conceitos e História da UML": "<p>Conteúdo detalhado sobre os conceitos e a história da UML...</p>" };
+
+            function loadLesson(lessonLink) {
+                lessonLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const icon = link.querySelector('.lesson-icon');
+                    if (icon.classList.contains('play')) {
+                        icon.classList.remove('play');
+                        if (!icon.classList.contains('completed')) icon.classList.add('todo');
+                    }
+                });
+
+                lessonLink.classList.add('active');
+                const activeIcon = lessonLink.querySelector('.lesson-icon');
+                if (!activeIcon.classList.contains('completed')) {
+                    activeIcon.classList.remove('todo');
+                    activeIcon.classList.add('play');
+                }
+                
+                const videoId = lessonLink.getAttribute('data-video-id');
+                const lessonTitle = lessonLink.querySelector('span:nth-of-type(2)').textContent;
+                
+                videoWrapper.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+                lessonTitleHeader.textContent = lessonTitle;
+                readingTitle.textContent = lessonTitle;
+                readingText.innerHTML = readingMaterials[lessonTitle] || "<p>Nenhum material de leitura disponível para esta aula.</p>";
+
+                if (activeIcon.classList.contains('completed')) {
+                    completeButton.classList.remove('button-primary');
+                    completeButton.classList.add('completed');
+                    completeButton.textContent = '✅ Concluído';
+                } else {
+                    completeButton.classList.remove('completed');
+                    completeButton.classList.add('button-primary');
+                    completeButton.textContent = 'Marcar como concluído';
+                }
+            }
+
+            const firstLesson = document.querySelector('.lesson-list a.active');
+            if (firstLesson) loadLesson(firstLesson);
+
+            lessonLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    loadLesson(this);
+                });
+            });
+
+            completeButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                const activeLessonLink = document.querySelector('.lesson-list a.active');
+                if (!activeLessonLink) return;
+                const activeIcon = activeLessonLink.querySelector('.lesson-icon');
+                
+                if (this.classList.contains('completed')) {
+                    this.classList.remove('completed');
+                    this.classList.add('button-primary');
+                    this.textContent = 'Marcar como concluído';
+                    activeIcon.classList.remove('completed');
+                    activeIcon.classList.add('play');
+                } else {
+                    this.classList.remove('button-primary');
+                    this.classList.add('completed');
+                    this.textContent = '✅ Concluído';
+                    activeIcon.classList.remove('play');
+                    activeIcon.classList.add('completed');
+                }
+            });
+
+            // --- LÓGICA DO MENU DROPDOWN DO USUÁRIO ---
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+
+            if (userMenuButton && userDropdown) {
+                userMenuButton.addEventListener('click', () => {
+                    userDropdown.classList.toggle('hidden');
+                });
+
+                window.addEventListener('click', (event) => {
+                    if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redefinir Senha | Modela+</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-body">
+
+    <div class="login-card">
+        <div class="login-form-container">
+            <div class="login-form-content text-center">
+                <div class="login-logo">
+                    <a href="/" title="Voltar para a página inicial">
+                        <img src="/Modela+a.png" alt="Logo da Modela+">
+                    </a>
+                </div>
+
+                <div class="login-header">
+                    <h1>Redefinir sua senha</h1>
+                    <p>Digite seu e-mail e crie uma nova senha.</p>
+                </div>
+
+                <form class="login-form">
+                    <div class="input-group">
+                        <label for="email">Email Institucional</label>
+                        <input type="email" id="email" name="email" placeholder="seu.nome@uea.edu.br" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="new-password">Nova Senha</label>
+                        <input type="password" id="new-password" name="new-password" placeholder="••••••••" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirm-password">Confirmar Nova Senha</label>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••" required>
+                    </div>
+                    <a href="/login.html" class="button button-primary full-width">Redefinir</a>
+                </form>
+
+                <div class="login-footer">
+                    <a href="/login.html">Lembrou a senha? Voltar para o login</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-image-container">
+            <img src="/passflow.png" alt="Fluxo de redefinição de senha">
+        </div>
+    </div>
+
+</body>
+</html>

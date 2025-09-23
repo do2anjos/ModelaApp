@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercícios | Modela+</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.33.0/src-min-noconflict/ace.js"></script>
+</head>
+<body class="dashboard-body">
+
+    <div class="dashboard-wrapper">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-logo"><a href="#"><img src="/Modela+a.png" alt="Logo da Modela+"></a></div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/home.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        Painel
+                    </a></li>
+                    <li><a href="/aulas.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        Aulas
+                    </a></li>
+                    <li><a href="/conteudos.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                        Conteúdos
+                    </a></li>
+                    <li><a href="/forum.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
+                        Fórum e Suporte
+                    </a></li>
+                    <li><a href="/exercicios.html" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        Exercícios
+                    </a></li>
+                    <li><a href="/certificado.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 17c-.8.8-2 .8-2.8 0l-2-2a2 2 0 1 1 2.8-2.8l.2.2.2-.2a2 2 0 1 1 2.8 2.8Z"/></svg>
+                        Certificado
+                    </a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="/login.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                    Sair
+                </a>
+            </div>
+        </aside>
+
+        <div class="dashboard-main">
+            <header id="exercise-list-header" class="dashboard-header">
+                <h1>Exercícios e Atividades</h1>
+                <div class="user-profile-menu">
+                    <button class="user-avatar-button" id="user-menu-button" aria-label="Abrir menu do usuário">
+                        MD
+                    </button>
+                    <div class="dropdown-menu hidden" id="user-dropdown">
+                        <div class="dropdown-header">
+                            <p class="user-name">Matheus dos Anjos</p>
+                            <p class="user-email">mdap.lic20@uea.edu.br</p>
+                        </div>
+                        <ul>
+                    <li><a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Meu Perfil
+                    </a></li>
+                    <li><a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg>
+                        Configurações
+                    </a></li>
+                    <li><a href="/login.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                        Sair
+                    </a></li>
+                    </ul>
+                    </div>
+                </div>
+            </header>
+            
+            <header id="activity-detail-header" class="dashboard-header hidden">
+                <h1 id="activity-title-header">Título da Atividade</h1>
+                <div class="header-actions">
+                    <div class="user-profile-menu">
+                        <button class="user-avatar-button" id="user-menu-button-detail" aria-label="Abrir menu do usuário">
+                            MD
+                        </button>
+                        <div class="dropdown-menu hidden" id="user-dropdown-detail">
+                            <div class="dropdown-header">
+                                <p class="user-name">Matheus dos Anjos</p>
+                                <p class="user-email">mdap.lic20@uea.edu.br</p>
+                            </div>
+                            <ul>
+                                <li><a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    Meu Perfil
+                                </a></li>
+                                <li><a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg>
+                                    Configurações
+                                </a></li>
+                            </ul>
+                            <div class="separator"></div>
+                            <ul>
+                                <li><a href="/login.html">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                                    Sair
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="#" id="back-to-exercises-btn" class="button button-primary">Voltar</a>
+                </div>
+            </header>
+
+            <main class="dashboard-content">
+                <div id="exercise-list-view">
+                    <div class="tabs-nav">
+                        <button class="tab-link active" data-tab="uml">1. Modelagem com UML</button>
+                        <button class="tab-link" data-tab="requisitos">2. Engenharia de Requisitos <svg class="lock-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></button>
+                        <button class="tab-link" data-tab="arquitetura">3. Arquitetura de Sistemas <svg class="lock-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></button>
+                        <button class="tab-link" data-tab="padroes">4. Padrões de Projeto <svg class="lock-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></button>
+                    </div>
+                    <div class="tabs-content">
+                        <div class="tab-pane active" id="uml">
+                            <div class="exercise-card">
+                                <span class="exercise-status completed">Concluído</span>
+                                <div class="exercise-info">
+                                    <h3>Exercício 1: Diagrama de Classes</h3>
+                                    <p>Crie o diagrama de classes para um sistema de biblioteca.</p>
+                                </div>
+                                <button class="button button-primary view-activity-btn button-exercise" data-activity-id="uml-ex1">Ver Correção</button>
+                            </div>
+                            <div class="exercise-card">
+                                <span class="exercise-status in-progress">Em Andamento</span>
+                                <div class="exercise-info">
+                                    <h3>Exercício 2: Diagrama de Sequência</h3>
+                                    <p>Modele o fluxo de login de um usuário.</p>
+                                </div>
+                                <button class="button button-primary view-activity-btn button-exercise" data-activity-id="uml-ex2">Continuar</button>
+                            </div>
+                            <div class="exercise-card">
+                                <span class="exercise-status todo">Não Iniciado</span>
+                                <div class="exercise-info">
+                                    <h3>Exercício 3: Diagrama de Casos de Uso</h3>
+                                    <p>Elabore um diagrama de casos de uso para um sistema de caixa eletrônico (ATM).</p>
+                                </div>
+                                <button class="button button-primary view-activity-btn button-exercise" data-activity-id="uml-ex3">Iniciar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="activity-detail-view" class="hidden">
+                    <div class="activity-wrapper">
+                        <div id="activity-instructions" class="activity-instructions">
+                            </div>
+                        <div class="activity-submission">
+                            <div class="dashboard-card">
+                                <h3>Ambiente de Resposta</h3>
+                                <div class="submission-toggles">
+                                    <button class="submission-toggle-btn active" data-submission="editor">Enviar Código</button>
+                                    <button class="submission-toggle-btn" data-submission="upload">Anexar Arquivo</button>
+                                </div>
+                                <div id="submission-methods">
+                                    <div id="editor-method">
+                                        <div id="code-editor"></div>
+                                        <button type="submit" class="button button-primary full-width">Submeter Código</button>
+                                    </div>
+                                    <div id="upload-method" class="hidden">
+                                        <div class="file-upload-wrapper">
+                                            <input type="file" id="file-upload" class="file-input-hidden">
+                                            <label for="file-upload" class="file-input-label">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                                                <span>Clique para enviar ou arraste o arquivo</span>
+                                            </label>
+                                        </div>
+                                        <button type="submit" class="button button-primary full-width">Enviar Arquivo</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // --- BANCO DE DADOS DE EXEMPLO DAS ATIVIDADES ---
+    const activityDatabase = {
+        "uml-ex1": {
+            title: "Exercício 1: Diagrama de Classes",
+            instructions: `<div class="dashboard-card"><h2>Instruções da Atividade</h2><p><strong>Exercício:</strong> Crie o diagrama de classes para um sistema de biblioteca.</p><h3>Objetivos</h3><ul><li>Identificar as classes principais.</li><li>Definir atributos e métodos.</li></ul></div>`
+        },
+        "uml-ex2": {
+            title: "Exercício 2: Diagrama de Sequência",
+            instructions: `<div class="dashboard-card"><h2>Instruções da Atividade</h2><p><strong>Exercício:</strong> Modele o fluxo de login de um usuário.</p><h3>Objetivos</h3><ul><li>Identificar atores e objetos.</li><li>Mapear a troca de mensagens.</li></ul></div>`
+        },
+        "uml-ex3": {
+            title: "Exercício 3: Diagrama de Casos de Uso",
+            instructions: `<div class="dashboard-card"><h2>Instruções da Atividade</h2><p><strong>Exercício:</strong> Elabore um diagrama de casos de uso para um caixa eletrônico (ATM).</p><h3>Objetivos</h3><ul><li>Identificar atores (Cliente, Banco).</li><li>Definir os casos de uso.</li></ul></div>`
+        }
+    };
+
+    // --- ELEMENTOS DO DOM ---
+    const exerciseListView = document.getElementById('exercise-list-view');
+    const activityDetailView = document.getElementById('activity-detail-view');
+    const listHeader = document.getElementById('exercise-list-header');
+    const detailHeader = document.getElementById('activity-detail-header');
+    const viewActivityBtns = document.querySelectorAll('.view-activity-btn');
+    const backToExercisesBtn = document.getElementById('back-to-exercises-btn');
+    const activityTitleHeader = document.getElementById('activity-title-header');
+    const instructionsWrapper = document.getElementById('activity-instructions');
+
+    // --- FUNÇÕES DE CONTROLE ---
+    function showActivityDetail(activityId) {
+        const activity = activityDatabase[activityId];
+        if (!activity) return;
+
+        activityTitleHeader.textContent = activity.title;
+        instructionsWrapper.innerHTML = activity.instructions;
+
+        exerciseListView.classList.add('hidden');
+        listHeader.classList.add('hidden');
+        activityDetailView.classList.remove('hidden');
+        detailHeader.classList.remove('hidden');
+    }
+
+    function showExerciseList() {
+        activityDetailView.classList.add('hidden');
+        detailHeader.classList.add('hidden');
+        exerciseListView.classList.remove('hidden');
+        listHeader.classList.remove('hidden');
+    }
+
+    // --- EVENT LISTENERS ---
+    viewActivityBtns.forEach(btn => {
+        btn.addEventListener('click', function(event) {
+            event.preventDefault();
+            const activityId = this.getAttribute('data-activity-id');
+            showActivityDetail(activityId);
+        });
+    });
+
+    backToExercisesBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        showExerciseList();
+    });
+
+    // LÓGICA DAS ABAS
+    const tabLinks = document.querySelectorAll('.tab-link');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function () {
+            if (this.querySelector('.lock-icon')) return;
+            const targetId = this.getAttribute('data-tab');
+            tabLinks.forEach(l => l.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+    
+    // LÓGICA DO EDITOR/UPLOAD
+    const submissionToggles = document.querySelectorAll('.submission-toggle-btn');
+    const editorMethod = document.getElementById('editor-method');
+    const uploadMethod = document.getElementById('upload-method');
+    
+    submissionToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            submissionToggles.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            const method = this.getAttribute('data-submission');
+            if (method === 'editor') {
+                editorMethod.classList.remove('hidden');
+                uploadMethod.classList.add('hidden');
+            } else {
+                uploadMethod.classList.remove('hidden');
+                editorMethod.classList.add('hidden');
+            }
+        });
+    });
+
+    // INICIALIZAÇÃO DO EDITOR DE CÓDIGO
+    if (document.getElementById('code-editor')) {
+        var editor = ace.edit("code-editor");
+        editor.setTheme("ace/theme/tomorrow_night_eighties");
+        editor.session.setMode("ace/mode/javascript");
+        editor.setFontSize(14);
+    }
+
+    // --- MENU DROPDOWN DO USUÁRIO ---
+    function setupUserMenu(menuButtonId, dropdownId) {
+        const userMenuButton = document.getElementById(menuButtonId);
+        const userDropdown = document.getElementById(dropdownId);
+
+        if (userMenuButton && userDropdown) {
+            userMenuButton.addEventListener('click', function(event) {
+                event.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            });
+
+            // Fechar dropdown ao clicar fora
+            document.addEventListener('click', function() {
+                userDropdown.classList.add('hidden');
+            });
+
+            // Prevenir fechamento ao clicar dentro do dropdown
+            userDropdown.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        }
+    }
+
+    // Configurar ambos os menus (lista e detalhe)
+    setupUserMenu('user-menu-button', 'user-dropdown');
+    setupUserMenu('user-menu-button-detail', 'user-dropdown-detail');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exercícios | Modela+</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.33.0/src-min-noconflict/ace.js"></script>
+</head>
+<body class="dashboard-body">
+
+    <div class="dashboard-wrapper">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-logo"><a href="#"><img src="/Modela+a.png" alt="Logo da Modela+"></a></div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/home.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        Painel
+                    </a></li>
+                    <li><a href="/aulas.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        Aulas
+                    </a></li>
+                    <li><a href="/conteudos.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                        Conteúdos
+                    </a></li>
+                    <li><a href="/forum.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
+                        Fórum e Suporte
+                    </a></li>
+                    <li><a href="/exercicios.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        Exercícios
+                    </a></li>
+                    <li><a href="#" class="active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 17c-.8.8-2 .8-2.8 0l-2-2a2 2 0 1 1 2.8-2.8l.2.2.2-.2a2 2 0 1 1 2.8 2.8Z"/></svg>
+                        Certificado
+                    </a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="/login.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                    Sair
+                </a>
+            </div>
+        </aside>
+
+        <div class="dashboard-main">
+            <header id="exercise-list-header" class="dashboard-header">
+                <h1>Meus Certificados</h1>
+                <div class="user-profile-menu">
+                    <button class="user-avatar-button" id="user-menu-button" aria-label="Abrir menu do usuário">
+                        MD
+                    </button>
+                    <div class="dropdown-menu hidden" id="user-dropdown">
+                        <div class="dropdown-header">
+                            <p class="user-name">Matheus dos Anjos</p>
+                            <p class="user-email">mdap.lic20@uea.edu.br</p>
+                        </div>
+                        <ul>
+                    <li><a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Meu Perfil
+                    </a></li>
+                    <li><a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg>
+                        Configurações
+                    </a></li>
+                    <li><a href="/login.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                        Sair
+                    </a></li>
+                    </ul>
+                    </div>
+                </div>
+            </header>
+
+            <main class="dashboard-content">
+                <div class="certificates-grid">
+                    <div class="certificate-card is-completed">
+                        <div class="cert-icon">🎓</div>
+                        <div class="cert-info">
+                            <h3>1. Modelagem com UML</h3>
+                            <p>Carga Horária: 25 horas</p>
+                        </div>
+                        <a href="#" class="button button-primary">Ver Certificado</a>
+                    </div>
+
+                    <div class="certificate-card is-locked">
+                        <div class="cert-icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </div>
+                        <div class="cert-info">
+                            <h3>2. Engenharia de Requisitos</h3>
+                            <p>Carga Horária: 25 horas</p>
+                        </div>
+                        <a href="#" class="button button-secondary disabled">Bloqueado</a>
+                    </div>
+
+                    <div class="certificate-card is-locked">
+                        <div class="cert-icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </div>
+                        <div class="cert-info">
+                            <h3>3. Arquitetura de Sistemas</h3>
+                            <p>Carga Horária: 20 horas</p>
+                        </div>
+                        <a href="#" class="button button-secondary disabled">Bloqueado</a>
+                    </div>
+
+                    <div class="certificate-card is-locked">
+                        <div class="cert-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </div>
+                        <div class="cert-info">
+                            <h3>4. Padrões de Projeto</h3>
+                            <p>Carga Horária: 20 horas</p>
+                        </div>
+                        <a href="#" class="button button-secondary disabled">Bloqueado</a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+<script>
+// --- SCRIPT DO MENU DROPDOWN DO USUÁRIO CORRIGIDO ---
+document.addEventListener('DOMContentLoaded', function () {
+  
+  function setupUserMenu(buttonId, dropdownId) {
+    const menuButton = document.getElementById(buttonId);
+    const dropdownMenu = document.getElementById(dropdownId);
+
+    if (!menuButton || !dropdownMenu) return;
+
+    // Abrir/fechar dropdown ao clicar no botão
+    menuButton.addEventListener('click', function (event) {
+      event.stopPropagation();
+      dropdownMenu.classList.toggle('hidden');
+    });
+
+    // Fechar dropdown ao clicar em qualquer lugar fora dele
+    document.addEventListener('click', function () {
+      dropdownMenu.classList.add('hidden');
+    });
+
+    // Impede que o menu feche ao clicar dentro dele
+    dropdownMenu.addEventListener('click', function (event) {
+      event.stopPropagation();
+    });
+  }
+
+  // Inicializa o menu principal do usuário
+  setupUserMenu('user-menu-button', 'user-dropdown');
+});
+</script>
+
+</body>
+</html>
