@@ -196,10 +196,19 @@
                 const videoId = lessonLink.getAttribute('data-video-id');
                 const lessonTitle = lessonLink.querySelector('span:nth-of-type(2)').textContent;
                 
-                videoWrapper.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" ...></iframe>`;
+                let embedUrl;
+                if (videoId.startsWith("PL")) {
+                    // se for playlist
+                    embedUrl = `https://www.youtube.com/embed/videoseries?list=${videoId}&autoplay=1&rel=0&modestbranding=1`;
+                } else {
+                    // se for vídeo único
+                    embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+                }
 
-                readingTitle.textContent = lessonTitle;
-                readingText.innerHTML = readingMaterials[lessonTitle] || "<p>Nenhum material de leitura disponível para esta aula.</p>";
+                videoWrapper.innerHTML = `<iframe width="100%" height="100%" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+
+                                readingTitle.textContent = lessonTitle;
+                                readingText.innerHTML = readingMaterials[lessonTitle] || "<p>Nenhum material de leitura disponível para esta aula.</p>";
 
                 if (activeIcon.classList.contains('completed')) {
                     completeButton.classList.remove('button-primary');
