@@ -17,7 +17,7 @@
 
     <div class="dashboard-wrapper">
         <aside class="dashboard-sidebar">
-            <div class="sidebar-logo"><a href="#"><img src="/Modela+a.png" alt="Logo da Modela+"></a></div>
+            <div class="sidebar-logo"><a href="/home.html"><img src="/Modela+a.png" alt="Logo da Modela+"></a></div>
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="/home.html">
@@ -75,60 +75,44 @@
                             <p class="user-email">mdap.lic20@uea.edu.br</p>
                         </div>
                         <ul>
-                            <li><a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                Meu Perfil
-                            </a></li>
-                            <li><a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg>
-                                Configurações
-                            </a></li>
-                            <li><a href="/login.html">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-                                Sair
-                            </a></li>
+                            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil</a></li>
+                            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg> Configurações</a></li>
+                            <li><a href="/login.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair</a></li>
                         </ul>
                     </div>
                 </div>
             </header>
             
             <header id="activity-detail-header" class="dashboard-header hidden">
-                <h1 id="activity-title-header">Título da Atividade</h1>
+                <div class="header-main-content">
+                    <h1 id="activity-title-header">Título da Atividade</h1>
+                    <a href="#" id="back-to-exercises-btn" class="back-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                        Voltar
+                    </a>
+                </div>
                 <div class="header-actions">
                     <div class="user-profile-menu">
                         <button class="user-avatar-button" id="user-menu-button-detail" aria-label="Abrir menu do usuário">
                             MD
                         </button>
                         <div class="dropdown-menu hidden" id="user-dropdown-detail">
-                            <div class="dropdown-header">
+                           <div class="dropdown-header">
                                 <p class="user-name">Matheus dos Anjos</p>
                                 <p class="user-email">mdap.lic20@uea.edu.br</p>
                             </div>
                             <ul>
-                                <li><a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                                    Meu Perfil
-                                </a></li>
-                                <li><a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg>
-                                    Configurações
-                                </a></li>
+                                <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil</a></li>
+                                <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg> Configurações</a></li>
                             </ul>
                             <div class="separator"></div>
                             <ul>
-                                <li><a href="/login.html">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-                                    Sair
-                                </a></li>
+                                <li><a href="/login.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair</a></li>
                             </ul>
                         </div>
                     </div>
-                    <a href="#" id="back-to-exercises-btn" class="button button-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m15 18-6-6 6-6"/>
-                        </svg>
-                        Voltar
-                    </a>
                 </div>
             </header>
 
@@ -142,7 +126,7 @@
                                     <h3>Exercício 1: Diagrama de Classes</h3>
                                     <p>Crie o diagrama de classes para um sistema de biblioteca.</p>
                                 </div>
-                                <button class="button button-primary view-activity-btn button-exercise" data-activity-id="uml-ex1">Ver Correção</button>
+                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex1">Ver Correção</button>
                             </div>
                             <div class="exercise-card">
                                 <span class="exercise-status in-progress">Em Andamento</span>
@@ -150,7 +134,7 @@
                                     <h3>Exercício 2: Diagrama de Sequência</h3>
                                     <p>Modele o fluxo de login de um usuário.</p>
                                 </div>
-                                <button class="button button-primary view-activity-btn button-exercise" data-activity-id="uml-ex2">Continuar</button>
+                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex2">Continuar</button>
                             </div>
                             <div class="exercise-card">
                                 <span class="exercise-status todo">Não Iniciado</span>
@@ -158,9 +142,11 @@
                                     <h3>Exercício 3: Diagrama de Casos de Uso</h3>
                                     <p>Elabore um diagrama de casos de uso para um sistema de caixa eletrônico (ATM).</p>
                                 </div>
-                                <button class="button button-primary view-activity-btn button-exercise" data-activity-id="uml-ex3">Iniciar</button>
+                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex3">Iniciar</button>
                             </div>
                         </div>
+                         <div class="tab-pane" id="requisitos">
+                            </div>
                     </div>
                 </div>
 
@@ -200,7 +186,6 @@
     </div>
 
 <script>
-// O SCRIPT PERMANECE O MESMO
 document.addEventListener('DOMContentLoaded', function () {
     // --- BANCO DE DADOS DE EXEMPLO DAS ATIVIDADES ---
     const activityDatabase = {
@@ -268,12 +253,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabPanes = document.querySelectorAll('.tab-pane');
     tabLinks.forEach(link => {
         link.addEventListener('click', function () {
+            // Não faz nada se a aba estiver bloqueada
             if (this.querySelector('.lock-icon')) return;
+
             const targetId = this.getAttribute('data-tab');
+            const targetPane = document.getElementById(targetId);
+            
+            // Troca a classe 'active' nos botões das abas
             tabLinks.forEach(l => l.classList.remove('active'));
-            tabPanes.forEach(p => p.classList.remove('active'));
             this.classList.add('active');
-            document.getElementById(targetId).classList.add('active');
+            
+            // Esconde todos os painéis e mostra apenas o alvo
+            tabPanes.forEach(p => p.classList.remove('active'));
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
         });
     });
     
@@ -315,20 +309,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 event.stopPropagation();
                 userDropdown.classList.toggle('hidden');
             });
-
-            // Fechar dropdown ao clicar fora
             document.addEventListener('click', function() {
                 userDropdown.classList.add('hidden');
             });
-
-            // Prevenir fechamento ao clicar dentro do dropdown
             userDropdown.addEventListener('click', function(event) {
                 event.stopPropagation();
             });
         }
     }
 
-    // Configurar ambos os menus (lista e detalhe)
     setupUserMenu('user-menu-button', 'user-dropdown');
     setupUserMenu('user-menu-button-detail', 'user-dropdown-detail');
 });
