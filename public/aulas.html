@@ -198,15 +198,14 @@
             
             let embedUrl;
             
-            // --- INÍCIO DA CORREÇÃO ---
+            // Lógica que constrói a URL de incorporação da maneira correta
             if (videoId.startsWith("PL")) {
-                // se for playlist, usamos o formato padrão e mais confiável
+                // Formato para PLAYLISTS
                 embedUrl = `https://www.youtube.com/embed?listType=playlist&list=${videoId}&autoplay=1&rel=0&modestbranding=1`;
             } else {
-                // se for vídeo único, o formato continua o mesmo
+                // Formato para VÍDEOS ÚNICOS
                 embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
             }
-            // --- FIM DA CORREÇÃO ---
 
             videoWrapper.innerHTML = `<iframe width="100%" height="100%" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
 
