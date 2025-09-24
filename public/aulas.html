@@ -196,8 +196,8 @@
                 const videoId = lessonLink.getAttribute('data-video-id');
                 const lessonTitle = lessonLink.querySelector('span:nth-of-type(2)').textContent;
                 
-                videoWrapper.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-                lessonTitleHeader.textContent = lessonTitle;
+                videoWrapper.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" ...></iframe>`;
+
                 readingTitle.textContent = lessonTitle;
                 readingText.innerHTML = readingMaterials[lessonTitle] || "<p>Nenhum material de leitura disponível para esta aula.</p>";
 
