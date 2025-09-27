@@ -1191,7 +1191,7 @@ ol.course-list {
   }
 }
 /* ==========================================================================
-   13. Exercises Page (exercicios.html) Styles
+   13. Estilos da Página de Exercícios (exercicios.html)
    ========================================================================== */
 
 /* --- Classes de Controle (JS) --- */
@@ -1199,19 +1199,35 @@ ol.course-list {
     display: none !important;
 }
 
-/* --- Layout do Cabeçalho --- */
-/* Garante que o conteúdo principal do header (título e abas/link)
-   ocupe o espaço necessário, empurrando o menu do usuário para a direita. */
+/* --- Layout do Cabeçalho da Página --- */
 .header-main-content {
-    flex-grow: 1;
+    flex-grow: 1; /* Garante que o conteúdo principal ocupe o espaço e empurre o menu do usuário para a direita */
+}
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+.back-link:hover {
+    color: var(--foreground);
 }
 
-/* --- Abas dos Módulos (List View) --- */
+/* --- Abas dos Módulos (Visualização em Lista) --- */
 .tabs-nav {
     display: flex;
     gap: 1rem;
     border-bottom: 1px solid var(--border);
-    margin-top: 1.5rem; /* Adiciona espaço abaixo do título h1 */
+    margin-top: 1.5rem;
 }
 
 .tab-link {
@@ -1242,7 +1258,7 @@ ol.course-list {
     border-bottom-color: var(--primary);
 }
 
-/* --- Lista de Exercícios (List View) --- */
+/* --- Painel das Abas e Lista de Exercícios --- */
 .tab-pane {
     display: none;
 }
@@ -1270,12 +1286,13 @@ ol.course-list {
 .exercise-info h3 {
     font-family: var(--font-heading);
     font-size: 1.1rem;
+    margin: 0;
 }
 
 .exercise-info p {
     font-size: 0.9rem;
     color: var(--muted-foreground);
-    margin-top: 0.25rem;
+    margin: 0.25rem 0 0;
 }
 
 .exercise-status {
@@ -1307,46 +1324,160 @@ ol.course-list {
 .exercise-card .button {
     min-width: 140px;
     text-align: center;
+    flex-shrink: 0;
 }
 
+/* ==========================================================================
+   14. Estilos da Visualização de Detalhes da Atividade
+   ========================================================================== */
 
-/* --- Detalhes da Atividade (Detail View) --- */
-
-/* Estilo para o link "Voltar" abaixo do título */
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    color: var(--muted-foreground);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-.back-link:hover {
-    color: var(--foreground);
-}
-
-/* Layout de duas colunas para instruções e submissão */
+/* --- Layout Principal da Atividade --- */
 .activity-wrapper {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr; /* Padrão para telas menores */
     gap: 2rem;
     align-items: start;
 }
-
-.activity-instructions .dashboard-card {
-    padding: 2rem;
+@media (min-width: 1024px) {
+    .activity-wrapper {
+        grid-template-columns: 1.5fr 1fr; /* Duas colunas em telas maiores */
+    }
 }
-.activity-instructions h2, .activity-instructions h3 {
+
+/* --- Seção de Instruções e Pontuação (Coluna da Esquerda) --- */
+.activity-instructions-card,
+.activity-scoring-card {
+    margin-bottom: 2rem; /* Espaçamento entre os cards de instrução e pontuação */
+}
+
+.activity-instructions-card:last-child,
+.activity-scoring-card:last-child {
+    margin-bottom: 0;
+}
+
+.activity-instructions-card h2,
+.activity-scoring-card h2 {
+    font-size: 1.25rem;
+    color: var(--primary);
     margin-top: 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.75rem;
 }
 
-/* Abas do Ambiente de Resposta */
-.submission-toggles {
-    display: flex;
-    border-bottom: 1px solid var(--border);
+.activity-instructions ul {
+    padding-left: 1.5rem;
+    list-style: disc;
+    margin-top: 1rem;
+}
+
+/* --- Sistema de Pontuação por Critério --- */
+.scoring-system {
+    margin-top: 1.5rem;
+}
+
+.scoring-criteria {
     margin-bottom: 1.5rem;
+}
+
+.criterion {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: var(--background);
+}
+
+.criterion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.criterion-name {
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.criterion-score {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.criterion-description {
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+}
+
+.scoring-summary {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.total-score {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.score-value {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.score-feedback {
+    background-color: hsl(217, 91%, 97%); /* Azul bem claro */
+    padding: 1rem;
+    border-radius: var(--radius);
+    border-left: 4px solid var(--primary);
+}
+.score-feedback p {
+    margin: 0;
+    color: var(--foreground);
+}
+
+/* --- Seção de Submissão (Coluna da Direita) --- */
+
+/* Card de "Atividade Enviada" */
+.submission-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.submission-status.completed .status-icon {
+    color: #15803d; /* Verde escuro */
+    flex-shrink: 0;
+}
+
+.submission-status .status-content h3 {
+    margin: 0 0 0.25rem 0;
+    color: #15803d;
+    font-weight: 600;
+}
+
+.submission-status .status-content p {
+    margin: 0;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+}
+
+/* Cabeçalho e Abas para Envio de Resposta */
+.submission-header {
+    margin-bottom: 1rem;
+}
+
+.submission-header h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.25rem;
+}
+
+.submission-toggles {
+  display: flex;
+  border-bottom: 1px solid var(--border);
 }
 
 .submission-toggle-btn {
@@ -1365,79 +1496,63 @@ ol.course-list {
     border-bottom-color: var(--primary);
 }
 
-/* Editor de Código */
-#code-editor {
-    height: 350px; /* Aumentei um pouco a altura */
-    border-radius: var(--radius);
-    margin-bottom: 1rem;
-    border: 1px solid var(--border);
+/* Métodos de Envio: Editor e Upload */
+.submission-method {
+    padding-top: 1.5rem;
 }
 
-/* Área de Upload de Arquivo */
-.file-upload-wrapper {
+#code-editor {
+  width: 100%;
+  height: 300px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.file-upload-area {
     border: 2px dashed var(--border);
     border-radius: var(--radius);
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    margin-bottom: 1rem;
-    transition: background-color 0.2s;
-}
-.file-upload-wrapper:hover {
-    background-color: hsl(220, 14%, 98%);
-}
-
-.file-input-hidden {
-    display: none;
-}
-
-.file-input-label {
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+.file-upload-area:hover {
+    background-color: hsl(220, 14%, 98%);
+    border-color: var(--primary);
+}
+
+.file-upload-area svg {
+    width: 32px;
+    height: 32px;
+    stroke: var(--muted-foreground);
+    margin-bottom: 0.75rem;
+    transition: stroke 0.2s;
+}
+.file-upload-area:hover svg {
+    stroke: var(--primary);
+}
+
+.file-upload-area p {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.file-upload-area strong {
     color: var(--primary);
     font-weight: 500;
 }
 
-.file-input-label span {
-    display: block;
-    margin-top: 0.5rem;
-    color: var(--muted-foreground);
-    font-weight: 400;
+/* Rodapé do card de submissão */
+.submission-footer {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1.5rem;
 }
 
-/* ==========================================================================
-   14. Activity Detail View (Dentro da exercicios.html)
-   ========================================================================== */
-.header-actions { display: flex; align-items: center; gap: 1rem; }
-.activity-wrapper { display: grid; grid-template-columns: 1fr; gap: 2rem; }
-@media (min-width: 1024px) { .activity-wrapper { grid-template-columns: 1.5fr 1fr; } }
-.activity-instructions h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 1.5rem; }
-.activity-instructions ul { padding-left: 1.5rem; list-style: disc; }
-
-/* Toggles de Submissão */
-.submission-toggles { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
-.submission-toggle-btn { padding: 0.5rem 1rem; font-weight: 500; color: var(--muted-foreground); background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent; }
-.submission-toggle-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-
-/* Editor de Código */
-#code-editor { width: 100%; height: 350px; border-radius: var(--radius); border: 1px solid var(--border); }
-
-/* Envio de Arquivo */
-.file-upload-wrapper { position: relative; }
-.file-input-hidden { display: none; }
-.file-input-label { border: 2px dashed var(--border); border-radius: var(--radius); padding: 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; cursor: pointer; transition: all 0.2s ease; }
-.file-input-label:hover { background-color: hsl(220, 14%, 98%); border-color: var(--primary); }
-.file-input-label svg { width: 32px; height: 32px; stroke: var(--primary); margin-bottom: 0.75rem; }
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-/* Adicionado para padronizar o tamanho dos botões da lista de exercícios */
-.button-exercise {
-  min-width: 130px;
-  text-align: center;
-  flex-shrink: 0; /* Impede que o botão encolha */
-}
 
 /* ==========================================================================
    Componente: Menu Dropdown do Usuário (FONTES E MARGENS CORRIGIDAS)

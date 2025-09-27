@@ -104,13 +104,10 @@
                                 <p class="user-email">mdap.lic20@uea.edu.br</p>
                             </div>
                             <ul>
-                                <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil</a></li>
-                                <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg> Configurações</a></li>
-                            </ul>
-                            <div class="separator"></div>
-                            <ul>
-                                <li><a href="/login.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair</a></li>
-                            </ul>
+                            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil</a></li>
+                            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg> Configurações</a></li>
+                            <li><a href="/login.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair</a></li>
+                        </ul>
                         </div>
                     </div>
                 </div>
@@ -155,30 +152,7 @@
                         <div id="activity-instructions" class="activity-instructions">
                             </div>
                         <div class="activity-submission">
-                            <div class="dashboard-card">
-                                <h3>Ambiente de Resposta</h3>
-                                <div class="submission-toggles">
-                                    <button class="submission-toggle-btn active" data-submission="editor">Enviar Código</button>
-                                    <button class="submission-toggle-btn" data-submission="upload">Anexar Arquivo</button>
-                                </div>
-                                <div id="submission-methods">
-                                    <div id="editor-method">
-                                        <div id="code-editor"></div>
-                                        <button type="submit" class="button button-primary full-width">Submeter Código</button>
-                                    </div>
-                                    <div id="upload-method" class="hidden">
-                                        <div class="file-upload-wrapper">
-                                            <input type="file" id="file-upload" class="file-input-hidden">
-                                            <label for="file-upload" class="file-input-label">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-                                                <span>Clique para enviar ou arraste o arquivo</span>
-                                            </label>
-                                        </div>
-                                        <button type="submit" class="button button-primary full-width">Enviar Arquivo</button>
-                                    </div>
-                                </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </main>
@@ -187,19 +161,255 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // --- TEMPLATES HTML PARA A ÁREA DE SUBMISSÃO ---
+    const submissionCompletedHTML = `
+        <div class="dashboard-card">
+            <div class="submission-status completed">
+                <div class="status-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <div class="status-content">
+                    <h3>Atividade Enviada</h3>
+                    <p>Sua resposta foi submetida com sucesso em 15/03/2024 às 14:30. Pontuação: 7/10</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const submissionPendingHTML = `
+        <div class="dashboard-card">
+            <div class="submission-header">
+                <h3>Enviar Resposta</h3>
+                <div class="submission-toggles">
+                    <button class="submission-toggle-btn active" data-submission="editor">Editor de Código</button>
+                    <button class="submission-toggle-btn" data-submission="upload">Upload de Arquivo</button>
+                </div>
+            </div>
+            <div id="editor-method" class="submission-method">
+                <div id="code-editor"></div>
+            </div>
+            <div id="upload-method" class="submission-method hidden">
+                <div class="file-upload-area">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                    <p>Arraste e solte o arquivo aqui ou <strong>clique para selecionar</strong>.</p>
+                    <input type="file" class="file-input" hidden>
+                </div>
+            </div>
+            <div class="submission-footer">
+                <button type="submit" class="button button-primary full-width">Enviar Atividade</button>
+            </div>
+        </div>
+    `;
+
     // --- BANCO DE DADOS DE EXEMPLO DAS ATIVIDADES ---
     const activityDatabase = {
         "uml-ex1": {
             title: "Exercício 1: Diagrama de Classes",
-            instructions: `<div class="dashboard-card"><h2>Instruções da Atividade</h2><p><strong>Exercício:</strong> Crie o diagrama de classes para um sistema de biblioteca.</p><h3>Objetivos</h3><ul><li>Identificar as classes principais.</li><li>Definir atributos e métodos.</li></ul></div>`
+            instructions: `
+                <div class="dashboard-card activity-instructions-card">
+                    <h2>Instruções da Atividade</h2>
+                    <p><strong>Exercício:</strong> Crie o diagrama de classes para um sistema de biblioteca.</p>
+                    <h3>Objetivos</h3>
+                    <ul>
+                        <li>Identificar as classes principais.</li>
+                        <li>Definir atributos e métodos.</li>
+                    </ul>
+                </div>
+                <div class="dashboard-card activity-scoring-card">
+                    <h2>Sistema de Pontuação por Critério</h2>
+                    <div class="scoring-system">
+                        <div class="scoring-criteria">
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Identificação de Classes</span>
+                                    <span class="criterion-score">2.5/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p><strong>Pontos fortes:</strong> Você identificou corretamente as classes Livro e Usuário.</p>
+                                    <p><strong>Oportunidades:</strong> Faltaram classes importantes como Empréstimo, Reserva e Funcionário.</p>
+                                </div>
+                            </div>
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Atributos e Métodos</span>
+                                    <span class="criterion-score">1.5/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p><strong>Pontos fortes:</strong> Os atributos básicos como título, autor e nome estão presentes.</p>
+                                    <p><strong>Oportunidades:</strong> Métodos importantes como emprestar(), devolver() e renovar() não foram definidos.</p>
+                                </div>
+                            </div>
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Relacionamentos</span>
+                                    <span class="criterion-score">1/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p><strong>Pontos fortes:</strong> Você estabeleceu a relação básica entre Livro e Usuário.</p>
+                                    <p><strong>Oportunidades:</strong> Faltaram relacionamentos como agregação entre Empréstimo e Livro, e associação com Funcionário.</p>
+                                </div>
+                            </div>
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Notação UML</span>
+                                    <span class="criterion-score">2/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p><strong>Pontos fortes:</strong> A notação básica de classes foi utilizada corretamente.</p>
+                                    <p><strong>Oportunidades:</strong> Cardinalidades e estereótipos não foram especificados adequadamente.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="scoring-summary">
+                            <div class="total-score">
+                                <span>Pontuação Total: </span>
+                                <span class="score-value">7/10 pontos</span>
+                            </div>
+                            <div class="score-feedback">
+                                <p><strong>Feedback:</strong> Bom começo! Você demonstrou compreensão dos conceitos básicos, mas precisa aprofundar na modelagem completa do sistema. Revise as classes faltantes e os relacionamentos mais complexos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            submissionContent: submissionCompletedHTML
         },
         "uml-ex2": {
             title: "Exercício 2: Diagrama de Sequência",
-            instructions: `<div class="dashboard-card"><h2>Instruções da Atividade</h2><p><strong>Exercício:</strong> Modele o fluxo de login de um usuário.</p><h3>Objetivos</h3><ul><li>Identificar atores e objetos.</li><li>Mapear a troca de mensagens.</li></ul></div>`
+            instructions: `
+                <div class="dashboard-card activity-instructions-card">
+                    <h2>Instruções da Atividade</h2>
+                    <p><strong>Exercício:</strong> Modele o fluxo de login de um usuário.</p>
+                    <h3>Objetivos</h3>
+                    <ul>
+                        <li>Identificar atores e objetos.</li>
+                        <li>Mapear a troca de mensagens.</li>
+                    </ul>
+                </div>
+                <div class="dashboard-card activity-scoring-card">
+                    <h2>Sistema de Pontuação por Critério</h2>
+                    <div class="scoring-system">
+                        <div class="scoring-criteria">
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Identificação de Atores/Objetos</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p>Identificar corretamente os atores e objetos envolvidos no fluxo de login.</p>
+                                </div>
+                            </div>
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Sequência de Mensagens</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p>Mapear corretamente a sequência de mensagens entre os objetos.</p>
+                                </div>
+                            </div>
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Condições e Loops</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p>Incluir condições e loops quando necessário (ex: tentativas de login).</p>
+                                </div>
+                            </div>
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Notação UML</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p>Utilizar corretamente a notação UML para diagramas de sequência.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="scoring-summary">
+                            <div class="total-score">
+                                <span>Pontuação Total: </span>
+                                <span class="score-value">0/10 pontos</span>
+                            </div>
+                            <div class="score-feedback">
+                                <p><strong>Feedback:</strong> Submeta sua resposta para receber avaliação detalhada.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            submissionContent: submissionPendingHTML
         },
         "uml-ex3": {
             title: "Exercício 3: Diagrama de Casos de Uso",
-            instructions: `<div class="dashboard-card"><h2>Instruções da Atividade</h2><p><strong>Exercício:</strong> Elabore um diagrama de casos de uso para um caixa eletrônico (ATM).</p><h3>Objetivos</h3><ul><li>Identificar atores (Cliente, Banco).</li><li>Definir os casos de uso.</li></ul></div>`
+            instructions: `
+                <div class="dashboard-card activity-instructions-card">
+                    <h2>Instruções da Atividade</h2>
+                    <p><strong>Exercício:</strong> Elabore um diagrama de casos de uso para um caixa eletrônico (ATM).</p>
+                    <h3>Objetivos</h3>
+                    <ul>
+                        <li>Identificar atores (Cliente, Banco).</li>
+                        <li>Definir os casos de uso.</li>
+                    </ul>
+                </div>
+                <div class="dashboard-card activity-scoring-card">
+                    <h2>Sistema de Pontuação por Critério</h2>
+                    <div class="scoring-system">
+                        <div class="scoring-criteria">
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Identificação de Atores</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p>Identificar corretamente todos os atores envolvidos no sistema.</p>
+                                </div>
+                            </div>
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Casos de Uso Principais</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p>Definir os casos de uso principais do sistema (saque, consulta, etc.).</p>
+                                </div>
+                            </div>
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Relacionamentos</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p>Estabelecer corretamente os relacionamentos entre atores e casos de uso.</p>
+                                </div>
+                            </div>
+                            <div class="criterion">
+                                <div class="criterion-header">
+                                    <span class="criterion-name">Inclusão/Extensão</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
+                                </div>
+                                <div class="criterion-description">
+                                    <p>Utilizar corretamente relações de inclusão e extensão quando aplicável.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="scoring-summary">
+                            <div class="total-score">
+                                <span>Pontuação Total: </span>
+                                <span class="score-value">0/10 pontos</span>
+                            </div>
+                            <div class="score-feedback">
+                                <p><strong>Feedback:</strong> Submeta sua resposta para receber avaliação detalhada.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            submissionContent: submissionPendingHTML
         }
     };
 
@@ -212,19 +422,60 @@ document.addEventListener('DOMContentLoaded', function () {
     const backToExercisesBtn = document.getElementById('back-to-exercises-btn');
     const activityTitleHeader = document.getElementById('activity-title-header');
     const instructionsWrapper = document.getElementById('activity-instructions');
+    const submissionWrapper = document.querySelector('.activity-submission');
 
-    // --- FUNÇÕES DE CONTROLE ---
+    // --- FUNÇÕES DE INICIALIZAÇÃO ---
+    function initializeSubmissionPanel() {
+        const submissionToggles = submissionWrapper.querySelectorAll('.submission-toggle-btn');
+        const editorMethod = submissionWrapper.querySelector('#editor-method');
+        const uploadMethod = submissionWrapper.querySelector('#upload-method');
+        
+        if (submissionToggles.length > 0) {
+            submissionToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    submissionToggles.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const method = this.getAttribute('data-submission');
+                    if (method === 'editor') {
+                        editorMethod.classList.remove('hidden');
+                        uploadMethod.classList.add('hidden');
+                    } else {
+                        uploadMethod.classList.remove('hidden');
+                        editorMethod.classList.add('hidden');
+                    }
+                });
+            });
+        }
+        
+        const codeEditorEl = document.getElementById('code-editor');
+        if (codeEditorEl) {
+            var editor = ace.edit(codeEditorEl);
+            editor.setTheme("ace/theme/tomorrow_night_eighties");
+            editor.session.setMode("ace/mode/javascript");
+            editor.setFontSize(14);
+        }
+    }
+
+    // --- FUNÇÕES DE CONTROLE DE VISIBILIDADE ---
     function showActivityDetail(activityId) {
         const activity = activityDatabase[activityId];
         if (!activity) return;
 
+        // Preenche o conteúdo
         activityTitleHeader.textContent = activity.title;
         instructionsWrapper.innerHTML = activity.instructions;
+        submissionWrapper.innerHTML = activity.submissionContent;
 
+        // Troca a visibilidade das telas
         exerciseListView.classList.add('hidden');
         listHeader.classList.add('hidden');
         activityDetailView.classList.remove('hidden');
         detailHeader.classList.remove('hidden');
+
+        // Se a atividade não for a primeira, inicializa o painel de submissão
+        if (activityId !== 'uml-ex1') {
+            initializeSubmissionPanel();
+        }
     }
 
     function showExerciseList() {
@@ -234,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
         listHeader.classList.remove('hidden');
     }
 
-    // --- EVENT LISTENERS ---
+    // --- EVENT LISTENERS GLOBAIS ---
     viewActivityBtns.forEach(btn => {
         btn.addEventListener('click', function(event) {
             event.preventDefault();
@@ -248,22 +499,18 @@ document.addEventListener('DOMContentLoaded', function () {
         showExerciseList();
     });
 
-    // LÓGICA DAS ABAS
+    // LÓGICA DAS ABAS (Original)
     const tabLinks = document.querySelectorAll('.tab-link');
     const tabPanes = document.querySelectorAll('.tab-pane');
     tabLinks.forEach(link => {
         link.addEventListener('click', function () {
-            // Não faz nada se a aba estiver bloqueada
             if (this.querySelector('.lock-icon')) return;
-
             const targetId = this.getAttribute('data-tab');
             const targetPane = document.getElementById(targetId);
             
-            // Troca a classe 'active' nos botões das abas
             tabLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
             
-            // Esconde todos os painéis e mostra apenas o alvo
             tabPanes.forEach(p => p.classList.remove('active'));
             if (targetPane) {
                 targetPane.classList.add('active');
@@ -271,35 +518,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
     
-    // LÓGICA DO EDITOR/UPLOAD
-    const submissionToggles = document.querySelectorAll('.submission-toggle-btn');
-    const editorMethod = document.getElementById('editor-method');
-    const uploadMethod = document.getElementById('upload-method');
-    
-    submissionToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
-            submissionToggles.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            const method = this.getAttribute('data-submission');
-            if (method === 'editor') {
-                editorMethod.classList.remove('hidden');
-                uploadMethod.classList.add('hidden');
-            } else {
-                uploadMethod.classList.remove('hidden');
-                editorMethod.classList.add('hidden');
-            }
-        });
-    });
-
-    // INICIALIZAÇÃO DO EDITOR DE CÓDIGO
-    if (document.getElementById('code-editor')) {
-        var editor = ace.edit("code-editor");
-        editor.setTheme("ace/theme/tomorrow_night_eighties");
-        editor.session.setMode("ace/mode/javascript");
-        editor.setFontSize(14);
-    }
-
-    // --- MENU DROPDOWN DO USUÁRIO ---
+    // --- LÓGICA DO MENU DROPDOWN DO USUÁRIO (Original) ---
     function setupUserMenu(menuButtonId, dropdownId) {
         const userMenuButton = document.getElementById(menuButtonId);
         const userDropdown = document.getElementById(dropdownId);
