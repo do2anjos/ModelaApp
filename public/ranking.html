@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ranking | Modela+</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="dashboard-body">
+
+    <div class="dashboard-wrapper">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-logo"><a href="/home.html"><img src="/Modela+a.png" alt="Logo da Modela+"></a></div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/home.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Painel</a></li>
+                    <li><a href="/aulas.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Aulas</a></li>
+                    <li><a href="/conteudos.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg> Conteúdos</a></li>
+                    <li><a href="/forum.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg> Fórum e Suporte</a></li>
+                    <li><a href="/exercicios.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Exercícios</a></li>
+                    <li><a href="/ranking.html" class="active"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg> Ranking</a></li>
+                    <li><a href="/certificado.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 17c-.8.8-2 .8-2.8 0l-2-2a2 2 0 1 1 2.8-2.8l.2.2.2-.2a2 2 0 1 1 2.8 2.8Z"/></svg> Certificado</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="/login.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair</a>
+            </div>
+        </aside>
+
+        <div class="dashboard-main">
+            <header class="dashboard-header">
+                <div class="header-main-content">
+                    <h1>Ranking de Alunos</h1>
+                    <p class="header-subtitle">Compare seu progresso e celebre suas conquistas.</p>
+                </div>
+                <div class="user-profile-menu">
+                    <button class="user-avatar-button" id="user-menu-button">MD</button>
+                    <div class="dropdown-menu hidden" id="user-dropdown"></div>
+                </div>
+            </header>
+
+            <main class="dashboard-content">
+                <div class="your-position-banner">
+                    <div class="your-rank-info">
+                        <span class="your-rank-label">Sua Posição</span>
+                        <span class="your-rank-number">12º</span>
+                    </div>
+                    <div class="your-rank-details">
+                        <p><strong>Matheus dos Anjos</strong> | 850 Pontos</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    <div class="your-rank-next">
+                        <span>Próximo nível: <strong>50 pts</strong></span>
+                    </div>
+                </div>
+
+                <div class="tabs-nav">
+                    <button class="tab-link active" data-tab="geral">Ranking Geral</button>
+                    <button class="tab-link" data-tab="forum">Destaques do Fórum</button>
+                </div>
+
+                <div class="tabs-content">
+                    <div class="tab-pane active" id="geral">
+                        <div class="podium-container">
+                            <div class="podium-card rank-2">
+                                <span class="podium-rank">🥈</span>
+                                <img src="https://picsum.photos/seed/user2/80" alt="Avatar" class="podium-avatar">
+                                <h4 class="podium-name">Carlos Eduardo</h4>
+                                <span class="podium-score">1.180 pts</span>
+                            </div>
+                            <div class="podium-card rank-1">
+                                <span class="podium-rank">🥇</span>
+                                <img src="https://picsum.photos/seed/user1/96" alt="Avatar" class="podium-avatar">
+                                <h4 class="podium-name">Ana Beatriz</h4>
+                                <span class="podium-score">1.250 pts</span>
+                            </div>
+                            <div class="podium-card rank-3">
+                                <span class="podium-rank">🥉</span>
+                                <img src="https://picsum.photos/seed/user3/80" alt="Avatar" class="podium-avatar">
+                                <h4 class="podium-name">Daniela Souza</h4>
+                                <span class="podium-score">1.150 pts</span>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="ranking-list">
+                                <div class="ranking-item">
+                                    <span class="rank-position">4</span>
+                                    <img src="https://picsum.photos/seed/user4/48" alt="Avatar" class="rank-avatar">
+                                    <span class="rank-name">Fernanda Lima</span>
+                                    <span class="rank-score">1.100 pts</span>
+                                </div>
+                                <div class="ranking-item">
+                                    <span class="rank-position">5</span>
+                                    <img src="https://picsum.photos/seed/user5/48" alt="Avatar" class="rank-avatar">
+                                    <span class="rank-name">Gabriel Alves</span>
+                                    <span class="rank-score">1.050 pts</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="forum">
+                        <div class="dashboard-card">
+                           <div class="ranking-list forum-ranking">
+                                <div class="ranking-item">
+                                    <span class="rank-position">1</span>
+                                    <img src="https://picsum.photos/seed/user2/48" alt="Avatar" class="rank-avatar">
+                                    <span class="rank-name">Carlos Eduardo</span>
+                                    <span class="rank-extra">25 Tópicos</span>
+                                    <span class="rank-score">150 Respostas</span>
+                                </div>
+                                <div class="ranking-item">
+                                    <span class="rank-position">2</span>
+                                    <img src="https://picsum.photos/seed/user4/48" alt="Avatar" class="rank-avatar">
+                                    <span class="rank-name">Fernanda Lima</span>
+                                    <span class="rank-extra">18 Tópicos</span>
+                                    <span class="rank-score">120 Respostas</span>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabLinks = document.querySelectorAll('.tabs-nav .tab-link');
+            const tabPanes = document.querySelectorAll('.tabs-content .tab-pane');
+
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    const targetId = this.getAttribute('data-tab');
+                    
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    tabPanes.forEach(pane => {
+                        if (pane.id === targetId) {
+                            pane.classList.add('active');
+                        } else {
+                            pane.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
