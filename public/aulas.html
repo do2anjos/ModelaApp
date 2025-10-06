@@ -67,7 +67,7 @@
     <span class="topic-progress">1/9</span>
                 </summary>
                 <ul class="lesson-list">
-                    <li><a href="#" class="active" data-video-id="Ba50CH6ImBo"><span class="lesson-icon play"></span><span>Conceitos e História da UML</span><span class="lesson-duration">15:56</span></a></li>
+                    <li><a href="#" class="active" data-video-id="d4j02XdB77g"><span class="lesson-icon play"></span><span>Conceitos e História da UML</span><span class="lesson-duration">15:56</span></a></li>
                     <li><a href="#" data-video-id="rDidOn6KN9k"><span class="lesson-icon todo"></span><span>Relacionamentos: Associação e Agregação</span><span class="lesson-duration">11:13</span></a></li>
                     <li><a href="#" data-video-id="ab6eDdwS3rA"><span class="lesson-icon todo"></span><span>Diagrama de Casos de Uso</span><span class="lesson-duration">22:07</span></a></li>
                     <li><a href="#" data-video-id="rDidOn6KN9k"><span class="lesson-icon todo"></span><span>Diagrama de Classes</span><span class="lesson-duration">31:11</span></a></li>
@@ -136,13 +136,14 @@
                     <span id="lesson-title-header">Conceitos e História da UML</span>
                 </a>
                 <div class="player-controls">
-                    <a href="#" class="button button-primary" id="complete-lesson-btn">Marcar como concluído</a>
                     <a href="#" class="button button-secondary hidden" id="view-exercise-btn">Ver Exercício</a>
+                    <a href="#" class="button button-primary hidden" id="complete-lesson-btn">Marcar como concluído</a>
+                    <a href="#" class="button button-primary hidden" id="next-lesson-btn">Próxima Aula</a>
                 </div>
             </div>
 
             <div class="video-player-wrapper">
-                </div>
+            </div>
             
             <section class="lesson-reading-content">
                 <h2>Conteúdo da Aula</h2>
@@ -161,6 +162,32 @@
                     <a href="#">Link para documentação oficial</a>
                 </div>
             </section>
+
+            <section class="lesson-exercise-content" id="exercise-section">
+                <h2>Exercício</h2>
+                <form id="exercise-form">
+                    <div class="exercise-question">
+                        <p>1. O que significa a sigla UML?</p>
+                        <label><input type="radio" name="q1" value="a"> a) Unified Modeling Language</label>
+                        <label><input type="radio" name="q1" value="b"> b) Universal Modeling Language</label>
+                        <label><input type="radio" name="q1" value="c"> c) Unique Modeling Language</label>
+                    </div>
+                    <div class="exercise-question">
+                        <p>2. Quais são os três autores principais da UML?</p>
+                        <label><input type="radio" name="q2" value="a"> a) Grady Booch, Ivar Jacobson, James Rumbaugh</label>
+                        <label><input type="radio" name="q2" value="b"> b) Martin Fowler, Kent Beck, Erich Gamma</label>
+                        <label><input type="radio" name="q2" value="c"> c) Alan Turing, John von Neumann, Alonzo Church</label>
+                    </div>
+                    <div class="exercise-question">
+                        <p>3. Qual organização padronizou a UML?</p>
+                        <label><input type="radio" name="q3" value="a"> a) Object Management Group (OMG)</label>
+                        <label><input type="radio" name="q3" value="b"> b) World Wide Web Consortium (W3C)</label>
+                        <label><input type="radio" name="q3" value="c"> c) International Organization for Standardization (ISO)</label>
+                    </div>
+                    <button type="button" id="submit-exercise">Verificar Respostas</button>
+                </form>
+                <div id="exercise-feedback"></div>
+            </section>
         </main>
     </div>
 
@@ -172,30 +199,142 @@
         const lessonTitleHeader = document.getElementById('lesson-title-header');
         const completeButton = document.getElementById('complete-lesson-btn');
         const viewExerciseBtn = document.getElementById('view-exercise-btn');
+        const nextLessonBtn = document.getElementById('next-lesson-btn');
         const readingTitle = document.getElementById('reading-title');
         const readingText = document.getElementById('reading-text');
         const accordions = document.querySelectorAll('.topic-accordion');
+        const exerciseSection = document.getElementById('exercise-section');
+        const submitExerciseBtn = document.getElementById('submit-exercise');
+        const exerciseFeedback = document.getElementById('exercise-feedback');
+        const exerciseForm = document.getElementById('exercise-form');
 
         // --- DADOS E ESTADO ---
         const lessonData = {
             "Conceitos e História da UML": {
                 reading: "<p>A Linguagem de Modelagem Unificada (UML) é uma linguagem padrão para visualizar, especificar, construir e documentar os artefatos de um sistema de software. Criada nos anos 90, unificou diversas notações orientadas a objetos.</p>",
-                exerciseUrl: "/exercicios/uml-conceitos.html"
+                exerciseUrl: "/exercicios/uml-conceitos.html",
+                correctAnswers: {
+                    q1: "a",
+                    q2: "a",
+                    q3: "a"
+                },
+                explanations: {
+                    q1: {
+                        correct: "A sigla UML significa Unified Modeling Language (Linguagem de Modelagem Unificada).",
+                        incorrect: {
+                            a: "",
+                            b: "Universal Modeling Language não é o significado correto da sigla UML.",
+                            c: "Unique Modeling Language não é o significado correto da sigla UML."
+                        }
+                    },
+                    q2: {
+                        correct: "Os três autores principais são Grady Booch, Ivar Jacobson e James Rumbaugh, conhecidos como os 'Três Amigos'.",
+                        incorrect: {
+                            a: "",
+                            b: "Martin Fowler, Kent Beck e Erich Gamma são importantes na engenharia de software, mas não são os criadores da UML.",
+                            c: "Alan Turing, John von Neumann e Alonzo Church são pioneiros da computação, mas não criaram a UML."
+                        }
+                    },
+                    q3: {
+                        correct: "A UML foi padronizada pelo Object Management Group (OMG) em 1997.",
+                        incorrect: {
+                            a: "",
+                            b: "O W3C padroniza tecnologias web, não a UML.",
+                            c: "A ISO padroniza normas internacionais, mas não foi a responsável pela padronização inicial da UML."
+                        }
+                    }
+                }
             },
             "Relacionamentos: Associação e Agregação": {
-                reading: "<p>Os relacionamentos em UML definem como as classes se conectam. Associação é uma relação estrutural básica, enquanto agregação é uma forma específica de associação que representa um relacionamento 'todo-parte'.</p>",
-                exerciseUrl: "/exercicios/uml-relacionamentos.html"
+                reading: "<p>Os relacionamentos em UML definen como as classes se conectam. Associação é uma relação estrutural básica, enquanto agregação é uma forma específica de associação que representa um relacionamento 'todo-parte'.</p>",
+                exerciseUrl: "/exercicios/uml-relacionamentos.html",
+                correctAnswers: {
+                    q1: "a",
+                    q2: "b",
+                    q3: "c"
+                },
+                explanations: {
+                    q1: {
+                        correct: "A associação é o relacionamento mais básico em UML.",
+                        incorrect: {
+                            a: "",
+                            b: "Esta não é a definição correta de associação.",
+                            c: "Esta é uma definição incorreta de associação."
+                        }
+                    },
+                    q2: {
+                        correct: "A agregação representa um relacionamento todo-parte.",
+                        incorrect: {
+                            a: "Esta é a definição de associação, não de agregação.",
+                            b: "",
+                            c: "Esta é a definição de composição, não de agregação."
+                        }
+                    },
+                    q3: {
+                        correct: "Na agregação, as partes podem existir independentemente do todo.",
+                        incorrect: {
+                            a: "Esta característica pertence à composição.",
+                            b: "Esta é uma característica da associação.",
+                            c: ""
+                        }
+                    }
+                }
             },
             "Diagrama de Casos de Uso": {
                 reading: "<p>O diagrama de casos de uso captura os requisitos funcionais do sistema, mostrando as interações entre atores externos e os casos de uso que o sistema oferece.</p>",
-                exerciseUrl: "/exercicios/uml-casos-uso.html"
+                exerciseUrl: "/exercicios/uml-casos-uso.html",
+                correctAnswers: {
+                    q1: "b",
+                    q2: "a",
+                    q3: "c"
+                },
+                explanations: {
+                    q1: {
+                        correct: "Os atores representam entidades externas que interagem com o sistema.",
+                        incorrect: {
+                            a: "Esta é a definição de casos de uso, não de atores.",
+                            b: "",
+                            c: "Esta é a definição de relacionamentos, não de atores."
+                        }
+                    },
+                    q2: {
+                        correct: "O relacionamento 'include' indica que um caso de uso sempre inclui o comportamento de outro.",
+                        incorrect: {
+                            a: "",
+                            b: "Esta é a definição do relacionamento 'extend'.",
+                            c: "Esta é a definição da generalização."
+                        }
+                    },
+                    q3: {
+                        correct: "O relacionamento 'extend' indica comportamento opcional que pode ser adicionado.",
+                        incorrect: {
+                            a: "Esta é a definição do relacionamento 'include'.",
+                            b: "Esta é a definição da generalização.",
+                            c: ""
+                        }
+                    }
+                }
             }
         };
 
-        // Estado do usuário para cada aula
-        const userProgress = JSON.parse(localStorage.getItem('userProgress')) || {};
+        // Estado do usuário (será resetado ao dar refresh)
+        let userProgress = {};
+        let currentYouTubePlayer = null;
+        let videoProgressInterval = null;
+        let currentLessonTitle = "";
 
         // --- FUNÇÕES ---
+
+        // Função para rolar suavemente para um elemento com offset
+        function smoothScrollToElement(element, offset = 80) {
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
 
         // Carrega o conteúdo de uma aula específica
         function loadLesson(lessonLink) {
@@ -219,67 +358,225 @@
             
             // Carrega o vídeo e o texto
             const videoId = lessonLink.getAttribute('data-video-id');
-            const lessonTitle = lessonLink.querySelector('span:nth-of-type(2)').textContent;
+            currentLessonTitle = lessonLink.querySelector('span:nth-of-type(2)').textContent;
             
-            let embedUrl;
-            if (videoId.startsWith("PL")) {
-                embedUrl = `https://www.youtube.com/embed?listType=playlist&list=${videoId}&autoplay=1&rel=0&modestbranding=1`;
-            } else {
-                embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-            }
-
-            videoWrapper.innerHTML = `<iframe width="100%" height="100%" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+            videoWrapper.innerHTML = `<div id="youtube-player"></div>`;
             
-            lessonTitleHeader.textContent = lessonTitle;
-            readingTitle.textContent = lessonTitle;
+            lessonTitleHeader.textContent = currentLessonTitle;
+            readingTitle.textContent = currentLessonTitle;
             
             // Carrega material de leitura específico da aula
-            const lessonInfo = lessonData[lessonTitle] || {};
+            const lessonInfo = lessonData[currentLessonTitle] || {};
             readingText.innerHTML = lessonInfo.reading || "<p>Nenhum material de leitura disponível para esta aula.</p>";
 
+            // Inicializa o player do YouTube
+            initializeYouTubePlayer(videoId, currentLessonTitle);
+
             // Atualiza estado dos botões
-            updateCompleteButtonState(activeIcon);
-            updateExerciseButtonState(lessonTitle);
+            updateButtonStates(currentLessonTitle, activeIcon);
+
+            // Reinicia o formulário de exercícios
+            resetExerciseForm();
+
+            // Esconde seção de exercícios inicialmente
+            exerciseSection.style.display = 'none';
+
+            // Rola para o topo da página suavemente
+            setTimeout(() => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }, 300);
         }
 
-        // Atualiza o estado do botão "Marcar como concluído"
-        function updateCompleteButtonState(activeIcon) {
-            if (activeIcon.classList.contains('completed')) {
-                completeButton.classList.remove('button-primary');
-                completeButton.classList.add('completed');
-                completeButton.textContent = '✅ Concluído';
+        // Inicializa o player do YouTube com API
+        function initializeYouTubePlayer(videoId, lessonTitle) {
+            // Para qualquer intervalo de progresso anterior
+            if (videoProgressInterval) {
+                clearInterval(videoProgressInterval);
+                videoProgressInterval = null;
+            }
+
+            if (window.YT && window.YT.Player) {
+                createYouTubePlayer(videoId, lessonTitle);
             } else {
-                completeButton.classList.remove('completed');
-                completeButton.classList.add('button-primary');
-                completeButton.textContent = 'Marcar como concluído';
+                // Carrega a API do YouTube se não estiver carregada
+                const tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                
+                window.onYouTubeIframeAPIReady = function() {
+                    createYouTubePlayer(videoId, lessonTitle);
+                };
             }
         }
 
-        // Atualiza o estado do botão "Ver Exercício"
-        function updateExerciseButtonState(lessonTitle) {
+        function createYouTubePlayer(videoId, lessonTitle) {
+            if (currentYouTubePlayer) {
+                currentYouTubePlayer.destroy();
+            }
+
+            currentYouTubePlayer = new YT.Player('youtube-player', {
+                height: '100%',
+                width: '100%',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 1,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'enablejsapi': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
+
+            function onPlayerReady(event) {
+                console.log('Player pronto para:', lessonTitle);
+            }
+
+            function onPlayerStateChange(event) {
+                // Inicia verificação de progresso quando o vídeo começa a tocar
+                if (event.data === YT.PlayerState.PLAYING) {
+                    startVideoProgressCheck(lessonTitle);
+                } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+                    // Para a verificação quando pausa ou termina
+                    if (videoProgressInterval) {
+                        clearInterval(videoProgressInterval);
+                        videoProgressInterval = null;
+                    }
+                    
+                    // Verifica se chegou ao final quando termina
+                    if (event.data === YT.PlayerState.ENDED) {
+                        handleVideoCompleted(lessonTitle);
+                    }
+                }
+            }
+
+            function onPlayerError(event) {
+                console.error('Erro no player YouTube:', event.data);
+            }
+        }
+
+        // Inicia a verificação de progresso do vídeo
+        function startVideoProgressCheck(lessonTitle) {
+            if (videoProgressInterval) {
+                clearInterval(videoProgressInterval);
+            }
+
+            videoProgressInterval = setInterval(() => {
+                if (currentYouTubePlayer && currentYouTubePlayer.getCurrentTime && currentYouTubePlayer.getDuration) {
+                    const currentTime = currentYouTubePlayer.getCurrentTime();
+                    const duration = currentYouTubePlayer.getDuration();
+                    
+                    if (duration > 0) {
+                        const progress = (currentTime / duration) * 100;
+                        
+                        // Salva progresso atual (em memória apenas)
+                        if (!userProgress[lessonTitle]) {
+                            userProgress[lessonTitle] = {};
+                        }
+                        userProgress[lessonTitle].videoProgress = progress;
+                        
+                        // Mostra botão de exercício se atingiu 90% ou mais (para garantir que funciona)
+                        if (progress >= 90 && !userProgress[lessonTitle].videoCompleted) {
+                            handleVideoCompleted(lessonTitle);
+                            clearInterval(videoProgressInterval);
+                            videoProgressInterval = null;
+                        }
+                    }
+                }
+            }, 1000); // Verifica a cada 1 segundo
+        }
+
+        function handleVideoCompleted(lessonTitle) {
+            if (!userProgress[lessonTitle]) {
+                userProgress[lessonTitle] = {};
+            }
+            userProgress[lessonTitle].videoCompleted = true;
+            userProgress[lessonTitle].videoProgress = 100;
+            
+            showExerciseButton();
+            
+            // Atualiza o ícone da aula para mostrar que o vídeo foi assistido
+            const activeLessonLink = document.querySelector('.lesson-list a.active');
+            if (activeLessonLink) {
+                const activeIcon = activeLessonLink.querySelector('.lesson-icon');
+                if (!activeIcon.classList.contains('completed')) {
+                    activeIcon.classList.remove('play');
+                    activeIcon.classList.add('video-watched');
+                }
+            }
+        }
+
+        function showExerciseButton() {
+            viewExerciseBtn.classList.remove('hidden');
+            viewExerciseBtn.classList.add('visible');
+        }
+
+        function hideExerciseButton() {
+            viewExerciseBtn.classList.add('hidden');
+            viewExerciseBtn.classList.remove('visible');
+        }
+
+        function showCompleteButton() {
+            completeButton.classList.remove('hidden');
+            completeButton.classList.add('visible');
+        }
+
+        function hideCompleteButton() {
+            completeButton.classList.add('hidden');
+            completeButton.classList.remove('visible');
+        }
+
+        function showNextLessonButton() {
+            nextLessonBtn.classList.remove('hidden');
+            nextLessonBtn.classList.add('visible');
+        }
+
+        function hideNextLessonButton() {
+            nextLessonBtn.classList.add('hidden');
+            nextLessonBtn.classList.remove('visible');
+        }
+
+        // Atualiza o estado dos botões
+        function updateButtonStates(lessonTitle, activeIcon) {
             const progress = userProgress[lessonTitle];
             
-            if (progress && progress.completed && progress.exerciseCompleted) {
-                // Aula e exercício concluídos
-                viewExerciseBtn.classList.remove('button-secondary');
-                viewExerciseBtn.classList.add('completed');
-                viewExerciseBtn.textContent = '✅ Exercício Concluído';
-                viewExerciseBtn.classList.remove('hidden');
-            } else if (progress && progress.completed) {
-                // Aula concluída, exercício disponível
-                viewExerciseBtn.classList.remove('completed');
-                viewExerciseBtn.classList.add('button-secondary');
-                viewExerciseBtn.textContent = 'Ver Exercício';
-                viewExerciseBtn.classList.remove('hidden');
+            // Botão "Ver Exercício" - aparece apenas se o vídeo foi assistido até o fim
+            if (progress && progress.videoCompleted && !progress.completed) {
+                showExerciseButton();
             } else {
-                // Aula não concluída, exercício bloqueado
-                viewExerciseBtn.classList.add('hidden');
+                hideExerciseButton();
+            }
+            
+            // Botão "Marcar como concluído" - aparece apenas se o exercício foi completado
+            if (progress && progress.exerciseCompleted && !progress.completed) {
+                showCompleteButton();
+            } else {
+                hideCompleteButton();
+            }
+            
+            // Botão "Próxima aula" - aparece apenas se a aula foi concluída
+            if (progress && progress.completed) {
+                showNextLessonButton();
+            } else {
+                hideNextLessonButton();
             }
 
-            // Define a URL do exercício se disponível
-            const lessonInfo = lessonData[lessonTitle];
-            if (lessonInfo && lessonInfo.exerciseUrl) {
-                viewExerciseBtn.href = lessonInfo.exerciseUrl;
+            // Aula já concluída - estado final
+            if (progress && progress.completed) {
+                viewExerciseBtn.classList.remove('hidden', 'visible');
+                viewExerciseBtn.classList.add('completed');
+                viewExerciseBtn.textContent = '✅ Exercício Concluído';
+                completeButton.classList.add('completed', 'disabled');
+                completeButton.textContent = '✅ Concluído';
+                completeButton.style.opacity = '1';
+                completeButton.style.pointerEvents = 'none';
             }
         }
 
@@ -313,6 +610,132 @@
             }
         }
 
+        // Reseta o formulário de exercícios
+        function resetExerciseForm() {
+            if (exerciseForm) {
+                exerciseForm.reset();
+                exerciseFeedback.textContent = '';
+                exerciseFeedback.className = '';
+                exerciseFeedback.innerHTML = '';
+                
+                // Remove quaisquer estilos aplicados anteriormente
+                document.querySelectorAll('.exercise-question').forEach(question => {
+                    question.classList.remove('correct', 'incorrect', 'partial-correct');
+                });
+            }
+        }
+
+        // Verifica as respostas do exercício
+        function checkExerciseAnswers(lessonTitle) {
+            const lessonInfo = lessonData[lessonTitle];
+            if (!lessonInfo || !lessonInfo.correctAnswers) {
+                return { allCorrect: false, score: 0 };
+            }
+            
+            const formData = new FormData(exerciseForm);
+            let correctCount = 0;
+            const totalQuestions = Object.keys(lessonInfo.correctAnswers).length;
+            
+            for (const [question, correctAnswer] of Object.entries(lessonInfo.correctAnswers)) {
+                const userAnswer = formData.get(question);
+                if (userAnswer === correctAnswer) {
+                    correctCount++;
+                }
+            }
+            
+            return {
+                allCorrect: correctCount === totalQuestions,
+                score: correctCount,
+                total: totalQuestions
+            };
+        }
+
+        // Gera feedback detalhado para cada questão
+        function generateDetailedFeedback(lessonTitle, result) {
+            const lessonInfo = lessonData[lessonTitle];
+            if (!lessonInfo || !lessonInfo.explanations) {
+                return '';
+            }
+            
+            const formData = new FormData(exerciseForm);
+            let feedbackHTML = '';
+            
+            // Feedback geral
+            if (result.allCorrect) {
+                feedbackHTML += `<div class="feedback-header success">🎉 Parabéns! Você acertou todas as ${result.total} questões!</div>`;
+            } else {
+                feedbackHTML += `<div class="feedback-header ${result.score > 0 ? 'partial' : 'error'}">`;
+                feedbackHTML += `Você acertou ${result.score} de ${result.total} questões.`;
+                if (result.score > 0) {
+                    feedbackHTML += ` Continue estudando para acertar todas!`;
+                } else {
+                    feedbackHTML += ` Revise o conteúdo e tente novamente!`;
+                }
+                feedbackHTML += `</div>`;
+            }
+            
+            // Detalhes por questão
+            feedbackHTML += `<div class="question-feedback-container">`;
+            
+            Object.keys(lessonInfo.correctAnswers).forEach((question, index) => {
+                const questionNumber = index + 1;
+                const userAnswer = formData.get(question);
+                const correctAnswer = lessonInfo.correctAnswers[question];
+                const isCorrect = userAnswer === correctAnswer;
+                const explanations = lessonInfo.explanations[question];
+                
+                feedbackHTML += `<div class="question-feedback ${isCorrect ? 'correct' : 'incorrect'}">`;
+                feedbackHTML += `<div class="question-header">`;
+                feedbackHTML += `<span class="question-number">Questão ${questionNumber}</span>`;
+                feedbackHTML += `<span class="question-status ${isCorrect ? 'correct' : 'incorrect'}">`;
+                feedbackHTML += isCorrect ? '✅ Correta' : '❌ Incorreta';
+                feedbackHTML += `</span>`;
+                feedbackHTML += `</div>`;
+                
+                if (isCorrect && explanations.correct) {
+                    feedbackHTML += `<div class="explanation correct-explanation">`;
+                    feedbackHTML += `<strong>Explicação:</strong> ${explanations.correct}`;
+                    feedbackHTML += `</div>`;
+                } else if (!isCorrect && explanations.incorrect && explanations.incorrect[userAnswer]) {
+                    feedbackHTML += `<div class="explanation incorrect-explanation">`;
+                    feedbackHTML += `<strong>Sua resposta:</strong> ${getAnswerText(question, userAnswer)}<br>`;
+                    feedbackHTML += `<strong>Resposta correta:</strong> ${getAnswerText(question, correctAnswer)}<br>`;
+                    feedbackHTML += `<strong>Explicação:</strong> ${explanations.incorrect[userAnswer]}`;
+                    feedbackHTML += `</div>`;
+                }
+                
+                feedbackHTML += `</div>`;
+            });
+            
+            feedbackHTML += `</div>`;
+            
+            return feedbackHTML;
+        }
+
+        // Obtém o texto da resposta baseado no valor
+        function getAnswerText(question, value) {
+            const questionElement = document.querySelector(`input[name="${question}"][value="${value}"]`);
+            if (questionElement) {
+                return questionElement.parentElement.textContent.trim();
+            }
+            return '';
+        }
+
+        // Mostra a seção de exercícios e rola até ela
+        function showExerciseSection() {
+            exerciseSection.style.display = 'block';
+            setTimeout(() => {
+                smoothScrollToElement(exerciseSection, 100);
+            }, 50);
+        }
+
+        // Volta para a seção do vídeo
+        function backToVideoSection() {
+            setTimeout(() => {
+                smoothScrollToElement(videoWrapper, 80);
+            }, 50);
+        }
+
         // --- EVENT LISTENERS ---
 
         // Carrega a primeira aula ao entrar na página
@@ -344,51 +767,154 @@
             const activeIcon = activeLessonLink.querySelector('.lesson-icon');
             const lessonTitle = activeLessonLink.querySelector('span:nth-of-type(2)').textContent;
             
-            // Alterna estado de conclusão
-            const isNowCompleted = !activeIcon.classList.contains('completed');
-            activeIcon.classList.toggle('completed');
+            // Verifica se o exercício foi completado
+            const progress = userProgress[lessonTitle];
+            if (!progress || !progress.exerciseCompleted) {
+                alert('Você precisa completar o exercício antes de marcar a aula como concluída.');
+                return;
+            }
+            
+            // Marca a aula como concluída
+            activeIcon.classList.remove('play', 'todo', 'video-watched');
+            activeIcon.classList.add('completed');
 
-            // Atualiza estado no localStorage
+            // Atualiza estado (em memória apenas)
             if (!userProgress[lessonTitle]) {
                 userProgress[lessonTitle] = {};
             }
-            userProgress[lessonTitle].completed = isNowCompleted;
-            localStorage.setItem('userProgress', JSON.stringify(userProgress));
+            userProgress[lessonTitle].completed = true;
+            userProgress[lessonTitle].completedAt = new Date().toISOString();
 
-            // Alterna entre os estados 'play' e 'todo' se não estiver completo
-            if (activeIcon.classList.contains('completed')) {
-                activeIcon.classList.remove('play');
-            } else {
-                activeIcon.classList.add('play');
-            }
+            // Atualiza a interface
+            completeButton.classList.add('completed', 'disabled');
+            completeButton.textContent = '✅ Concluído';
+            completeButton.style.pointerEvents = 'none';
             
-            updateCompleteButtonState(activeIcon);
-            updateExerciseButtonState(lessonTitle);
+            showNextLessonButton();
+            hideCompleteButton();
             
             // Atualiza o contador do tópico atual
             const parentAccordion = activeLessonLink.closest('.topic-accordion');
             updateTopicProgress(parentAccordion);
             
-            // Desbloqueia próxima aula se concluída
-            if (isNowCompleted) {
-                unlockNextLesson(lessonTitle);
+            // Desbloqueia próxima aula
+            unlockNextLesson(lessonTitle);
+
+            // Volta para a seção do vídeo
+            backToVideoSection();
+        });
+
+        // Evento de clique no botão de exercício - MOSTRA A SEÇÃO DE EXERCÍCIOS
+        viewExerciseBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            showExerciseSection();
+        });
+
+        // Evento de clique no botão de próxima aula
+        nextLessonBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            const activeLessonLink = document.querySelector('.lesson-list a.active');
+            if (!activeLessonLink) return;
+            
+            const currentListItem = activeLessonLink.parentElement;
+            const nextListItem = currentListItem.nextElementSibling;
+            
+            if (nextListItem) {
+                const nextLessonLink = nextListItem.querySelector('a');
+                const nextIcon = nextLessonLink.querySelector('.lesson-icon');
+                
+                // Verifica se a próxima aula está bloqueada
+                if (nextIcon.classList.contains('locked')) {
+                    alert('Complete a aula atual para desbloquear a próxima.');
+                    return;
+                }
+                
+                // Carrega a próxima aula
+                nextLessonLink.click();
+                
+                // Volta para o topo do vídeo
+                backToVideoSection();
+            } else {
+                alert('Não há mais aulas neste tópico.');
             }
         });
 
-        // Evento de clique no botão de exercício
-        viewExerciseBtn.addEventListener('click', function(event) {
+        // Evento de clique no botão de verificar exercício
+        submitExerciseBtn.addEventListener('click', function() {
             const activeLessonLink = document.querySelector('.lesson-list a.active');
             if (!activeLessonLink) return;
             
             const lessonTitle = activeLessonLink.querySelector('span:nth-of-type(2)').textContent;
-            const progress = userProgress[lessonTitle];
+            const result = checkExerciseAnswers(lessonTitle);
             
-            // Verifica se a aula foi concluída
-            if (!progress || !progress.completed) {
-                event.preventDefault();
-                alert('Você precisa completar a aula antes de acessar o exercício.');
-                return;
+            // Gera feedback detalhado
+            const feedbackHTML = generateDetailedFeedback(lessonTitle, result);
+            exerciseFeedback.innerHTML = feedbackHTML;
+            exerciseFeedback.className = 'fade-in detailed-feedback';
+            
+            // Rola automaticamente para o feedback com offset adequado
+            setTimeout(() => {
+                smoothScrollToElement(exerciseFeedback, 100);
+            }, 100);
+            
+            // Atualiza estado (em memória apenas) - SEMPRE marca o exercício como completado após verificação
+            if (!userProgress[lessonTitle]) {
+                userProgress[lessonTitle] = {};
             }
+            userProgress[lessonTitle].exerciseCompleted = true;
+            
+            // Mostra o botão "Marcar como concluído" no header
+            showCompleteButton();
+            
+            // SEMPRE adiciona botões de ação no feedback, independente do resultado
+            const actionButtonsHTML = `
+                <div class="feedback-actions">
+                    <button class="button feedback-complete-btn" id="feedback-complete-btn">Marcar como concluído</button>
+                    <button class="button feedback-try-again-btn" id="try-again-btn">Tentar Novamente</button>
+                    <button class="button feedback-next-btn" id="feedback-next-btn">Próxima Aula</button>
+                </div>
+            `;
+            exerciseFeedback.insertAdjacentHTML('beforeend', actionButtonsHTML);
+            
+            // Adiciona eventos aos botões do feedback
+            document.getElementById('feedback-complete-btn').addEventListener('click', function() {
+                completeButton.click();
+                
+                // Atualiza o estado dos botões no feedback após marcar como concluído
+                const progress = userProgress[lessonTitle];
+                if (progress && progress.completed) {
+                    this.classList.add('completed', 'disabled');
+                    this.textContent = '✅ Concluído';
+                    this.style.pointerEvents = 'none';
+                    this.style.backgroundColor = '#4CAF50';
+                    this.style.color = 'white';
+                    
+                    document.getElementById('feedback-next-btn').style.backgroundColor = '#3C83F6';
+                    document.getElementById('feedback-next-btn').style.color = 'white';
+                }
+            });
+            
+            document.getElementById('try-again-btn').addEventListener('click', function() {
+                resetExerciseForm();
+                exerciseFeedback.innerHTML = '';
+                
+                // Rola para o topo dos exercícios
+                setTimeout(() => {
+                    smoothScrollToElement(exerciseSection, 100);
+                }, 50);
+                
+                // Foca na primeira questão para facilitar o novo tentativa
+                const firstQuestion = document.querySelector('.exercise-question:first-child input[type="radio"]');
+                if (firstQuestion) {
+                    setTimeout(() => {
+                        firstQuestion.focus();
+                    }, 200);
+                }
+            });
+            
+            document.getElementById('feedback-next-btn').addEventListener('click', function() {
+                nextLessonBtn.click();
+            });
         });
 
         // Lógica para o accordion "sanfona"
@@ -420,23 +946,16 @@
             userDropdown.addEventListener('click', (event) => event.stopPropagation());
         }
 
-        // Inicialização: bloqueia aulas não iniciadas e carrega progresso
+        // Inicialização: bloqueia aulas não iniciadas
         function initializeProgress() {
             lessonLinks.forEach((link, index) => {
                 const lessonTitle = link.querySelector('span:nth-of-type(2)').textContent;
                 const icon = link.querySelector('.lesson-icon');
                 
-                // Carrega estado salvo
-                if (userProgress[lessonTitle] && userProgress[lessonTitle].completed) {
-                    icon.classList.remove('todo', 'play');
-                    icon.classList.add('completed');
-                } else if (index > 0) {
-                    // Bloqueia aulas além da primeira
-                    const prevLessonTitle = lessonLinks[index - 1].querySelector('span:nth-of-type(2)').textContent;
-                    if (!userProgress[prevLessonTitle] || !userProgress[prevLessonTitle].completed) {
-                        icon.classList.remove('todo');
-                        icon.classList.add('locked');
-                    }
+                // Bloqueia aulas além da primeira
+                if (index > 0) {
+                    icon.classList.remove('todo');
+                    icon.classList.add('locked');
                 }
             });
 
@@ -447,7 +966,169 @@
         }
 
         initializeProgress();
+
+        // Adiciona CSS para os novos estilos de feedback
+        const style = document.createElement('style');
+        style.textContent = `
+            .lesson-icon.video-watched::before {
+                content: "✓";
+                background-color: #4CAF50;
+                color: white;
+            }
+            
+            .detailed-feedback {
+                margin-top: 1.5rem;
+                padding: 0;
+            }
+            
+            .feedback-header {
+                padding: 1rem 1.5rem;
+                border-radius: var(--radius);
+                font-weight: 600;
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+            
+            .feedback-header.success {
+                background-color: hsl(142 76% 36% / 0.1);
+                color: hsl(142 76% 36%);
+                border: 1px solid hsl(142 76% 36% / 0.2);
+            }
+            
+            .feedback-header.partial {
+                background-color: hsl(45 93% 47% / 0.1);
+                color: hsl(45 93% 47%);
+                border: 1px solid hsl(45 93% 47% / 0.2);
+            }
+            
+            .feedback-header.error {
+                background-color: hsl(0 84% 60% / 0.1);
+                color: hsl(0 84% 60%);
+                border: 1px solid hsl(0 84% 60% / 0.2);
+            }
+            
+            .question-feedback-container {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .question-feedback {
+                padding: 1.25rem;
+                border-radius: var(--radius);
+                border-left: 4px solid;
+            }
+            
+            .question-feedback.correct {
+                background-color: hsl(142 76% 36% / 0.05);
+                border-left-color: hsl(142 76% 36%);
+            }
+            
+            .question-feedback.incorrect {
+                background-color: hsl(0 84% 60% / 0.05);
+                border-left-color: hsl(0 84% 60%);
+            }
+            
+            .question-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 0.75rem;
+            }
+            
+            .question-number {
+                font-weight: 600;
+                color: var(--foreground);
+            }
+            
+            .question-status {
+                font-weight: 500;
+                font-size: 0.9rem;
+            }
+            
+            .question-status.correct {
+                color: hsl(142 76% 36%);
+            }
+            
+            .question-status.incorrect {
+                color: hsl(0 84% 60%);
+            }
+            
+            .explanation {
+                font-size: 0.9rem;
+                line-height: 1.5;
+                color: var(--muted-foreground);
+            }
+            
+            .correct-explanation {
+                color: hsl(142 76% 36%);
+            }
+            
+            .incorrect-explanation {
+                color: hsl(0 84% 60%);
+            }
+            
+            .feedback-actions {
+                margin-top: 1.5rem;
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                padding-top: 1rem;
+                border-top: 1px solid var(--border);
+                flex-wrap: wrap;
+            }
+            
+            .feedback-actions .button {
+                margin: 0;
+                flex: 1;
+                min-width: 150px;
+                text-align: center;
+                background-color: #3C83F6;
+                color: white;
+                border: none;
+                border-radius: var(--radius);
+                padding: 0.75rem 1.5rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: opacity 0.2s;
+            }
+            
+            .feedback-actions .button:hover {
+                opacity: 0.9;
+            }
+            
+            .feedback-actions .button:active {
+                opacity: 0.8;
+            }
+            
+            .feedback-complete-btn {
+                background-color: #3C83F6 !important;
+            }
+            
+            .feedback-complete-btn.completed {
+                background-color: #4CAF50 !important;
+                opacity: 1 !important;
+            }
+            
+            .feedback-try-again-btn {
+                background-color: #3C83F6 !important;
+            }
+            
+            .feedback-next-btn {
+                background-color: #3C83F6 !important;
+            }
+            
+            .fade-in {
+                animation: fadeIn 0.5s;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
     });
 </script>
 </body>
-</html> 
+</html>
