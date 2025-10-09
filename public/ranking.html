@@ -38,12 +38,26 @@
                     <h1>Ranking de Alunos</h1>
                     <p class="header-subtitle">Compare seu progresso e celebre suas conquistas.</p>
                 </div>
-                <div class="user-profile-menu">
-                    <button class="user-avatar-button" id="user-menu-button">MD</button>
-                    <div class="dropdown-menu hidden" id="user-dropdown"></div>
+                 <div class="header-actions">
+                    <div class="user-profile-menu">
+                        <button class="user-avatar-button" id="user-menu-button-detail" aria-label="Abrir menu do usuário">
+                            MD
+                        </button>
+                        <div class="dropdown-menu hidden" id="user-dropdown-detail">
+                           <div class="dropdown-header">
+                                <p class="user-name">Matheus dos Anjos</p>
+                                <p class="user-email">mdap.lic20@uea.edu.br</p>
+                            </div>
+                            <ul>
+                            <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil</a></li>
+                            <li><a href="configuracoes.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg> Configurações</a></li>
+                            <li><a href="/login.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair</a></li>
+                        </ul>
+                        </div>
+                    </div>
                 </div>
             </header>
-
+            
             <main class="dashboard-content">
                 <div class="your-position-banner">
                     <div class="your-rank-info">
@@ -132,6 +146,7 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Funcionalidade das abas
             const tabLinks = document.querySelectorAll('.tabs-nav .tab-link');
             const tabPanes = document.querySelectorAll('.tabs-content .tab-pane');
 
@@ -151,7 +166,29 @@
                     });
                 });
             });
+
+            // Funcionalidade do menu do usuário
+            const userMenuButton = document.getElementById('user-menu-button-detail');
+            const userDropdown = document.getElementById('user-dropdown-detail');
+
+            if (userMenuButton && userDropdown) {
+                userMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('hidden');
+                });
+
+                // Fechar dropdown quando clicar fora
+                document.addEventListener('click', function() {
+                    userDropdown.classList.add('hidden');
+                });
+
+                // Prevenir fechamento quando clicar dentro do dropdown
+                userDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
         });
     </script>
+    <script src="/dark-mode.js"></script>
 </body>
 </html>

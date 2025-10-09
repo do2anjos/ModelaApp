@@ -1,8 +1,11 @@
 /* ==========================================================================
    1. Design System (CSS Variables)
    ========================================================================== */
+/* ==========================================================================
+   1. Design System (CSS Variables) - ATUALIZADO PARA DARK MODE
+   ========================================================================== */
 :root {
-  /* Tech & Clean Color Palette */
+  /* Tech & Clean Color Palette - Light Mode (Padrão) */
   --background: hsl(0 0% 100%);
   --foreground: hsl(210 24% 16%);
   --card: hsl(0 0% 100%);
@@ -23,10 +26,33 @@
   --gradient-accent: linear-gradient(135deg, hsl(21 94% 64%), hsl(217 91% 60%));
   --shadow-soft: 0 4px 6px -1px hsl(210 24% 16% / 0.1);
   --shadow-medium: 0 10px 15px -3px hsl(210 24% 16% / 0.1);
+  --shadow-lg: 0 20px 25px -5px hsl(210 24% 16% / 0.1);
 
   /* Typography */
   --font-heading: 'Montserrat', sans-serif;
   --font-body: 'Roboto', sans-serif;
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] {
+  --background: hsl(210 24% 16%);
+  --foreground: hsl(0 0% 98%);
+  --card: hsl(210 24% 20%);
+  --card-foreground: hsl(0 0% 98%);
+  --primary: hsl(217 91% 60%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(160 84% 39%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(210 24% 25%);
+  --muted-foreground: hsl(0 0% 85%);
+  --accent: hsl(21 94% 64%);
+  --accent-foreground: hsl(0 0% 100%);
+  --border: hsl(210 24% 30%);
+  
+  /* Dark Mode Shadows */
+  --shadow-soft: 0 4px 6px -1px hsl(0 0% 0% / 0.3);
+  --shadow-medium: 0 10px 15px -3px hsl(0 0% 0% / 0.3);
+  --shadow-lg: 0 20px 25px -5px hsl(0 0% 0% / 0.3);
 }
 
 /* ==========================================================================
@@ -2162,3 +2188,641 @@ ol.course-list {
 .rank-name { font-weight: 500; }
 .rank-extra { font-size: 0.9rem; color: var(--muted-foreground); }
 .rank-score { font-weight: 600; color: var(--primary); text-align: right; }
+
+/* ==========================================================================
+   17. Configurações Page (configuracoes.html) Styles
+   ========================================================================== */
+
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 800px;
+}
+
+/* Cards de Configurações */
+.settings-container .dashboard-card {
+    margin-bottom: 0;
+    transition: all 0.3s ease;
+}
+
+.settings-container .dashboard-card:hover {
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-2px);
+}
+
+.settings-container .dashboard-card h2 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--foreground);
+    margin-bottom: 0.5rem;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.card-description {
+    color: var(--muted-foreground);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+/* Sistema de Grid para Formulários */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .form-grid .input-group:first-child:nth-last-child(odd) {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Grupos de Input Melhorados */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-weight: 600;
+    color: var(--foreground);
+    font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group textarea {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background-color: var(--background);
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.15);
+}
+
+.input-group input:disabled {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.input-group textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+}
+
+.input-hint {
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+    margin-top: 0.25rem;
+}
+
+/* Ações do Formulário */
+.form-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+/* Lista de Preferências */
+.preferences-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.preference-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+}
+
+.preference-item:hover {
+    border-color: var(--primary);
+    background-color: hsla(217, 91%, 60%, 0.02);
+}
+
+.preference-info {
+    flex: 1;
+    margin-right: 1.5rem;
+}
+
+.preference-info h4 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    color: var(--foreground);
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+}
+
+.preference-info p {
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Toggle Switch Moderno */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--muted);
+    border: 2px solid var(--border);
+    transition: all 0.3s ease;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--background);
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+    background-color: var(--primary-foreground);
+}
+
+.toggle-switch input:focus + .toggle-slider {
+    box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.15);
+}
+
+.toggle-switch input:disabled + .toggle-slider {
+    background-color: var(--border);
+    border-color: var(--border);
+    cursor: not-allowed;
+}
+
+.toggle-switch input:disabled + .toggle-slider:before {
+    background-color: var(--muted-foreground);
+}
+
+/* Zona de Perigo */
+.danger-zone {
+    border: 1px solid hsl(0, 84%, 60%);
+    background-color: hsl(0, 84%, 60%, 0.02);
+}
+
+.danger-zone h2 {
+    color: hsl(0, 84%, 60%);
+}
+
+.danger-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.danger-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.5rem;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.danger-info {
+    flex: 1;
+    margin-right: 1.5rem;
+}
+
+.danger-info h4 {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--foreground);
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.danger-info p {
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Botões Especiais */
+.button-danger {
+    background-color: hsl(0, 84%, 60%);
+    color: white;
+    border: 1px solid hsl(0, 84%, 60%);
+    min-width: 140px;
+}
+
+.button-danger:hover {
+    background-color: hsl(0, 84%, 50%);
+    border-color: hsl(0, 84%, 50%);
+    transform: translateY(-1px);
+}
+
+.button-success {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.button-success:hover {
+    background-color: hsl(160, 84%, 35%);
+    border-color: hsl(160, 84%, 35%);
+}
+
+/* Estados de Validação */
+.input-group input:valid:not(:placeholder-shown) {
+    border-color: var(--secondary);
+}
+
+.input-group input:invalid:not(:placeholder-shown) {
+    border-color: hsl(0, 84%, 60%);
+}
+
+.input-group input:invalid:not(:placeholder-shown):focus {
+    box-shadow: 0 0 0 3px hsla(0, 84%, 60%, 0.15);
+}
+
+/* Animações */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.settings-container .dashboard-card {
+    animation: slideIn 0.4s ease-out;
+}
+
+.settings-container .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+.settings-container .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+.settings-container .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+.settings-container .dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+.settings-container .dashboard-card:nth-child(5) { animation-delay: 0.5s; }
+.settings-container .dashboard-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .settings-container {
+        gap: 1.5rem;
+    }
+    
+    .preference-item {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .preference-info {
+        margin-right: 0;
+    }
+    
+    .toggle-switch {
+        align-self: flex-start;
+    }
+    
+    .danger-action {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .danger-info {
+        margin-right: 0;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .button {
+        width: 100%;
+    }
+    
+    .danger-action .button {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-container .dashboard-card {
+        padding: 1.25rem;
+    }
+    
+    .preference-item,
+    .danger-action {
+        padding: 1rem;
+    }
+    
+    .form-grid {
+        gap: 1rem;
+    }
+    
+    .input-group input,
+    .input-group textarea {
+        padding: 0.6rem 0.8rem;
+    }
+}
+
+/* Estados de Loading */
+.button.loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.button.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Feedback Visual para Toggles */
+.preference-item.active {
+    border-color: var(--primary);
+    background-color: hsla(217, 91%, 60%, 0.05);
+}
+
+.preference-item.active .preference-info h4 {
+    color: var(--primary);
+}
+
+/* ==========================================================================
+   18. Dark Mode System Styles
+   ========================================================================== */
+
+/* Transição suave para mudanças de tema */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ajustes específicos para elementos no Dark Mode */
+[data-theme="dark"] .dashboard-body {
+  background-color: var(--background);
+}
+
+[data-theme="dark"] .main-header {
+  background-color: hsla(210, 24%, 20%, 0.8);
+  border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .hero {
+  background: linear-gradient(to bottom right, var(--background), var(--muted), hsla(217, 91%, 60%, 0.05));
+}
+
+[data-theme="dark"] .features {
+  background-color: hsla(210, 24%, 25%, 0.3);
+}
+
+[data-theme="dark"] .main-footer {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+[data-theme="dark"] .login-body {
+  background-color: var(--muted);
+}
+
+[data-theme="dark"] .lesson-header {
+  background-color: var(--card);
+  color: var(--foreground);
+}
+
+[data-theme="dark"] .stat-card {
+  background-color: var(--card);
+}
+
+[data-theme="dark"] .stat-card h4,
+[data-theme="dark"] .stat-card p {
+  color: var(--foreground);
+}
+
+/* Ajustes para imagens no dark mode */
+[data-theme="dark"] img {
+  filter: brightness(0.9);
+}
+
+/* Ajustes para o toggle switch no dark mode */
+[data-theme="dark"] .toggle-slider {
+  background-color: var(--muted);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .toggle-switch input:checked + .toggle-slider {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Ajustes para elementos de formulário */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: var(--card);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.15);
+}
+
+/* Ajustes para cards e containers */
+[data-theme="dark"] .dashboard-card,
+[data-theme="dark"] .feature-card,
+[data-theme="dark"] .login-card,
+[data-theme="dark"] .forum-card,
+[data-theme="dark"] .exercise-card,
+[data-theme="dark"] .certificate-card,
+[data-theme="dark"] .podium-card {
+  background-color: var(--card);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+
+/* Ajustes para elementos de texto */
+[data-theme="dark"] .card-description,
+[data-theme="dark"] .header-subtitle,
+[data-theme="dark"] .input-hint,
+[data-theme="dark"] .preference-info p,
+[data-theme="dark"] .danger-info p {
+  color: var(--muted-foreground);
+}
+
+/* Ajustes para elementos de lista e tabela */
+[data-theme="dark"] .ranking-item,
+[data-theme="dark"] .topic-item,
+[data-theme="dark"] .post-item,
+[data-theme="dark"] .course-list li {
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .ranking-item:hover,
+[data-theme="dark"] .topic-item:hover {
+  background-color: var(--muted);
+}
+
+/* Ajustes para botões no dark mode */
+[data-theme="dark"] .button-ghost:hover {
+  background-color: var(--muted);
+}
+
+[data-theme="dark"] .button-outline {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+[data-theme="dark"] .button-outline:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Ajustes para elementos de progresso */
+[data-theme="dark"] .progress-bar {
+  background-color: var(--muted);
+}
+
+/* Ajustes para elementos de navegação */
+[data-theme="dark"] .tabs-nav {
+  border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .sidebar-nav a:not(.active) {
+  color: var(--muted-foreground);
+}
+
+[data-theme="dark"] .sidebar-nav a:not(.active):hover {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+
+/* Ajustes para elementos de acordeão */
+[data-theme="dark"] .path-module-accordion,
+[data-theme="dark"] .topic-accordion {
+  border-color: var(--border);
+  background-color: var(--card);
+}
+
+[data-theme="dark"] .path-module-accordion:hover,
+[data-theme="dark"] .topic-accordion:hover {
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .topic-accordion summary:hover {
+  background-color: var(--muted);
+}
+
+[data-theme="dark"] .topic-accordion[open] > summary {
+  background-color: hsl(217 91% 60% / 0.1);
+  color: var(--primary);
+}
+
+/* Ajustes para o dropdown do usuário */
+[data-theme="dark"] .dropdown-menu {
+  background-color: var(--card);
+  border-color: var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+[data-theme="dark"] .dropdown-header {
+  background-color: var(--muted);
+  border-bottom-color: var(--border);
+}
+
+/* Sistema de preferência do sistema */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: hsl(210 24% 16%);
+    --foreground: hsl(0 0% 98%);
+    --card: hsl(210 24% 20%);
+    --card-foreground: hsl(0 0% 98%);
+    --primary: hsl(217 91% 60%);
+    --primary-foreground: hsl(0 0% 100%);
+    --secondary: hsl(160 84% 39%);
+    --secondary-foreground: hsl(0 0% 100%);
+    --muted: hsl(210 24% 25%);
+    --muted-foreground: hsl(0 0% 85%);
+    --accent: hsl(21 94% 64%);
+    --accent-foreground: hsl(0 0% 100%);
+    --border: hsl(210 24% 30%);
+    
+    /* Dark Mode Shadows */
+    --shadow-soft: 0 4px 6px -1px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 10px 15px -3px hsl(0 0% 0% / 0.3);
+    --shadow-lg: 0 20px 25px -5px hsl(0 0% 0% / 0.3);
+  }
+}
