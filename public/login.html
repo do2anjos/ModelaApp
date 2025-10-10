@@ -1,29 +1,58 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Login | Modela+</title>
-    
+    <meta name="color-scheme" content="light">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/style.css">
-    <script>
-  (function() {
-    try {
-      var theme = localStorage.getItem('theme') || 'system';
-      if (['dark','light'].includes(theme)) {
-        document.documentElement.setAttribute('data-theme', theme);
-      } else if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    } catch(e){}
-  })();
-</script>
+    <style>
+        /* Correção para problema de zoom na página de login */
+        .login-body {
+            zoom: 1;
+            transform: scale(1);
+            overflow-x: hidden;
+        }
+        
+        .login-card {
+            zoom: 1;
+            transform: scale(1);
+            max-width: 960px;
+            width: 100%;
+        }
+        
+        .login-form-container {
+            zoom: 1;
+            transform: scale(1);
+        }
+        
+        /* Garantir que não há zoom em elementos específicos */
+        * {
+            zoom: 1 !important;
+            transform: scale(1) !important;
+        }
+        
+        /* Correção para mobile */
+        @media (max-width: 768px) {
+            .login-body {
+                padding: 1rem;
+            }
+            
+            .login-card {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .login-form-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body class="login-body login-page">
 
@@ -40,17 +69,21 @@
                 <p>É necessário seu email institucional</p>
             </div>
 
-            <form class="login-form">
+            <form class="login-form" id="loginForm" novalidate>
                 <div class="input-group">
                     <label for="email">Email Institucional</label>
-                    <input type="email" id="email" name="email" placeholder="seu.nome@uea.edu.br" required>
+                    <input type="email" id="email" name="email" placeholder="seu.nome@uea.edu.br">
                 </div>
                 <div class="input-group">
                     <label for="password">Senha</label>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <input type="password" id="password" name="password" placeholder="••••••••">
                 </div>
-                <a href="/home.html" class="button button-primary full-width">Continuar com email</a>
+                <button type="submit" class="button button-primary full-width" id="loginButton">
+                    <span class="button-text">Continuar com email</span>
+                </button>
             </form>
+            
+            <div id="loginMessages"></div>
 
             <div class="login-footer">
                 <a href="redefinir.html">Esqueceu a senha? redefina aqui</a>
@@ -64,5 +97,43 @@
 
     <!-- Script para gerenciar dark mode (páginas de autenticação ficam sempre claras) -->
     <script src="/dark-mode.js"></script>
+    <script src="/usability.js"></script>
+    
+    <!-- Script para corrigir problema de zoom -->
+    <script>
+        // Prevenir zoom automático
+        document.addEventListener('DOMContentLoaded', function() {
+            // Resetar qualquer zoom aplicado
+            document.body.style.zoom = '1';
+            document.body.style.transform = 'scale(1)';
+            
+            // Prevenir zoom em mudanças de orientação
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() {
+                    document.body.style.zoom = '1';
+                    document.body.style.transform = 'scale(1)';
+                }, 100);
+            });
+            
+            // Prevenir zoom em resize
+            window.addEventListener('resize', function() {
+                document.body.style.zoom = '1';
+                document.body.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+    
+    <!-- SCRIPT DE REDIRECIONAMENTO DIRETO -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Impede o envio do formulário
+                    window.location.href = '/home.html'; // Redireciona
+                });
+            }
+        });
+    </script>
 </body>
 </html>

@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body class="lesson-body">
+    <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
 
     <header class="lesson-header">
         <div class="container header-container">
@@ -45,8 +46,8 @@
                         </div>
                         <ul>
                     <li><a href="/perfil.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil</a></li>
-                    <li><a href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg>
+                    <li><a href="/configuracoes.html">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                         Configurações
                     </a></li>
                     <li><a href="/login.html">
@@ -61,9 +62,9 @@
 
     <div class="lesson-page-wrapper">
         <aside class="lesson-sidebar">
-            <div class="sidebar-title-wrapper" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="sidebar-title-wrapper">
             <h3>Tópicos do Curso</h3>
-            <a href="/home.html" class="back-button" style="display: flex; align-items: center; gap: 4px; font-size: 0.85rem; text-decoration: none; color: inherit;">
+            <a href="/home.html" class="sidebar-back-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m15 18-6-6 6-6"/>
                 </svg>
@@ -123,15 +124,24 @@
             </nav>
         </aside>
 
-        <main class="lesson-main-content">
+        <main class="lesson-main-content" id="main-content">
             <div class="player-header">
-                <a href="#" class="back-button">
-                    <span id="lesson-title-header">Conceitos e História da UML</span>
-                </a>
-                <div class="player-controls">
-                    <a href="#" class="button button-secondary hidden" id="view-exercise-btn">Ver Exercício</a>
-                    <a href="#" class="button button-primary hidden" id="complete-lesson-btn">Marcar como concluído</a>
-                    <a href="#" class="button button-primary hidden" id="next-lesson-btn">Próxima Aula</a>
+                <nav class="breadcrumb" aria-label="Navegação estrutural">
+                    <ol>
+                        <li><a href="/">Início</a></li>
+                        <li><a href="/home.html">Painel</a></li>
+                        <li aria-current="page">Aulas</li>
+                    </ol>
+                </nav>
+                
+                <div class="lesson-title-section">
+                    <h1 id="lesson-title-header">Conceitos e História da UML</h1>
+                </div>
+                
+                <div class="player-controls" role="toolbar" aria-label="Controles da aula">
+                    <button class="button button-secondary hidden" id="view-exercise-btn" aria-label="Ver exercício da aula">Ver Exercício</button>
+                    <button class="button button-primary hidden" id="complete-lesson-btn" aria-label="Marcar aula como concluída">Marcar como concluído</button>
+                    <button class="button button-primary hidden" id="next-lesson-btn" aria-label="Ir para próxima aula">Próxima Aula</button>
                 </div>
             </div>
 
@@ -156,33 +166,46 @@
                 </div>
             </section>
 
-            <section class="lesson-exercise-content" id="exercise-section">
-                <h2>Exercício</h2>
-                <form id="exercise-form">
-                    <div class="exercise-question">
-                        <p>1. O que significa a sigla UML?</p>
-                        <label><input type="radio" name="q1" value="a"> a) Unified Modeling Language</label>
-                        <label><input type="radio" name="q1" value="b"> b) Universal Modeling Language</label>
-                        <label><input type="radio" name="q1" value="c"> c) Unique Modeling Language</label>
+            <section class="lesson-exercise-content" id="exercise-section" aria-labelledby="exercise-title">
+                <h2 id="exercise-title">Exercício</h2>
+                <p class="exercise-description">Teste seus conhecimentos sobre o conteúdo da aula respondendo às questões abaixo.</p>
+                <form id="exercise-form" aria-label="Formulário de exercício">
+                    <fieldset class="exercise-question">
+                        <legend>1. O que significa a sigla UML?</legend>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q1" value="a" required> a) Unified Modeling Language</label>
+                            <label><input type="radio" name="q1" value="b" required> b) Universal Modeling Language</label>
+                            <label><input type="radio" name="q1" value="c" required> c) Unique Modeling Language</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="exercise-question">
+                        <legend>2. Quais são os três autores principais da UML?</legend>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q2" value="a" required> a) Grady Booch, Ivar Jacobson, James Rumbaugh</label>
+                            <label><input type="radio" name="q2" value="b" required> b) Martin Fowler, Kent Beck, Erich Gamma</label>
+                            <label><input type="radio" name="q2" value="c" required> c) Alan Turing, John von Neumann, Alonzo Church</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="exercise-question">
+                        <legend>3. Qual organização padronizou a UML?</legend>
+                        <div class="radio-group">
+                            <label><input type="radio" name="q3" value="a" required> a) Object Management Group (OMG)</label>
+                            <label><input type="radio" name="q3" value="b" required> b) World Wide Web Consortium (W3C)</label>
+                            <label><input type="radio" name="q3" value="c" required> c) International Organization for Standardization (ISO)</label>
+                        </div>
+                    </fieldset>
+                    <div class="exercise-actions">
+                        <button type="button" id="submit-exercise" class="button button-primary">Verificar Respostas</button>
                     </div>
-                    <div class="exercise-question">
-                        <p>2. Quais são os três autores principais da UML?</p>
-                        <label><input type="radio" name="q2" value="a"> a) Grady Booch, Ivar Jacobson, James Rumbaugh</label>
-                        <label><input type="radio" name="q2" value="b"> b) Martin Fowler, Kent Beck, Erich Gamma</label>
-                        <label><input type="radio" name="q2" value="c"> c) Alan Turing, John von Neumann, Alonzo Church</label>
-                    </div>
-                    <div class="exercise-question">
-                        <p>3. Qual organização padronizou a UML?</p>
-                        <label><input type="radio" name="q3" value="a"> a) Object Management Group (OMG)</label>
-                        <label><input type="radio" name="q3" value="b"> b) World Wide Web Consortium (W3C)</label>
-                        <label><input type="radio" name="q3" value="c"> c) International Organization for Standardization (ISO)</label>
-                    </div>
-                    <button type="button" id="submit-exercise">Verificar Respostas</button>
                 </form>
-                <div id="exercise-feedback"></div>
+                <div id="exercise-feedback" role="region" aria-live="polite" aria-label="Resultado do exercício"></div>
             </section>
         </main>
     </div>
+
+<!-- Script para gerenciar dark mode e usabilidade -->
+<script src="/dark-mode.js"></script>
+<script src="/usability.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

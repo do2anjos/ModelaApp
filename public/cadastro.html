@@ -1,29 +1,58 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Cadastro | Modela+</title>
-    
+    <meta name="color-scheme" content="light">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/style.css">
-    <script>
-  (function() {
-    try {
-      var theme = localStorage.getItem('theme') || 'system';
-      if (['dark','light'].includes(theme)) {
-        document.documentElement.setAttribute('data-theme', theme);
-      } else if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    } catch(e){}
-  })();
-</script>
+    <style>
+        /* Correção para problema de zoom na página de cadastro */
+        .login-body {
+            zoom: 1;
+            transform: scale(1);
+            overflow-x: hidden;
+        }
+        
+        .login-card {
+            zoom: 1;
+            transform: scale(1);
+            max-width: 960px;
+            width: 100%;
+        }
+        
+        .login-form-container {
+            zoom: 1;
+            transform: scale(1);
+        }
+        
+        /* Garantir que não há zoom em elementos específicos */
+        * {
+            zoom: 1 !important;
+            transform: scale(1) !important;
+        }
+        
+        /* Correção para mobile */
+        @media (max-width: 768px) {
+            .login-body {
+                padding: 1rem;
+            }
+            
+            .login-card {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .login-form-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body class="login-body">
 
@@ -40,25 +69,29 @@
                 <p>Junte-se à plataforma e comece a aprender.</p>
             </div>
 
-            <form class="login-form">
+            <form class="login-form" id="cadastroForm" novalidate>
                 <div class="input-group">
                     <label for="nome">Nome completo</label>
-                    <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+                    <input type="text" id="nome" name="nome" placeholder="Seu nome completo">
                 </div>
                 <div class="input-group">
                     <label for="email">Email Institucional</label>
-                    <input type="email" id="email" name="email" placeholder="seu.nome@uea.edu.br" required>
+                    <input type="email" id="email" name="email" placeholder="seu.nome@uea.edu.br">
                 </div>
                 <div class="input-group">
                     <label for="matricula">Matrícula</label>
-                    <input type="text" id="matricula" name="matricula" placeholder="Sua matrícula da UEA" required>
+                    <input type="text" id="matricula" name="matricula" placeholder="Sua matrícula da UEA">
                 </div>
                 <div class="input-group">
-                    <label for="telefone">Telefone</label>
+                    <label for="telefone">Telefone (Opcional)</label>
                     <input type="tel" id="telefone" name="telefone" placeholder="(92) 99999-9999">
                 </div>
-                <a href="/login.html" class="button button-primary full-width">Cadastrar</a>
+                <button type="submit" class="button button-primary full-width" id="cadastroButton">
+                    <span class="button-text">Cadastrar</span>
+                </button>
             </form>
+            
+            <div id="cadastroMessages"></div>
 
             <div class="login-footer">
                 <a href="/login.html">Já tem uma conta? Faça login</a>
@@ -72,5 +105,43 @@
 
     <!-- Script para gerenciar dark mode (páginas de autenticação ficam sempre claras) -->
     <script src="/dark-mode.js"></script>
+    <script src="/usability.js"></script>
+    
+    <!-- Script para corrigir problema de zoom -->
+    <script>
+        // Prevenir zoom automático
+        document.addEventListener('DOMContentLoaded', function() {
+            // Resetar qualquer zoom aplicado
+            document.body.style.zoom = '1';
+            document.body.style.transform = 'scale(1)';
+            
+            // Prevenir zoom em mudanças de orientação
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() {
+                    document.body.style.zoom = '1';
+                    document.body.style.transform = 'scale(1)';
+                }, 100);
+            });
+            
+            // Prevenir zoom em resize
+            window.addEventListener('resize', function() {
+                document.body.style.zoom = '1';
+                document.body.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+    
+    <!-- SCRIPT DE REDIRECIONAMENTO DIRETO -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cadastroForm = document.getElementById('cadastroForm');
+            if (cadastroForm) {
+                cadastroForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Impede o envio do formulário
+                    window.location.href = '/home.html'; // Redireciona
+                });
+            }
+        });
+    </script>
 </body>
 </html>
