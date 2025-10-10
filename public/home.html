@@ -26,7 +26,6 @@
 </script>
 </head>
 <body class="dashboard-body home-page">
-    <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
 
     <div class="dashboard-wrapper">
         <aside class="dashboard-sidebar">
@@ -71,16 +70,7 @@
 
         <div class="dashboard-main">
             <header class="dashboard-header">
-                <button class="mobile-menu-toggle" aria-label="Abrir menu de navegação">☰</button>
-                <div class="header-main-content">
-                    <nav class="breadcrumb" aria-label="Navegação estrutural">
-                        <ol>
-                            <li><a href="/">Início</a></li>
-                            <li aria-current="page">Painel</li>
-                        </ol>
-                    </nav>
-                    <h1>Painel</h1>
-                </div>
+                <h1>Painel</h1>
                 <div class="user-profile-menu">
                     <button class="user-avatar-button" id="user-menu-button" aria-label="Abrir menu do usuário">
                         MD
@@ -92,7 +82,7 @@
                         </div>
                         <ul>
                     <li><a href="/perfil.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil</a></li>
-                    <li><a href="/configuracoes.html">
+                    <li><a href="configuracoes.html">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg>
                         Configurações
                     </a></li>
@@ -105,7 +95,7 @@
 </div>
             </header>
 
-            <main class="dashboard-content home-layout" id="main-content">
+            <main class="dashboard-content home-layout">
                 <div class="dashboard-card continue-learning">
                     <div class="card-text">
                         <h3>Engenharia de Requisitos</h3>
@@ -147,6 +137,5 @@
     </div>
 <!-- Script para gerenciar dark mode e menu do usuário -->
 <script src="/dark-mode.js"></script>
-<script src="/usability.js"></script>
 </body>
 </html>
