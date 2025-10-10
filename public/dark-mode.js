@@ -12,7 +12,20 @@ class DarkModeManager {
         this.setupMenuToggle(); // Adicionar toggle do menu em todas as páginas
     }
 
+    // Verificar se a página atual é de autenticação (deve ficar sempre clara)
+    isAuthPage() {
+        const currentPage = window.location.pathname;
+        const authPages = ['/index.html', '/', '/login.html', '/cadastro.html', '/redefinir.html'];
+        return authPages.includes(currentPage) || currentPage.endsWith('/');
+    }
+
     applyTheme() {
+        // Se for página de autenticação, sempre forçar tema claro
+        if (this.isAuthPage()) {
+            document.documentElement.setAttribute('data-theme', 'light');
+            return;
+        }
+
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         
         if (this.theme === 'dark' || (this.theme === 'system' && prefersDark)) {
@@ -59,6 +72,11 @@ class DarkModeManager {
     }
 
     toggleDarkMode(enable) {
+        // Não permitir mudança de tema em páginas de autenticação
+        if (this.isAuthPage()) {
+            return;
+        }
+
         if (enable) {
             this.theme = 'dark';
         } else {
@@ -87,6 +105,11 @@ class DarkModeManager {
     }
 
     switchTheme() {
+        // Não permitir mudança de tema em páginas de autenticação
+        if (this.isAuthPage()) {
+            return;
+        }
+
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         this.theme = newTheme;

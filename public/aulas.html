@@ -931,20 +931,7 @@
             });
         });
 
-        // Lógica do menu dropdown do usuário
-        const userMenuButton = document.getElementById('user-menu-button');
-        const userDropdown = document.getElementById('user-dropdown');
-
-        if (userMenuButton && userDropdown) {
-            userMenuButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                userDropdown.classList.toggle('hidden');
-            });
-            window.addEventListener('click', () => {
-                userDropdown.classList.add('hidden');
-            });
-            userDropdown.addEventListener('click', (event) => event.stopPropagation());
-        }
+        // Menu do usuário é gerenciado pelo dark-mode.js
 
         // Inicialização: bloqueia aulas não iniciadas
         function initializeProgress() {
@@ -1130,5 +1117,8 @@
         document.head.appendChild(style);
     });
 </script>
+
+<!-- INCLUIR O dark-mode.js ANTES do script personalizado -->
+<script src="/dark-mode.js"></script>
 </body>
 </html>
