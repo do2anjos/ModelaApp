@@ -15,18 +15,18 @@
   --secondary: hsl(160 84% 39%);
   --secondary-foreground: hsl(0 0% 100%);
   --muted: hsl(220 14% 96%);
-  --muted-foreground: hsl(210 24% 16%);
+  --muted-foreground: hsl(210 24% 16%); 
   --accent: hsl(21 94% 64%);
   --accent-foreground: hsl(0 0% 100%);
-  --border: hsl(220 14% 96%);
+  --border: hsl(220 14% 96%); 
   --radius: 0.75rem;
 
   /* Custom gradients & Shadows */
-  --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(160 84% 39%));
+  --gradient-primary: linear-gradient(135deg, hsl(217, 72%, 52%), hsl(160, 84%, 39%));
   --gradient-accent: linear-gradient(135deg, hsl(21 94% 64%), hsl(217 91% 60%));
   --shadow-soft: 0 4px 6px -1px hsl(210 24% 16% / 0.1);
   --shadow-medium: 0 10px 15px -3px hsl(210 24% 16% / 0.1);
-  --shadow-lg: 0 20px 25px -5px hsl(210 24% 16% / 0.1);
+  --shadow-lg: 0 20px 25px -5px hsla(207, 24%, 16%, 0.1);
 
   /* Typography */
   --font-heading: 'Montserrat', sans-serif;
@@ -363,7 +363,7 @@ h3 { font-size: 1.25rem; }
    8. Dashboard Styles (Estrutura Principal) - ATUALIZADO
    ========================================================================== */
 .dashboard-body { background-color: var(--muted); }
-.dashboard-wrapper { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.dashboard-wrapper { display: grid; grid-template-columns: 240px 1fr; height: 100vh; } /* Alterado para height */
 .dashboard-sidebar {
   background-color: var(--card); border-right: 1px solid var(--border);
   display: flex; flex-direction: column; padding: 1.5rem;
@@ -388,14 +388,20 @@ h3 { font-size: 1.25rem; }
 .sidebar-nav svg { stroke: currentColor; flex-shrink: 0; }
 .sidebar-footer { margin-top: auto; }
 .sidebar-footer a { display: flex; align-items: center; gap: 0.75rem; font-weight: 500; color: var(--muted-foreground); padding: 0.75rem 1rem; }
-.dashboard-main { padding: 2rem; overflow-y: auto; }
+.dashboard-main { 
+    padding: 1.5rem; /* Reduzido */
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
+}
 
 /* REGRA DE HEADER CORRIGIDA PARA ALINHAMENTO */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start; /* Alinha os itens no topo */
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem; /* Reduzido */
+  flex-shrink: 0; /* Impede que o header encolha */
 }
 .dashboard-header h1 {
   font-size: 2rem;
@@ -405,32 +411,62 @@ h3 { font-size: 1.25rem; }
   flex-direction: column; /* Coloca os itens em coluna */
   align-items: flex-end;   /* Alinha a coluna à direita */
   gap: 0.75rem;
-}
-.user-avatar {
-  width: 40px; height: 40px; border-radius: 50%; background-color: var(--primary);
-  color: var(--primary-foreground); display: flex; justify-content: center;
   align-items: center; font-family: var(--font-heading); font-weight: 700;
 }
-.dashboard-content { display: grid; gap: 1.5rem; }
-.dashboard-card { background-color: var(--card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-soft); }
+.dashboard-content { 
+    display: grid; 
+    gap: 1.5rem; /* Restaurado */
+    flex-grow: 1; /* Faz o conteúdo crescer para preencher o espaço */
+}
+
+/* Layout específico para home.html */
+.dashboard-content.home-layout {
+    grid-template-columns: repeat(3, 1fr); /* Grid de 3 colunas */
+    grid-template-rows: auto 1fr; /* Linhas automáticas e a última ocupa o espaço restante */
+    gap: 1rem; /* Reduzido para home */
+}
+.dashboard-card { 
+    background-color: var(--card); 
+    border-radius: var(--radius); 
+    padding: 1.25rem; /* Reduzido */
+    box-shadow: var(--shadow-soft); 
+}
 /* ... (resto da seção 8 - stats-grid, etc., continua igual) ... */
 
 .dashboard-card.full-width {
     grid-column: 1 / -1; /* Faz o card ocupar a largura total se necessário */
 }
 
-.continue-learning {
+/* Layout específico para continue-learning apenas na home */
+.home-layout .continue-learning {
   border-left: 5px solid var(--primary);
+  grid-column: 1 / -1; /* Ocupa a primeira linha inteira */
+  display: grid; /* Layout de grid para melhor controle */
+  grid-template-columns: 1fr auto; /* Texto à esquerda, botão à direita */
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0.5rem 1.5rem; /* Espaçamento entre linhas e colunas */
 }
 
-.continue-learning .card-subtitle {
-  font-size: 0.9rem;
-  color: var(--muted-foreground);
-  font-weight: 500;
+.home-layout .continue-learning .card-text {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.home-layout .continue-learning .card-progress {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.home-layout .continue-learning .button {
+    grid-column: 2;
+    grid-row: 1 / span 2; /* Ocupa as duas linhas */
+    align-self: center; /* Centraliza verticalmente */
+    margin: 0;
 }
 
 .continue-learning h3 {
-  margin: 0.25rem 0;
+  margin: 0 0 0.25rem;
 }
 
 .progress-bar {
@@ -438,7 +474,7 @@ h3 { font-size: 1.25rem; }
   border-radius: 99px;
   height: 8px;
   overflow: hidden;
-  margin: 1.5rem 0 0.5rem;
+  margin: 0.5rem 0 0; /* Margem reduzida */
 }
 
 .progress-fill {
@@ -451,45 +487,54 @@ h3 { font-size: 1.25rem; }
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--muted-foreground);
+  display: none; /* Oculto para economizar espaço */
 }
 
-.continue-learning .button {
-  margin-top: 1rem;
-}
-
-/* Stats Grid */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+/* Stats Grid - apenas para home */
+.home-layout .stats-grid {
+  display: contents; /* Usa o grid pai (.dashboard-content) */
 }
 
 /* Adiciona um fundo escuro ao card */
 .stat-card {
-  background-color: var(--foreground); /* Cinza escuro */
-  padding: 1.5rem;
+  background-color: var(--foreground); /* Fundo escuro/contrastante */
+  padding: 1.25rem;
   border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centraliza conteúdo */
 }
 
 /* Muda a cor do título (h4) para branco */
 .stat-card h4 {
-  color: var(--background); /* Branco */
-  /* Leve transparência para hierarquia */
+  color: var(--background); /* Texto claro */
+  opacity: 0.8; /* Hierarquia visual */
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
 }
 
 /* Muda a cor do número (p) para branco */
 .stat-card p {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   font-family: var(--font-heading);
-  color: var(--background); /* Branco */
+  color: var(--background); /* Texto claro */
 }
 
-/* Course List (Alinhado à Esquerda) */
-ol.course-list {
+/* Course List (Alinhado à Esquerda) - apenas na home */
+.home-layout .course-list-card {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+}
+.home-layout ol.course-list {
   list-style: none;
   counter-reset: course-counter;
   padding-left: 0;
+  flex-grow: 1; /* Ocupa espaço disponível */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around; /* Distribui itens igualmente */
 }
 
 .course-list li {
@@ -2825,4 +2870,358 @@ body {
     --shadow-medium: 0 10px 15px -3px hsl(0 0% 0% / 0.3);
     --shadow-lg: 0 20px 25px -5px hsl(0 0% 0% / 0.3);
   }
+}
+
+/* Layout da porcentagem ao lado da barra no card Continuar Aula - apenas na home */
+.home-layout .continue-learning .card-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.home-layout .continue-learning .progress-bar {
+  flex: 1;
+  margin: 0; /* remove margens verticais para alinhar com o rótulo */
+}
+
+.home-layout .continue-learning .card-progress span {
+  display: inline-block; /* reexibe o rótulo, sobrescrevendo a regra global */
+  white-space: nowrap;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+/* ==========================================================================
+    19. Perfil Page Specific Styles
+    ========================================================================== */
+
+/* Botões estáticos azuis para perfil.html */
+.perfil-page .button-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.perfil-page .button-primary:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.perfil-page .button-outline {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.perfil-page .button-outline:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Garantir que todos os botões em perfil.html sejam clicáveis */
+.perfil-page .button {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+}
+
+.perfil-page .button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Botões estáticos azuis para certificado.html */
+.certificado-page .button-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.certificado-page .button-primary:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.certificado-page .button-outline {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.certificado-page .button-outline:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Garantir que todos os botões em certificado.html sejam clicáveis */
+.certificado-page .button {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+}
+
+.certificado-page .button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Botões estáticos azuis para exercicios.html */
+.exercicios-page .button-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.exercicios-page .button-primary:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.exercicios-page .button-outline {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.exercicios-page .button-outline:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Garantir que todos os botões em exercicios.html sejam clicáveis */
+.exercicios-page .button {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+}
+
+.exercicios-page .button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Botões estáticos azuis para forum.html */
+.forum-page .button-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.forum-page .button-primary:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.forum-page .button-outline {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.forum-page .button-outline:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Garantir que todos os botões em forum.html sejam clicáveis */
+.forum-page .button {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+}
+
+.forum-page .button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Botões estáticos azuis para conteudos.html */
+.conteudos-page .button-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.conteudos-page .button-primary:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.conteudos-page .button-outline {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.conteudos-page .button-outline:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Garantir que todos os botões em conteudos.html sejam clicáveis */
+.conteudos-page .button {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+}
+
+.conteudos-page .button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Botão "Continuar Aula" estático azul para home.html */
+.home-page .continue-learning .button {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.home-page .continue-learning .button:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.home-page .continue-learning .button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Botão "Login" estático azul para index.html */
+.index-page .main-nav .button-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.index-page .main-nav .button-primary:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.index-page .main-nav .button-primary:active {
+  transform: scale(0.98) !important;
+}
+
+/* Botão "Continuar com Email" estático azul para login.html */
+.login-page .login-form .button-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.login-page .login-form .button-primary:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.login-page .login-form .button-primary:active {
+  transform: scale(0.98) !important;
+}
+
+/* Botão "Redefinir" estático azul para redefinir.html */
+.redefinir-page .login-form .button-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+.redefinir-page .login-form .button-primary:hover {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.redefinir-page .login-form .button-primary:active {
+  transform: scale(0.98) !important;
+}
+
+/* Estilos para tópicos bloqueados em aulas.html */
+.locked-topic {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.locked-topic summary {
+  cursor: not-allowed;
+  color: var(--muted-foreground);
+}
+
+.locked-topic .topic-progress {
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.locked-content {
+  padding: 1rem;
+  text-align: center;
+  color: var(--muted-foreground);
+  font-style: italic;
+  background-color: var(--muted);
+  border-radius: var(--radius);
+  margin: 0.5rem 0;
 }
