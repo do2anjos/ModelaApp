@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu Perfil | Modela+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script>
+  (function() {
+    try {
+      var theme = localStorage.getItem('theme') || 'system';
+      if (['dark','light'].includes(theme)) {
+        document.documentElement.setAttribute('data-theme', theme);
+      } else if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch(e){}
+  })();
+</script>
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-wrapper">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-logo"><a href="/home.html"><img src="/Modela+a.png" alt="Logo da Modela+"></a></div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/home.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Painel</a></li>
+                    <li><a href="/aulas.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Aulas</a></li>
+                    <li><a href="/conteudos.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg> Módulos</a></li>
+                    <li><a href="/forum.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg> Fórum e Suporte</a></li>
+                    <li><a href="/exercicios.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Atividades</a></li>
+                    <li><a href="/ranking.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg> Ranking</a></li>
+                    <li><a href="/certificado.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 17c-.8.8-2 .8-2.8 0l-2-2a2 2 0 1 1 2.8-2.8l.2.2.2-.2a2 2 0 1 1 2.8 2.8Z"/></svg> Certificado</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <div class="dashboard-main">
+            <header class="dashboard-header">
+                <div class="header-main-content">
+                    <h1>Meu Perfil</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="user-profile-menu">
+                        <button class="user-avatar-button" id="user-menu-button" aria-label="Abrir menu do usuário">MD</button>
+                        <div class="dropdown-menu hidden" id="user-dropdown">
+                            <div class="dropdown-header">
+                                <p class="user-name">Matheus dos Anjos</p>
+                                <p class="user-email">mdap.lic20@uea.edu.br</p>
+                            </div>
+                            <ul>
+                                <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil</a></li>
+                                <li><a href="/login.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main class="dashboard-content">
+                <div class="settings-container">
+                    <!-- Seção de Informações Pessoais -->
+                    <div class="dashboard-card">
+                        <h2>Informações Pessoais</h2>
+                        <p class="card-description">Atualize suas informações pessoais e como outros usuários veem você no perfil.</p>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="nome">Nome Completo</label>
+                                <input type="text" id="nome" value="Matheus dos Anjos">
+                            </div>
+                            <div class="input-group">
+                                <label for="usuario">Nome de Usuário</label>
+                                <input type="text" id="usuario" value="matheus.anjos">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="button button-primary">Salvar Alterações</button>
+                        </div>
+                    </div>
+                    <!-- Seção de Alterar Email -->
+                    <div class="dashboard-card">
+                        <h2>Alterar Email</h2>
+                        <p class="card-description">Atualize o endereço de email associado à sua conta.</p>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="email-atual">Email Atual</label>
+                                <input type="email" id="email-atual" value="mdap.lic20@uea.edu.br" disabled>
+                                <small class="input-hint">Seu email atual não pode ser alterado diretamente</small>
+                            </div>
+                            <div class="input-group">
+                                <label for="novo-email">Novo Email</label>
+                                <input type="email" id="novo-email" placeholder="Digite seu novo email">
+                            </div>
+                            <div class="input-group">
+                                <label for="confirmar-email">Confirmar Novo Email</label>
+                                <input type="email" id="confirmar-email" placeholder="Confirme seu novo email">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="button button-primary">Enviar Código de Verificação</button>
+                        </div>
+                    </div>
+                    <!-- Seção de Alterar Senha -->
+                    <div class="dashboard-card">
+                        <h2>Alterar Senha</h2>
+                        <p class="card-description">Mantenha sua conta segura com uma senha forte e única.</p>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="senha-atual">Senha Atual</label>
+                                <input type="password" id="senha-atual" placeholder="Digite sua senha atual">
+                            </div>
+                            <div class="input-group">
+                                <label for="nova-senha">Nova Senha</label>
+                                <input type="password" id="nova-senha" placeholder="Digite sua nova senha">
+                                <small class="input-hint">Mínimo de 8 caracteres, incluindo letras e números</small>
+                            </div>
+                            <div class="input-group">
+                                <label for="confirmar-senha">Confirmar Nova Senha</label>
+                                <input type="password" id="confirmar-senha" placeholder="Confirme sua nova senha">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="button button-primary">Alterar Senha</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="/dark-mode.js"></script>
+    <script>
+        // Inclua aqui qualquer script relevante transferido de configuracoes.html para funcionamento dos formulários
+    </script>
+</body>
+</html>

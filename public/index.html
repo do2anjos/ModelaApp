@@ -6,6 +6,21 @@
     <title>Modela+ | Plataforma de Cursos Online - UEA</title>
     <meta name="description" content="Transforme suas ideias em sistemas robustos com a Modela+. Cursos gratuitos de Engenharia de Requisitos, Design Patterns, Arquitetura de Sistemas e UML da UEA." />
 
+    <script>
+  (function() {
+    try {
+      var theme = localStorage.getItem('theme') || 'system';
+      if (['dark','light'].includes(theme)) {
+        document.documentElement.setAttribute('data-theme', theme);
+      } else if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    } catch(e){}
+  })();
+</script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
