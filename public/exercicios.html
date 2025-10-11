@@ -18,6 +18,17 @@
             } catch(e){}
         })();
     </script>
+
+    <script>
+        (function() {
+            try {
+                var daltonism = localStorage.getItem('daltonism') || 'nenhum';
+                if (daltonism && daltonism !== 'nenhum') {
+                    document.documentElement.setAttribute('data-daltonismo', daltonism);
+                }
+            } catch(e){}
+        })();
+    </script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +45,38 @@
         }
         html[data-daltonismo="tritanopia"] {
             filter: contrast(1.2) saturate(0.9) brightness(1.05) hue-rotate(30deg);
+        }
+
+        /* PROTEÇÃO GLOBAL DA LOGO */
+        /* Garante que a logo não seja afetada por filtros de acessibilidade (daltonismo) ou tema */
+        .logo img,
+        html[data-daltonismo] .logo img,
+        [data-theme="dark"] .logo img,
+        .lesson-header .logo img,
+        #main-logo {
+            filter: none !important;
+            -webkit-filter: none !important; /* Compatibilidade com Safari */
+            transform: none !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Prevenir qualquer manipulação visual da logo */
+        .logo img::before,
+        .logo img::after,
+        .lesson-header .logo img::before,
+        .lesson-header .logo img::after {
+            display: none !important;
+            content: none !important;
+        }
+
+        /* Garantir que a logo seja sempre visível e correta */
+        .logo img {
+            pointer-events: auto !important;
+            user-select: none !important;
         }
     </style>
 

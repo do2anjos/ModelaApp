@@ -91,21 +91,39 @@ class DarkModeManager {
     }
 
     updateLogo(theme) {
-        // Trocar logo baseada no tema
-        const logos = document.querySelectorAll('img[src*="Modela"]');
+        console.log('🔄 Dark mode - Updating logo for theme:', theme);
+
+        // Trocar logo baseada no tema (evitar conflito com inicialização precoce)
+        const logos = document.querySelectorAll('img[src*="Modela"]:not(#main-logo)');
+        console.log('📸 Other logos found:', logos.length);
         logos.forEach(logo => {
             if (theme === 'dark') {
                 // Tema escuro: usar Modela+p.png
                 if (logo.src.includes('Modela+a.png')) {
                     logo.src = logo.src.replace('Modela+a.png', 'Modela+p.png');
+                    console.log('🔄 Changed to dark logo:', logo.src);
                 }
             } else {
                 // Tema claro: usar Modela+a.png
                 if (logo.src.includes('Modela+p.png')) {
                     logo.src = logo.src.replace('Modela+p.png', 'Modela+a.png');
+                    console.log('🔄 Changed to light logo:', logo.src);
                 }
             }
         });
+
+        // Atualizar logo principal se necessário
+        const mainLogo = document.getElementById('main-logo');
+        if (mainLogo) {
+            const expectedSrc = theme === 'dark' ? '/Modela+p.png' : '/Modela+a.png';
+            console.log('🎯 Main logo current:', mainLogo.src, 'expected:', expectedSrc);
+            if (!mainLogo.src.includes(expectedSrc)) {
+                mainLogo.src = expectedSrc;
+                console.log('🔄 Updated main logo to:', expectedSrc);
+            } else {
+                console.log('✅ Main logo already correct');
+            }
+        }
     }
 
     updateToggle() {

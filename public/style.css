@@ -2747,7 +2747,11 @@ body {
   background-color: var(--card);
 }
 
-[data-theme="dark"] .stat-card h4,
+[data-theme="dark"] .stat-card h4 {
+  color: var(--foreground) !important;
+  opacity: 1 !important;
+}
+
 [data-theme="dark"] .stat-card p {
   color: var(--foreground);
 }
