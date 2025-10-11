@@ -84,7 +84,7 @@
         <div class="container header-container">
             <div class="logo">
                 <a href="#">
-                    <img src="/Modela+a.png" alt="Logo da Modela+" id="main-logo">
+                    <img src="/Modela+p.png" alt="Logo da Modela+" id="main-logo">
                 </a>
             </div>
             <div class="user-profile-menu">
@@ -263,28 +263,21 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // --- INICIALIZAÇÃO DA LOGO ---
-        // Definir logo baseado no tema após DOM carregado
+        // Aulas.html sempre usa logo branca (Modela+p.png) nativamente
         (function() {
             try {
-                var currentTheme = document.documentElement.getAttribute('data-theme');
-                var logoSrc = currentTheme === 'dark' ? '/Modela+p.png' : '/Modela+a.png';
+                var logoSrc = '/Modela+p.png'; // Sempre branca para aulas.html
+                console.log('🎨 Aulas.html - Using white logo natively:', logoSrc);
 
-                console.log('🎨 DOM loaded - Theme:', currentTheme, 'Logo src:', logoSrc);
-
-                // Aplicar logo correto imediatamente
+                // Aplicar logo branca imediatamente
                 var logos = document.querySelectorAll('img[src*="Modela"]');
                 console.log('🔍 Found logos:', logos.length);
                 logos.forEach(function(logo, index) {
                     console.log(`📸 Logo ${index}:`, logo.src, '→', logoSrc);
                     console.log(`🔧 Logo ${index} computed style:`, window.getComputedStyle(logo).filter);
-                    if (currentTheme === 'dark') {
-                        if (logo.src.includes('Modela+a.png') || logo.src.includes('Modela+p.png')) {
-                            logo.src = logoSrc;
-                        }
-                    } else {
-                        if (logo.src.includes('Modela+p.png') || logo.src.includes('Modela+a.png')) {
-                            logo.src = logoSrc;
-                        }
+                    // Força sempre a logo branca
+                    if (logo.src.includes('Modela+a.png') || logo.src.includes('Modela+p.png')) {
+                        logo.src = logoSrc;
                     }
                 });
             } catch(e){
