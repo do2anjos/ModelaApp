@@ -128,7 +128,40 @@ h3 { font-size: 1.25rem; }
 }
 
 .logo img { 
-  height: 7rem; 
+  height: 2.5rem; /* Ajuste para o tamanho padrão do logo no header */
+  vertical-align: middle;
+}
+
+/* PROTEÇÃO GLOBAL DA LOGO */
+/* Garante que a logo não seja afetada por filtros de acessibilidade (daltonismo) ou tema */
+.logo img,
+html[data-daltonismo] .logo img,
+[data-theme="dark"] .logo img,
+.lesson-header .logo img,
+#main-logo {
+    filter: none !important;
+    -webkit-filter: none !important; /* Compatibilidade com Safari */
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Prevenir qualquer manipulação visual da logo */
+.logo img::before,
+.logo img::after,
+.lesson-header .logo img::before,
+.lesson-header .logo img::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Garantir que a logo seja sempre visível e correta */
+.logo img {
+    pointer-events: auto !important;
+    user-select: none !important;
 }
 
 /* Estilos para a navegação unificada */
@@ -589,7 +622,12 @@ h3 { font-size: 1.25rem; }
 
 .lesson-header .logo img {
   height: 5rem;
-  margin-left: -4rem; 
+  margin-left: -4rem;
+  filter: none !important;
+  -webkit-filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .user-avatar-button {
@@ -1964,7 +2002,7 @@ h3 { font-size: 1.25rem; }
 }
 
 .lesson-body .dropdown-header .user-name {
-  color: #000000 !important;
+  color: var(--foreground) !important;
   font-family: var(--font-heading);
   font-weight: 600; /* ✅ MESMO PESO DA HOME */
   font-size: 1rem; /* ✅ MESMO TAMANHO DA HOME */
