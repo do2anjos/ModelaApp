@@ -3617,6 +3617,114 @@ select:focus-visible {
 }
 
 /* ==========================================================================
+   FILTROS DE DALTONISMO (ACESSIBILIDADE)
+   ========================================================================== */
+
+/* Filtros CSS para diferentes tipos de daltonismo */
+html[data-daltonismo="protanopia"] {
+  /* Protanopia: Filtro baseado em pesquisa científica */
+  /* Aumenta contraste entre vermelho-verde para compensar ausência de cones L */
+  filter: contrast(1.3) saturate(0.8) brightness(1.1) sepia(0.2);
+}
+
+html[data-daltonismo="deuteranopia"] {
+  /* Deuteranopia: Filtro otimizado para diferenciação vermelho-verde */
+  /* Baseado em algoritmo de correção de deuteranopia */
+  filter: contrast(1.25) saturate(1.1) brightness(0.95) hue-rotate(-15deg);
+}
+
+html[data-daltonismo="tritanopia"] {
+  /* Tritanopia: Filtro para compensar ausência de cones S (azul) */
+  /* Aumenta contraste azul-amarelo */
+  filter: contrast(1.2) saturate(0.9) brightness(1.05) hue-rotate(30deg);
+}
+
+/* Garantir que elementos críticos mantenham contraste mesmo com filtros */
+html[data-daltonismo] .button-primary,
+html[data-daltonismo] .button-accent,
+html[data-daltonismo] .button-secondary {
+  filter: none !important;
+  border: 2px solid currentColor !important;
+}
+
+html[data-daltonismo] .breadcrumb a,
+html[data-daltonismo] .nav-link,
+html[data-daltonismo] .sidebar-nav a {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Ajustes específicos para melhor contraste em elementos importantes */
+html[data-daltonismo] .stat-card strong,
+html[data-daltonismo] .progress-fill,
+html[data-daltonismo] .lesson-icon.completed {
+  filter: contrast(1.2) brightness(1.1);
+}
+
+/* ==========================================================================
+   CONTROLES DE ACESSIBILIDADE
+   ========================================================================== */
+
+.daltonism-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.daltonism-select {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--card);
+  color: var(--foreground);
+  font-size: 0.875rem;
+  min-width: 200px;
+}
+
+.daltonism-select:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-color: var(--primary);
+}
+
+.daltonism-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Estados visuais para controles de acessibilidade */
+.preference-item.active .daltonism-controls .daltonism-select {
+  border-color: var(--secondary);
+  background-color: hsl(160, 84%, 39%, 0.05);
+}
+
+.preference-item.active .daltonism-controls .toggle-switch .toggle-slider {
+  background-color: var(--secondary);
+}
+
+/* Responsividade para controles de acessibilidade */
+@media (max-width: 768px) {
+  .daltonism-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .daltonism-select {
+    min-width: 100%;
+    width: 100%;
+  }
+
+  .preference-item {
+    padding: 1rem;
+  }
+
+  .preference-item .preference-info {
+    margin-bottom: 1rem;
+  }
+}
+
+/* ==========================================================================
    ESTILOS ESPECÍFICOS PARA AULAS.HTML
    ========================================================================== */
 
