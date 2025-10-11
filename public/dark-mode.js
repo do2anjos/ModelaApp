@@ -23,17 +23,20 @@ class DarkModeManager {
         // Se for página de autenticação, sempre forçar tema claro
         if (this.isAuthPage()) {
             document.documentElement.setAttribute('data-theme', 'light');
+            this.updateLogo('light');
             return;
         }
 
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
+
         if (this.theme === 'dark' || (this.theme === 'system' && prefersDark)) {
             document.documentElement.setAttribute('data-theme', 'dark');
+            this.updateLogo('dark');
         } else {
             document.documentElement.setAttribute('data-theme', 'light');
+            this.updateLogo('light');
         }
-        
+
         this.updateToggle();
     }
 
@@ -82,9 +85,27 @@ class DarkModeManager {
         } else {
             this.theme = 'light';
         }
-        
+
         localStorage.setItem('theme', this.theme);
         this.applyTheme();
+    }
+
+    updateLogo(theme) {
+        // Trocar logo baseada no tema
+        const logos = document.querySelectorAll('img[src*="Modela"]');
+        logos.forEach(logo => {
+            if (theme === 'dark') {
+                // Tema escuro: usar Modela+p.png
+                if (logo.src.includes('Modela+a.png')) {
+                    logo.src = logo.src.replace('Modela+a.png', 'Modela+p.png');
+                }
+            } else {
+                // Tema claro: usar Modela+a.png
+                if (logo.src.includes('Modela+p.png')) {
+                    logo.src = logo.src.replace('Modela+p.png', 'Modela+a.png');
+                }
+            }
+        });
     }
 
     updateToggle() {
@@ -92,7 +113,7 @@ class DarkModeManager {
         if (darkModeToggle) {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             darkModeToggle.checked = isDark;
-            
+
             const parent = darkModeToggle.closest('.preference-item');
             if (parent) {
                 if (isDark) {
@@ -115,7 +136,7 @@ class DarkModeManager {
         this.theme = newTheme;
         localStorage.setItem('theme', newTheme);
         this.applyTheme();
-        
+
         // Mostrar notificação se a função existir
         if (typeof this.showNotification === 'function') {
             this.showNotification(`Modo ${newTheme === 'dark' ? 'escuro' : 'claro'} ativado`, 'success');
