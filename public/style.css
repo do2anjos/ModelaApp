@@ -471,56 +471,166 @@ html[data-daltonismo] .logo img,
 }
 
 /* Layout específico para continue-learning apenas na home */
+/* Layout moderno para continue-learning */
 .home-layout .continue-learning {
-  border-left: 5px solid var(--primary);
-  grid-column: 1 / -1; /* Ocupa a primeira linha inteira */
-  display: grid; /* Layout de grid para melhor controle */
-  grid-template-columns: 1fr auto; /* Texto à esquerda, botão à direita */
-  grid-template-rows: auto auto;
+  border-left: 4px solid var(--primary);
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, var(--card) 0%, var(--muted) 100%);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-layout .continue-learning::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: 50%;
+  opacity: 0.05;
+  transform: translate(30px, -30px);
+}
+
+.learning-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.learning-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.learning-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 12px;
+  display: flex;
   align-items: center;
-  gap: 0.5rem 1.5rem; /* Espaçamento entre linhas e colunas */
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-.home-layout .continue-learning .card-text {
-    grid-column: 1;
-    grid-row: 1;
+.learning-info {
+  flex: 1;
+  min-width: 0;
 }
 
-.home-layout .continue-learning .card-progress {
-    grid-column: 1;
-    grid-row: 2;
-}
-
-.home-layout .continue-learning .button {
-    grid-column: 2;
-    grid-row: 1 / span 2; /* Ocupa as duas linhas */
-    align-self: center; /* Centraliza verticalmente */
-    margin: 0;
-}
-
-.continue-learning h3 {
+.learning-info h3 {
   margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--foreground);
+  line-height: 1.3;
+}
+
+.learning-info p {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.learning-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.progress-percentage {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(37, 99, 235, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
 }
 
 .progress-bar {
   background-color: var(--muted);
-  border-radius: 99px;
-  height: 8px;
+  border-radius: 10px;
+  height: 10px;
   overflow: hidden;
-  margin: 0.5rem 0 0; /* Margem reduzida */
+  position: relative;
 }
 
 .progress-fill {
-  background-color: var(--secondary); /* Verde-água para o progresso */
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
   height: 100%;
-  border-radius: 99px;
+  border-radius: 10px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
-.card-progress span {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--muted-foreground);
-  display: none; /* Oculto para economizar espaço */
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.learning-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.btn-continue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.btn-continue:hover {
+  background: var(--secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+}
+
+.btn-continue:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
 /* Stats Grid - apenas para home */
@@ -2914,25 +3024,7 @@ body {
   }
 }
 
-/* Layout da porcentagem ao lado da barra no card Continuar Aula - apenas na home */
-.home-layout .continue-learning .card-progress {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.home-layout .continue-learning .progress-bar {
-  flex: 1;
-  margin: 0; /* remove margens verticais para alinhar com o rótulo */
-}
-
-.home-layout .continue-learning .card-progress span {
-  display: inline-block; /* reexibe o rótulo, sobrescrevendo a regra global */
-  white-space: nowrap;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--muted-foreground);
-}
+/* Removido - regras antigas substituídas pelo novo design */
 
 /* ==========================================================================
     19. Perfil Page Specific Styles
@@ -3158,25 +3250,60 @@ body {
   transform: scale(0.98) !important;
 }
 
-/* Botão "Continuar Aula" estático azul para home.html */
-.home-page .continue-learning .button {
-  background-color: var(--primary) !important;
-  color: var(--primary-foreground) !important;
-  border-color: var(--primary) !important;
-  cursor: pointer !important;
-  pointer-events: auto !important;
+/* Botão "Continuar Aula" moderno já estilizado na classe .btn-continue */
+
+/* Responsividade para continue-learning */
+@media (max-width: 768px) {
+  .home-layout .continue-learning {
+    padding: 1.25rem;
+  }
+  
+  .learning-header {
+    gap: 0.75rem;
+  }
+  
+  .learning-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .learning-info h3 {
+    font-size: 1.1rem;
+  }
+  
+  .learning-info p {
+    font-size: 0.9rem;
+  }
+  
+  .btn-continue {
+    width: 100%;
+    justify-content: center;
+    padding: 0.875rem 1.5rem;
+  }
+  
+  .learning-actions {
+    justify-content: stretch;
+  }
 }
 
-.home-page .continue-learning .button:hover {
-  background-color: var(--primary) !important;
-  color: var(--primary-foreground) !important;
-  border-color: var(--primary) !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-.home-page .continue-learning .button:active {
-  transform: scale(0.98) !important;
+@media (max-width: 480px) {
+  .home-layout .continue-learning {
+    padding: 1rem;
+  }
+  
+  .learning-content {
+    gap: 1rem;
+  }
+  
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .progress-percentage {
+    align-self: flex-end;
+  }
 }
 
 /* Botão "Login" estático azul para index.html */
