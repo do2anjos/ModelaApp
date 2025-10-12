@@ -77,9 +77,24 @@
         }
 
         /* Manter tamanho de fonte original do título da aula */
+        .player-header h1,
         #lesson-title-header {
             font-size: 1.5rem !important;
-            margin: 0;
+            margin: 0.5rem 0 0 0 !important;
+            padding: 0 !important; /* Alinha com o breadcrumb */
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            color: var(--foreground) !important;
+            line-height: 1.2 !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        
+        /* Garantir que o container do h1 também seja visível */
+        .player-header .header-main-content {
+            display: block !important;
+            width: 100% !important;
         }
     </style>
 </head>
@@ -138,21 +153,39 @@
                 </summary>
                 <ul class="lesson-list">
                     <li><a href="#" class="active" data-video-id="d4j02XdB77g"><span class="lesson-icon play"></span><span>Conceitos e História da UML</span><span class="lesson-duration">15:56</span></a></li>
-                    <li><a href="#" data-video-id="rDidOn6KN9k"><span class="lesson-icon todo"></span><span>Relacionamentos: Associação e Agregação</span><span class="lesson-duration">11:13</span></a></li>
-                    <li><a href="#" data-video-id="ab6eDdwS3rA"><span class="lesson-icon todo"></span><span>Diagrama de Casos de Uso</span><span class="lesson-duration">22:07</span></a></li>
-                    <li><a href="#" data-video-id="rDidOn6KN9k"><span class="lesson-icon todo"></span><span>Diagrama de Classes</span><span class="lesson-duration">31:11</span></a></li>
-                    <li><a href="#" data-video-id="qaWShGkUiBo"><span class="lesson-icon todo"></span><span>Diagrama de Sequência</span><span class="lesson-duration">27:00</span></a></li>
-                    <li><a href="#" data-video-id="-d9bg1rZNhk"><span class="lesson-icon todo"></span><span>Diagrama de Atividades</span><span class="lesson-duration">16:51</span></a></li>
-                    <li><a href="#" data-video-id="UVkj3ed0ZuM"><span class="lesson-icon todo"></span><span>Diagrama de Estados</span><span class="lesson-duration">12:35</span></a></li>
-                    <li><a href="#" data-video-id="CWj2F9dfIaU"><span class="lesson-icon todo"></span><span>Diagrama de Componentes</span><span class="lesson-duration">07:53</span></a></li>
-                    <li><a href="#" data-video-id="pCCqiJDLr4Y"><span class="lesson-icon todo"></span><span>Estudo de Caso Prático</span><span class="lesson-duration">47:45</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="rDidOn6KN9k">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Relacionamentos: Associação e Agregação</span><span class="lesson-duration">11:13</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="ab6eDdwS3rA">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Diagrama de Casos de Uso</span><span class="lesson-duration">22:07</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="rDidOn6KN9k">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Diagrama de Classes</span><span class="lesson-duration">31:11</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="qaWShGkUiBo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Diagrama de Sequência</span><span class="lesson-duration">27:00</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="-d9bg1rZNhk">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Diagrama de Atividades</span><span class="lesson-duration">16:51</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="UVkj3ed0ZuM">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Diagrama de Estados</span><span class="lesson-duration">12:35</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="CWj2F9dfIaU">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Diagrama de Componentes</span><span class="lesson-duration">07:53</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="pCCqiJDLr4Y">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Estudo de Caso Prático</span><span class="lesson-duration">47:45</span></a></li>
                 </ul>
                 </details>
 
                 <details class="topic-accordion locked-topic">
                 <summary>
                     <span>Engenharia de Requisitos</span>
-                    <span class="topic-progress">🔒 Bloqueado</span>
+                    <span class="topic-progress">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
                 </summary>
                 <div class="locked-content">
                     <p>Este tópico será desbloqueado após a conclusão de "Modelagem com UML".</p>
@@ -162,7 +195,9 @@
                 <details class="topic-accordion locked-topic">
                 <summary>
                     <span>Arquitetura de Sistemas</span>
-                    <span class="topic-progress">🔒 Bloqueado</span>
+                    <span class="topic-progress">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
                 </summary>
                 <div class="locked-content">
                     <p>Este tópico será desbloqueado após a conclusão de "Modelagem com UML".</p>
@@ -172,7 +207,9 @@
                 <details class="topic-accordion locked-topic">
                 <summary>
                     <span>Padrões de Projeto</span>
-                    <span class="topic-progress">🔒 Bloqueado</span>
+                    <span class="topic-progress">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
                 </summary>
                 <div class="locked-content">
                     <p>Este tópico será desbloqueado após a conclusão de "Modelagem com UML".</p>
@@ -195,7 +232,7 @@
                     
                     <h1 id="lesson-title-header">Conceitos e História da UML</h1>
                 </div>
-                <div class="header-actions">
+                <div class="header-actions">    
                 
                 <div class="player-controls" role="toolbar" aria-label="Controles da aula">
                     <button class="button button-secondary hidden" id="view-exercise-btn" aria-label="Ver exercício da aula">Ver Exercício</button>
@@ -438,11 +475,13 @@
 
         // Carrega o conteúdo de uma aula específica
         function loadLesson(lessonLink) {
+            console.log('🎬 loadLesson chamada com:', lessonLink);
+            
             // Desativa a aula anterior
             lessonLinks.forEach(link => {
                 link.classList.remove('active');
                 const icon = link.querySelector('.lesson-icon');
-                if (icon.classList.contains('play')) {
+                if (icon && icon.classList.contains('play')) {
                     icon.classList.remove('play');
                     if (!icon.classList.contains('completed')) icon.classList.add('todo');
                 }
@@ -450,15 +489,34 @@
 
             // Ativa a nova aula
             lessonLink.classList.add('active');
-            const activeIcon = lessonLink.querySelector('.lesson-icon');
-            if (!activeIcon.classList.contains('completed')) {
+            
+            // Encontra o ícone da aula (pode ser .lesson-icon ou SVG)
+            let activeIcon = lessonLink.querySelector('.lesson-icon');
+            if (!activeIcon) {
+                // Se não tem .lesson-icon, cria um
+                activeIcon = document.createElement('span');
+                activeIcon.className = 'lesson-icon play';
+                lessonLink.insertBefore(activeIcon, lessonLink.firstChild);
+            } else if (!activeIcon.classList.contains('completed')) {
                 activeIcon.classList.remove('todo');
                 activeIcon.classList.add('play');
             }
             
             // Carrega o vídeo e o texto
             const videoId = lessonLink.getAttribute('data-video-id');
-            currentLessonTitle = lessonLink.querySelector('span:nth-of-type(2)').textContent;
+            console.log('🎥 Video ID:', videoId);
+            
+            // Corrige seleção do título da aula (pega o segundo span, não o ícone nem a duração)
+            const allSpans = lessonLink.querySelectorAll('span');
+            let titleSpan = null;
+            for (let span of allSpans) {
+                if (!span.classList.contains('lesson-duration') && !span.classList.contains('lesson-icon')) {
+                    titleSpan = span;
+                    break;
+                }
+            }
+            currentLessonTitle = titleSpan ? titleSpan.textContent : 'Aula sem título';
+            console.log('📝 Título da aula:', currentLessonTitle);
             
             videoWrapper.innerHTML = `<div id="youtube-player"></div>`;
             
@@ -594,6 +652,8 @@
         }
 
         function handleVideoCompleted(lessonTitle) {
+            console.log('✅ Vídeo completado:', lessonTitle);
+            
             if (!userProgress[lessonTitle]) {
                 userProgress[lessonTitle] = {};
             }
@@ -606,7 +666,7 @@
             const activeLessonLink = document.querySelector('.lesson-list a.active');
             if (activeLessonLink) {
                 const activeIcon = activeLessonLink.querySelector('.lesson-icon');
-                if (!activeIcon.classList.contains('completed')) {
+                if (activeIcon && !activeIcon.classList.contains('completed')) {
                     activeIcon.classList.remove('play');
                     activeIcon.classList.add('video-watched');
                 }
@@ -614,13 +674,17 @@
         }
 
         function showExerciseButton() {
+            console.log('🎯 Mostrando botão de exercício');
             viewExerciseBtn.classList.remove('hidden');
             viewExerciseBtn.classList.add('visible');
+            viewExerciseBtn.style.display = 'inline-block';
         }
 
         function hideExerciseButton() {
+            console.log('🚫 Escondendo botão de exercício');
             viewExerciseBtn.classList.add('hidden');
             viewExerciseBtn.classList.remove('visible');
+            viewExerciseBtn.style.display = 'none';
         }
 
         function showCompleteButton() {
@@ -646,6 +710,8 @@
         // Atualiza o estado dos botões
         function updateButtonStates(lessonTitle, activeIcon) {
             const progress = userProgress[lessonTitle];
+            
+            console.log('🔧 updateButtonStates - progress:', progress, 'lessonTitle:', lessonTitle);
             
             // Botão "Ver Exercício" - aparece apenas se o vídeo foi assistido até o fim
             if (progress && progress.videoCompleted && !progress.completed) {
@@ -682,6 +748,11 @@
 
         // Atualiza o contador de progresso de um tópico
         function updateTopicProgress(accordionElement) {
+            // Não atualiza tópicos bloqueados (locked-topic)
+            if (accordionElement.classList.contains('locked-topic')) {
+                return;
+            }
+            
             const progressSpan = accordionElement.querySelector('.topic-progress');
             const lessons = accordionElement.querySelectorAll('.lesson-list li');
             const completedLessons = accordionElement.querySelectorAll('.lesson-icon.completed');
@@ -695,17 +766,34 @@
             const currentListItem = currentLessonLink.parentElement;
             const nextListItem = currentListItem.nextElementSibling;
             
-            if (nextListItem) {
+            if (nextListItem && nextListItem.classList.contains('lesson-locked')) {
                 const nextLessonLink = nextListItem.querySelector('a');
-                const nextLessonTitle = nextLessonLink.querySelector('span:nth-of-type(2)').textContent;
+                const allSpans = nextLessonLink.querySelectorAll('span');
+                let titleSpan = null;
+                for (let span of allSpans) {
+                    if (!span.classList.contains('lesson-duration') && !span.classList.contains('lesson-icon')) {
+                        titleSpan = span;
+                        break;
+                    }
+                }
+                const nextLessonTitle = titleSpan ? titleSpan.textContent : 'Aula sem título';
                 
                 // Desbloqueia próxima aula se a atual foi concluída
                 if (userProgress[currentLessonTitle] && userProgress[currentLessonTitle].completed) {
-                    const nextIcon = nextLessonLink.querySelector('.lesson-icon');
-                    if (nextIcon.classList.contains('locked')) {
-                        nextIcon.classList.remove('locked');
-                        nextIcon.classList.add('todo');
+                    // Remove classe de bloqueio e adiciona classe de desbloqueio
+                    nextListItem.classList.remove('lesson-locked');
+                    nextListItem.classList.add('lesson-unlocked');
+                    
+                    // Remove o ícone de cadeado e adiciona ícone padrão
+                    const lockIcon = nextListItem.querySelector('svg');
+                    if (lockIcon) {
+                        lockIcon.remove();
                     }
+                    
+                    // Adiciona o ícone padrão de aula
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'lesson-icon todo';
+                    nextLessonLink.insertBefore(iconSpan, nextLessonLink.firstChild);
                 }
             }
         }
@@ -840,7 +928,12 @@
 
         // Carrega a primeira aula ao entrar na página
         const firstLesson = document.querySelector('.lesson-list a.active');
-        if (firstLesson) loadLesson(firstLesson);
+        if (firstLesson) {
+            console.log('🎬 Carregando primeira aula:', firstLesson);
+            loadLesson(firstLesson);
+        } else {
+            console.error('❌ Nenhuma aula ativa encontrada');
+        }
 
         // Adiciona evento de clique para cada link de aula
         lessonLinks.forEach(link => {
@@ -848,8 +941,8 @@
                 event.preventDefault();
                 
                 // Verifica se a aula está bloqueada
-                const icon = this.querySelector('.lesson-icon');
-                if (icon.classList.contains('locked')) {
+                const listItem = this.parentElement;
+                if (listItem.classList.contains('lesson-locked')) {
                     alert('Complete a aula anterior para desbloquear esta aula.');
                     return;
                 }
@@ -865,7 +958,15 @@
             if (!activeLessonLink) return;
 
             const activeIcon = activeLessonLink.querySelector('.lesson-icon');
-            const lessonTitle = activeLessonLink.querySelector('span:nth-of-type(2)').textContent;
+            const allSpans = activeLessonLink.querySelectorAll('span');
+            let titleSpan = null;
+            for (let span of allSpans) {
+                if (!span.classList.contains('lesson-duration') && !span.classList.contains('lesson-icon')) {
+                    titleSpan = span;
+                    break;
+                }
+            }
+            const lessonTitle = titleSpan ? titleSpan.textContent : 'Aula sem título';
             
             // Verifica se o exercício foi completado
             const progress = userProgress[lessonTitle];
@@ -921,10 +1022,9 @@
             
             if (nextListItem) {
                 const nextLessonLink = nextListItem.querySelector('a');
-                const nextIcon = nextLessonLink.querySelector('.lesson-icon');
                 
                 // Verifica se a próxima aula está bloqueada
-                if (nextIcon.classList.contains('locked')) {
+                if (nextListItem.classList.contains('lesson-locked')) {
                     alert('Complete a aula atual para desbloquear a próxima.');
                     return;
                 }
@@ -944,7 +1044,15 @@
             const activeLessonLink = document.querySelector('.lesson-list a.active');
             if (!activeLessonLink) return;
             
-            const lessonTitle = activeLessonLink.querySelector('span:nth-of-type(2)').textContent;
+            const allSpans = activeLessonLink.querySelectorAll('span');
+            let titleSpan = null;
+            for (let span of allSpans) {
+                if (!span.classList.contains('lesson-duration') && !span.classList.contains('lesson-icon')) {
+                    titleSpan = span;
+                    break;
+                }
+            }
+            const lessonTitle = titleSpan ? titleSpan.textContent : 'Aula sem título';
             const result = checkExerciseAnswers(lessonTitle);
             
             // Gera feedback detalhado
@@ -1033,19 +1141,8 @@
 
         // Menu do usuário é gerenciado pelo dark-mode.js
 
-        // Inicialização: bloqueia aulas não iniciadas
+        // Inicialização: aulas bloqueadas já estão marcadas no HTML
         function initializeProgress() {
-            lessonLinks.forEach((link, index) => {
-                const lessonTitle = link.querySelector('span:nth-of-type(2)').textContent;
-                const icon = link.querySelector('.lesson-icon');
-                
-                // Bloqueia aulas além da primeira
-                if (index > 0) {
-                    icon.classList.remove('todo');
-                    icon.classList.add('locked');
-                }
-            });
-
             // Atualiza contadores de progresso
             accordions.forEach(accordion => {
                 updateTopicProgress(accordion);
