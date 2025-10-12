@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Painel | Modela+</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,6 +52,44 @@
         .logo img {
             pointer-events: auto !important;
             user-select: none !important;
+        }
+
+        /* Estilo para cadeados transparentes nos cursos bloqueados */
+        .locked-icon {
+            /* Apenas o cadeado, sem box */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.5;
+            color: var(--muted-foreground);
+            cursor: not-allowed;
+            
+            /* Remover todos os estilos de box */
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            font-weight: normal;
+            font-size: inherit;
+            text-align: left;
+            transition: none;
+            min-width: auto;
+        }
+
+        .locked-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        /* Garantir que o cadeado seja tratado igual ao botão na lista */
+        .course-list li .locked-icon {
+            margin-left: auto; /* Empurra para a direita como o botão */
+            margin-right: 0; /* Remove qualquer margin-right */
+        }
+        
+        /* Adicionar margin-right: auto no span que contém o cadeado */
+        .course-list li:has(.locked-icon) span:first-child {
+            margin-right: auto !important; /* Mesma margin-right do span do título */
         }
     </style>
     <script>
@@ -128,7 +166,7 @@
                 <div class="header-main-content">
                     <nav class="breadcrumb" aria-label="Navegação estrutural">
                         <ol>
-                            <li><a href="/">Início</a></li>
+                            <li><a href="/home.html">Início</a></li>
                             <li aria-current="page">Painel</li>
                         </ol>
                     </nav>
@@ -170,29 +208,29 @@
                                 </svg>
                             </div>
                             <div class="learning-info">
-                                <h3>Modelagem com UML</h3>
+                                <div class="learning-title-row">
+                                    <h3>Modelagem com UML</h3>
+                                    <a href="/aulas.html" class="btn-continue">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="5,3 19,12 5,21"/>
+                                        </svg>
+                                        Continuar Aula
+                                    </a>
+                                </div>
                                 <p>Aula 03: Diagrama de casos de uso</p>
                             </div>
                         </div>
                         
                         <div class="learning-progress">
                             <div class="progress-header">
-                                <span class="progress-label">Progresso da Aula</span>
-                                <span class="progress-percentage">45%</span>
+                                <span class="progress-label">Progresso da Aula</span><span class="progress-percentage">45%</span>
+                                
                             </div>
                             <div class="progress-bar">
                                 <div class="progress-fill" style="width: 45%;"></div>
                             </div>
                         </div>
                         
-                        <div class="learning-actions">
-                            <a href="/aulas.html" class="btn-continue">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="5,3 19,12 5,21"/>
-                                </svg>
-                                Continuar Aula
-                            </a>
-                        </div>
                     </div>
                 </div>
 
@@ -213,9 +251,15 @@
                     <h3>Aulas</h3>
                     <ol class="course-list">
                         <li><span>Modelagem com UML</span> <a href="aulas.html" class="button button-outline">Assistir</a></li>
-                        <li><span>Engenharia de Requisitos</span> <a href="aulas.html" class="button button-outline">Assistir</a></li>
-                        <li><span>Arquitetura de Sistemas</span> <a href="aulas.html" class="button button-outline">Assistir</a></li>
-                        <li><span>Padrões de Projeto (Design Patterns)</span> <a href="aulas.html" class="button button-outline">Assistir</a></li>
+                        <li><span>Engenharia de Requisitos</span> <span class="locked-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </span></li>
+                        <li><span>Arquitetura de Sistemas</span> <span class="locked-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </span></li>
+                        <li><span>Padrões de Projeto (Design Patterns)</span> <span class="locked-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </span></li>
                     </ol>
                 </div>
             </main>
