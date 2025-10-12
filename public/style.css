@@ -2092,22 +2092,7 @@ html[data-daltonismo] .logo img,
   margin-right: -4rem; /* ✅ VALOR IDEAL ENCONTRADO */
 }
 
-/* ✅ MANTÉM EXATAMENTE O MESMO ESTILO DA HOME.HTML */
-.lesson-body .user-avatar-button {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: var(--font-heading);
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem; /* ✅ MESMO TAMANHO DA HOME */
-}
+/* Removido CSS específico para aulas.html - usa o padrão igual às outras páginas */
 
 .lesson-body .dropdown-menu {
   width: 240px; /* ✅ MESMA LARGURA DA HOME */
