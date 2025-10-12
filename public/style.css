@@ -527,12 +527,21 @@ html[data-daltonismo] .logo img,
   min-width: 0;
 }
 
+.learning-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
 .learning-info h3 {
-  margin: 0 0 0.25rem;
+  margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--foreground);
   line-height: 1.3;
+  flex: 1;
 }
 
 .learning-info p {
@@ -601,31 +610,28 @@ html[data-daltonismo] .logo img,
   100% { transform: translateX(100%); }
 }
 
-.learning-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.5rem;
-}
-
 .btn-continue {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   background: var(--primary);
   color: var(--primary-foreground);
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   text-decoration: none;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-continue:hover {
-  background: var(--secondary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+  background: var(--primary);
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
 }
 
 .btn-continue:active {
@@ -2307,6 +2313,40 @@ html[data-daltonismo] .logo img,
     stroke: #9ca3af; /* Garante que a cor do contorno do SVG também mude */
 }
 
+/* Estilo específico para cadeados transparentes nos certificados bloqueados */
+.certificate-card .locked-icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 0.5 !important;
+    color: var(--muted-foreground) !important;
+    cursor: not-allowed !important;
+    
+    /* Remover todos os estilos de box */
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    font-weight: normal !important;
+    font-size: inherit !important;
+    text-align: center !important;
+    transition: none !important;
+    min-width: auto !important;
+    
+    /* Mesmo comportamento do botão - flexbox natural */
+    width: auto !important;
+    white-space: nowrap !important;
+    
+    /* Posicionamento com pequeno recuo da direita */
+    margin-left: auto !important;
+    margin-right: 3rem !important;
+}
+
+.certificate-card .locked-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+}
+
 /* ==========================================================================
    16. Ranking Page (ranking.html) Styles - VERSÃO MELHORADA
    ========================================================================== */
@@ -3267,6 +3307,12 @@ body {
     height: 40px;
   }
   
+  .learning-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
   .learning-info h3 {
     font-size: 1.1rem;
   }
@@ -3278,11 +3324,7 @@ body {
   .btn-continue {
     width: 100%;
     justify-content: center;
-    padding: 0.875rem 1.5rem;
-  }
-  
-  .learning-actions {
-    justify-content: stretch;
+    padding: 0.75rem 1.25rem;
   }
 }
 
@@ -3293,6 +3335,15 @@ body {
   
   .learning-content {
     gap: 1rem;
+  }
+  
+  .learning-title-row {
+    gap: 0.5rem;
+  }
+  
+  .btn-continue {
+    padding: 0.625rem 1rem;
+    font-size: 0.8rem;
   }
   
   .progress-header {
@@ -3385,6 +3436,11 @@ body {
   font-weight: 500;
 }
 
+.locked-topic .topic-progress svg {
+  opacity: 0.5;
+  color: var(--muted-foreground);
+}
+
 .locked-content {
   padding: 1rem;
   text-align: center;
@@ -3393,6 +3449,60 @@ body {
   background-color: var(--muted);
   border-radius: var(--radius);
   margin: 0.5rem 0;
+}
+
+/* Estilos para aulas bloqueadas em aulas.html */
+.lesson-locked {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.lesson-locked a {
+  cursor: not-allowed;
+  color: var(--muted-foreground);
+  position: relative;
+}
+
+.lesson-locked a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.05));
+  border-radius: var(--radius);
+  z-index: 1;
+}
+
+.lesson-locked a svg {
+  color: var(--muted-foreground);
+  opacity: 0.5;
+}
+
+.lesson-locked a span {
+  opacity: 0.8;
+}
+
+/* Hover effect para aulas bloqueadas */
+.lesson-locked a:hover {
+  background-color: var(--muted);
+  transform: none;
+}
+
+/* Estilo para aulas desbloqueadas */
+.lesson-unlocked {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lesson-unlocked a {
+  cursor: pointer;
+  color: var(--foreground);
+}
+
+.lesson-unlocked a::before {
+  display: none;
 }
 
 /* ==========================================================================
