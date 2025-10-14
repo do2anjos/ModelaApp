@@ -2336,6 +2336,44 @@ html[data-daltonismo] .logo img,
    16. Ranking Page (ranking.html) Styles - VERSÃO MELHORADA
    ========================================================================== */
 
+/* Banner informativo sobre sistema de ranking */
+.ranking-info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-foreground));
+  color: white;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.info-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.info-content h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.info-content p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
 .header-subtitle {
     font-size: 1rem;
     color: var(--muted-foreground);
