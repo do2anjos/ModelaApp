@@ -132,34 +132,19 @@
             </header>
             
             <main class="dashboard-content">
-                <!-- Banner informativo sobre sistema de ranking -->
-                <div class="ranking-info-banner">
-                    <div class="info-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 16v-4"></path>
-                            <path d="M12 8h.01"></path>
-                        </svg>
-                    </div>
-                    <div class="info-content">
-                        <h3>Sistema de Ranking - Primeira Tentativa</h3>
-                        <p>No Modela+, apenas sua <strong>primeira tentativa</strong> em cada exercício conta para o ranking. Você pode tentar quantas vezes quiser para aprender, mas apenas a pontuação da primeira tentativa determina sua posição no ranking geral.</p>
-                    </div>
-                </div>
-
-                <div class="your-position-banner" id="user-ranking-banner">
+                <div class="your-position-banner">
                     <div class="your-rank-info">
                         <span class="your-rank-label">Sua Posição</span>
-                        <span class="your-rank-number" id="user-position">Carregando...</span>
+                        <span class="your-rank-number">12º</span>
                     </div>
                     <div class="your-rank-details">
-                        <p id="user-details"><strong>Carregando...</strong></p>
+                        <p><strong>Matheus dos Anjos</strong> | 850 Pontos</p>
                         <div class="progress-bar">
-                            <div class="progress-fill" id="user-progress" style="width: 0%;"></div>
+                            <div class="progress-fill" style="width: 75%;"></div>
                         </div>
                     </div>
                     <div class="your-rank-next">
-                        <span id="next-level-info">Próximo nível: <strong>Carregando...</strong></span>
+                        <span>Próximo nível: <strong>50 pts</strong></span>
                     </div>
                 </div>
 
@@ -233,10 +218,7 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', async function () {
-            // Carregar dados do ranking
-            await loadRankingData();
-
+        document.addEventListener('DOMContentLoaded', function () {
             // Funcionalidade das abas
             const tabLinks = document.querySelectorAll('.tabs-nav .tab-link');
             const tabPanes = document.querySelectorAll('.tabs-content .tab-pane');
@@ -244,10 +226,10 @@
             tabLinks.forEach(link => {
                 link.addEventListener('click', function () {
                     const targetId = this.getAttribute('data-tab');
-
+                    
                     tabLinks.forEach(l => l.classList.remove('active'));
                     this.classList.add('active');
-
+                    
                     tabPanes.forEach(pane => {
                         if (pane.id === targetId) {
                             pane.classList.add('active');
@@ -260,84 +242,9 @@
 
             // Menu do usuário é gerenciado pelo dark-mode.js
         });
-
-        // Função para carregar dados do ranking
-        async function loadRankingData() {
-            try {
-                const rankingSystem = window.RankingSystem;
-                if (!rankingSystem) {
-                    console.error("Sistema de ranking não encontrado");
-                    return;
-                }
-
-                const rankingData = await rankingSystem.getCurrentRanking();
-
-                if (rankingData && rankingData.currentUser) {
-                    const user = rankingData.currentUser;
-
-                    // Atualizar banner do usuário
-                    document.getElementById('user-position').textContent = `${user.rankingPosition}º`;
-                    document.getElementById('user-details').innerHTML = `<strong>${user.name}</strong> | ${user.xp} Pontos`;
-
-                    // Calcular progresso para próximo nível
-                    const currentLevelXP = getLevelXP(user.level);
-                    const nextLevelXP = getNextLevelXP(user.level);
-                    const progress = ((user.xp - currentLevelXP) / (nextLevelXP - currentLevelXP)) * 100;
-
-                    document.getElementById('user-progress').style.width = `${Math.min(progress, 100)}%`;
-                    document.getElementById('next-level-info').innerHTML = `Próximo nível: <strong>${nextLevelXP - user.xp} pts</strong>`;
-
-                    // Atualizar pódio
-                    updatePodium(rankingData.leaderboard);
-                }
-            } catch (error) {
-                console.error("Erro ao carregar dados do ranking:", error);
-            }
-        }
-
-        // Função auxiliar para obter XP mínimo do nível atual
-        function getLevelXP(level) {
-            switch(level) {
-                case 'Iniciante': return 0;
-                case 'Intermediário': return 500;
-                case 'Avançado': return 1000;
-                case 'Expert': return 2000;
-                default: return 0;
-            }
-        }
-
-        // Função auxiliar para obter XP necessário para próximo nível
-        function getNextLevelXP(level) {
-            switch(level) {
-                case 'Iniciante': return 500;
-                case 'Intermediário': return 1000;
-                case 'Avançado': return 2000;
-                case 'Expert': return 10000;
-                default: return 500;
-            }
-        }
-
-        // Função para atualizar pódio
-        function updatePodium(leaderboard) {
-            const podiumCards = document.querySelectorAll('.podium-card');
-
-            podiumCards.forEach((card, index) => {
-                if (leaderboard[index]) {
-                    const user = leaderboard[index];
-                    const nameEl = card.querySelector('.podium-name');
-                    const scoreEl = card.querySelector('.podium-score');
-                    const avatarEl = card.querySelector('.podium-avatar');
-
-                    if (nameEl) nameEl.textContent = user.name;
-                    if (scoreEl) scoreEl.textContent = `${user.xp} pts`;
-                    if (avatarEl) avatarEl.src = user.avatar;
-                }
-            });
-        }
     </script>
     <script src="/dark-mode.js"></script>
     <script src="/daltonism-mode.js"></script>
     <script src="/usability.js"></script>
-    <script src="/js/ranking-system.js"></script>
 </body>
 </html>

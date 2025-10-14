@@ -195,26 +195,26 @@
                             <div class="exercise-card">
                                 <span class="exercise-status completed">Concluído</span>
                                 <div class="exercise-info">
-                                    <h3>Parte 1: Relacionamento Include</h3>
-                                    <p>Domine o relacionamento <<include>> em diagramas de casos de uso com cenário de E-commerce.</p>
+                                    <h3>Exercício 1: Diagrama de Classes</h3>
+                                    <p>Crie o diagrama de classes para um sistema de biblioteca.</p>
                                 </div>
-                                <button class="button button-primary view-activity-btn" data-activity-id="include-part1">Ver Correção</button>
+                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex1">Ver Correção</button>
+                            </div>
+                            <div class="exercise-card">
+                                <span class="exercise-status in-progress">Em Andamento</span>
+                                <div class="exercise-info">
+                                    <h3>Exercício 2: Diagrama de Sequência</h3>
+                                    <p>Modele o fluxo de login de um usuário.</p>
+                                </div>
+                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex2">Continuar</button>
                             </div>
                             <div class="exercise-card">
                                 <span class="exercise-status todo">Não Iniciado</span>
                                 <div class="exercise-info">
-                                    <h3>Parte 2: Relacionamento Extend</h3>
-                                    <p>Aprenda a usar o relacionamento <<extend>> corretamente com cenário bancário ATM.</p>
+                                    <h3>Exercício 3: Diagrama de Casos de Uso</h3>
+                                    <p>Elabore um diagrama de casos de uso para um sistema de caixa eletrônico (ATM).</p>
                                 </div>
-                                <button class="button button-secondary disabled" data-activity-id="extend-part2">Bloqueado</button>
-                            </div>
-                            <div class="exercise-card">
-                                <span class="exercise-status todo">Não Iniciado</span>
-                                <div class="exercise-info">
-                                    <h3>Parte 3: Diagrama de Casos de Uso Completo</h3>
-                                    <p>Combine include e extend em um diagrama completo de gestão acadêmica.</p>
-                                </div>
-                                <button class="button button-secondary disabled" data-activity-id="complete-usecase-part3">Bloqueado</button>
+                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex3">Iniciar</button>
                             </div>
                         </div>
                          <div class="tab-pane" id="requisitos">
@@ -286,25 +286,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- BANCO DE DADOS DE EXEMPLO DAS ATIVIDADES ---
     const activityDatabase = {
-        "include-part1": {
-            title: "Parte 1: Relacionamento Include",
+        "uml-ex1": {
+            title: "Exercício 1: Diagrama de Classes",
             instructions: `
                 <div class="dashboard-card activity-instructions-card">
                     <h2>Instruções da Atividade</h2>
-                    <p><strong>Objetivo:</strong> Domine o relacionamento <<include>> em diagramas de casos de uso.</p>
-                    <h3>Cenário: Sistema de E-commerce</h3>
-                    <p>Você deve modelar um sistema onde o caso de uso "Realizar Compra" sempre inclui "Validar Pagamento".</p>
-                    <h3>Objetivos Específicos</h3>
+                    <p><strong>Exercício:</strong> Crie o diagrama de classes para um sistema de biblioteca.</p>
+                    <h3>Objetivos</h3>
                     <ul>
-                        <li>Identificar atores corretos (Cliente, Sistema de Pagamento).</li>
-                        <li>Definir casos de uso principais e secundários.</li>
-                        <li>Aplicar relacionamento <<include>> adequadamente.</li>
-                        <li>Documentar adequadamente o diagrama.</li>
+                        <li>Identificar as classes principais.</li>
+                        <li>Definir atributos e métodos.</li>
                     </ul>
-                    <div class="activity-info-box">
-                        <h4>💡 Dica:</h4>
-                        <p>O relacionamento <<include>> é usado quando um caso de uso sempre inclui o comportamento de outro caso de uso.</p>
-                    </div>
                 </div>
                 <div class="dashboard-card activity-scoring-card">
                     <h2>Sistema de Pontuação por Critério</h2>
@@ -312,52 +304,52 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="scoring-criteria">
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Identificação de Atores</span>
+                                    <span class="criterion-name">Identificação de Classes</span>
                                     <span class="criterion-score">2.5/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p><strong>Pontos fortes:</strong> Atores Cliente e Sistema de Pagamento identificados corretamente.</p>
-                                    <p><strong>Aplicação:</strong> Relacionamentos adequados estabelecidos entre atores e casos de uso.</p>
+                                    <p><strong>Pontos fortes:</strong> Você identificou corretamente as classes Livro e Usuário.</p>
+                                    <p><strong>Oportunidades:</strong> Faltaram classes importantes como Empréstimo, Reserva e Funcionário.</p>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Casos de Uso Principais</span>
-                                    <span class="criterion-score">2.5/2.5 pontos</span>
+                                    <span class="criterion-name">Atributos e Métodos</span>
+                                    <span class="criterion-score">1.5/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p><strong>Pontos fortes:</strong> Caso de uso "Realizar Compra" definido como caso principal.</p>
-                                    <p><strong>Aplicação:</strong> Hierarquia de casos de uso bem estruturada.</p>
+                                    <p><strong>Pontos fortes:</strong> Os atributos básicos como título, autor e nome estão presentes.</p>
+                                    <p><strong>Oportunidades:</strong> Métodos importantes como emprestar(), devolver() e renovar() não foram definidos.</p>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Relacionamento <<include>></span>
-                                    <span class="criterion-score">2.5/2.5 pontos</span>
+                                    <span class="criterion-name">Relacionamentos</span>
+                                    <span class="criterion-score">1/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p><strong>Pontos fortes:</strong> Relacionamento <<include>> aplicado corretamente entre "Realizar Compra" e "Validar Pagamento".</p>
-                                    <p><strong>Aplicação:</strong> Direção do relacionamento está correta (do caso principal para o incluído).</p>
+                                    <p><strong>Pontos fortes:</strong> Você estabeleceu a relação básica entre Livro e Usuário.</p>
+                                    <p><strong>Oportunidades:</strong> Faltaram relacionamentos como agregação entre Empréstimo e Livro, e associação com Funcionário.</p>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Documentação e Notação</span>
-                                    <span class="criterion-score">2.5/2.5 pontos</span>
+                                    <span class="criterion-name">Notação UML</span>
+                                    <span class="criterion-score">2/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p><strong>Pontos fortes:</strong> Notação UML utilizada corretamente com símbolos adequados.</p>
-                                    <p><strong>Aplicação:</strong> Diagrama bem documentado e legível.</p>
+                                    <p><strong>Pontos fortes:</strong> A notação básica de classes foi utilizada corretamente.</p>
+                                    <p><strong>Oportunidades:</strong> Cardinalidades e estereótipos não foram especificados adequadamente.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="scoring-summary">
                             <div class="total-score">
                                 <span>Pontuação Total: </span>
-                                <span class="score-value">10/10 pontos</span>
+                                <span class="score-value">7/10 pontos</span>
                             </div>
                             <div class="score-feedback">
-                                <p><strong>Feedback:</strong> Excelente trabalho! Você demonstrou compreensão sólida do relacionamento <<include>>. Continue praticando com cenários mais complexos.</p>
+                                <p><strong>Feedback:</strong> Bom começo! Você demonstrou compreensão dos conceitos básicos, mas precisa aprofundar na modelagem completa do sistema. Revise as classes faltantes e os relacionamentos mais complexos.</p>
                             </div>
                         </div>
                     </div>
@@ -365,25 +357,17 @@ document.addEventListener('DOMContentLoaded', function () {
             `,
             submissionContent: submissionCompletedHTML
         },
-        "extend-part2": {
-            title: "Parte 2: Relacionamento Extend",
+        "uml-ex2": {
+            title: "Exercício 2: Diagrama de Sequência",
             instructions: `
                 <div class="dashboard-card activity-instructions-card">
                     <h2>Instruções da Atividade</h2>
-                    <p><strong>Objetivo:</strong> Aprenda a usar o relacionamento <<extend>> corretamente.</p>
-                    <h3>Cenário: Sistema Bancário ATM</h3>
-                    <p>Modele um caixa eletrônico onde "Sacar Dinheiro" pode ser estendido por "Imprimir Recibo" quando solicitado pelo cliente.</p>
-                    <h3>Objetivos Específicos</h3>
+                    <p><strong>Exercício:</strong> Modele o fluxo de login de um usuário.</p>
+                    <h3>Objetivos</h3>
                     <ul>
-                        <li>Identificar atores (Cliente, Banco).</li>
-                        <li>Definir casos de uso base e de extensão.</li>
-                        <li>Aplicar relacionamento <<extend>> adequadamente.</li>
-                        <li>Incluir condições de extensão.</li>
+                        <li>Identificar atores e objetos.</li>
+                        <li>Mapear a troca de mensagens.</li>
                     </ul>
-                    <div class="activity-info-box">
-                        <h4>💡 Dica:</h4>
-                        <p>O relacionamento <<extend>> é usado quando um caso de uso pode ser estendido por outro caso de uso sob certas condições.</p>
-                    </div>
                 </div>
                 <div class="dashboard-card activity-scoring-card">
                     <h2>Sistema de Pontuação por Critério</h2>
@@ -391,38 +375,38 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="scoring-criteria">
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Identificação de Atores</span>
+                                    <span class="criterion-name">Identificação de Atores/Objetos</span>
                                     <span class="criterion-score">0/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p>Identificar corretamente os atores Cliente e Banco.</p>
+                                    <p>Identificar corretamente os atores e objetos envolvidos no fluxo de login.</p>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Casos de Uso Base e Extensão</span>
+                                    <span class="criterion-name">Sequência de Mensagens</span>
                                     <span class="criterion-score">0/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p>Definir "Sacar Dinheiro" como caso de uso base e "Imprimir Recibo" como extensão.</p>
+                                    <p>Mapear corretamente a sequência de mensagens entre os objetos.</p>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Relacionamento <<extend>></span>
+                                    <span class="criterion-name">Condições e Loops</span>
                                     <span class="criterion-score">0/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p>Aplicar relacionamento <<extend>> do caso de extensão para o caso base.</p>
+                                    <p>Incluir condições e loops quando necessário (ex: tentativas de login).</p>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Condições de Extensão</span>
+                                    <span class="criterion-name">Notação UML</span>
                                     <span class="criterion-score">0/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p>Incluir condição "Cliente solicita recibo" adequadamente.</p>
+                                    <p>Utilizar corretamente a notação UML para diagramas de sequência.</p>
                                 </div>
                             </div>
                         </div>
@@ -440,26 +424,17 @@ document.addEventListener('DOMContentLoaded', function () {
             `,
             submissionContent: submissionPendingHTML
         },
-        "complete-usecase-part3": {
-            title: "Parte 3: Diagrama de Casos de Uso Completo",
+        "uml-ex3": {
+            title: "Exercício 3: Diagrama de Casos de Uso",
             instructions: `
                 <div class="dashboard-card activity-instructions-card">
                     <h2>Instruções da Atividade</h2>
-                    <p><strong>Objetivo:</strong> Combine include e extend em um diagrama completo de casos de uso.</p>
-                    <h3>Cenário: Sistema de Gestão Acadêmica</h3>
-                    <p>Modele um sistema completo com múltiplos atores (Aluno, Professor, Coordenador) e pelo menos 5 casos de uso, incluindo 2 relacionamentos include e 2 extend.</p>
-                    <h3>Objetivos Específicos</h3>
+                    <p><strong>Exercício:</strong> Elabore um diagrama de casos de uso para um caixa eletrônico (ATM).</p>
+                    <h3>Objetivos</h3>
                     <ul>
-                        <li>Incluir pelo menos 3 atores diferentes.</li>
-                        <li>Definir pelo menos 5 casos de uso principais.</li>
-                        <li>Incluir 2 relacionamentos <<include>>.</li>
-                        <li>Incluir 2 relacionamentos <<extend>>.</li>
-                        <li>Documentar adequadamente todos os elementos.</li>
+                        <li>Identificar atores (Cliente, Banco).</li>
+                        <li>Definir os casos de uso.</li>
                     </ul>
-                    <div class="activity-info-box">
-                        <h4>🎯 Desafio:</h4>
-                        <p>Crie um diagrama que represente realisticamente um sistema de gestão acadêmica real.</p>
-                    </div>
                 </div>
                 <div class="dashboard-card activity-scoring-card">
                     <h2>Sistema de Pontuação por Critério</h2>
@@ -468,44 +443,44 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="criterion">
                                 <div class="criterion-header">
                                     <span class="criterion-name">Identificação de Atores</span>
-                                    <span class="criterion-score">0/5 pontos</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p>Incluir pelo menos 3 atores relevantes (Aluno, Professor, Coordenador).</p>
+                                    <p>Identificar corretamente todos os atores envolvidos no sistema.</p>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
                                     <span class="criterion-name">Casos de Uso Principais</span>
-                                    <span class="criterion-score">0/5 pontos</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p>Definir pelo menos 5 casos de uso relevantes para gestão acadêmica.</p>
+                                    <p>Definir os casos de uso principais do sistema (saque, consulta, etc.).</p>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Relacionamentos Include (2x)</span>
-                                    <span class="criterion-score">0/5 pontos</span>
+                                    <span class="criterion-name">Relacionamentos</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p>Incluir pelo menos 2 relacionamentos <<include>> aplicados corretamente.</p>
+                                    <p>Estabelecer corretamente os relacionamentos entre atores e casos de uso.</p>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
-                                    <span class="criterion-name">Relacionamentos Extend (2x)</span>
-                                    <span class="criterion-score">0/5 pontos</span>
+                                    <span class="criterion-name">Inclusão/Extensão</span>
+                                    <span class="criterion-score">0/2.5 pontos</span>
                                 </div>
                                 <div class="criterion-description">
-                                    <p>Incluir pelo menos 2 relacionamentos <<extend>> com condições adequadas.</p>
+                                    <p>Utilizar corretamente relações de inclusão e extensão quando aplicável.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="scoring-summary">
                             <div class="total-score">
                                 <span>Pontuação Total: </span>
-                                <span class="score-value">0/20 pontos</span>
+                                <span class="score-value">0/10 pontos</span>
                             </div>
                             <div class="score-feedback">
                                 <p><strong>Feedback:</strong> Submeta sua resposta para receber avaliação detalhada.</p>

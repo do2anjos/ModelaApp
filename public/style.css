@@ -1,4 +1,196 @@
 /* ==========================================================================
+   GAMIFICATION SYSTEM - AULAS.HTML
+   ========================================================================== */
+
+/* Gamificação no header */
+.user-gamification {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-right: 1rem;
+}
+
+.gamification-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.user-level {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: rgba(var(--primary-rgb), 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--primary-rgb), 0.2);
+}
+
+.user-xp {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.xp-bar {
+  width: 60px;
+  height: 4px;
+  background: var(--muted);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--primary-foreground));
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.xp-text {
+  color: var(--muted-foreground);
+  font-weight: 500;
+  font-size: 0.7rem;
+}
+
+/* Notificações de XP */
+.xp-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  animation: slideInRight 0.5s ease-out;
+}
+
+.xp-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-foreground));
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.xp-icon {
+  font-size: 1.2rem;
+}
+
+.xp-text {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Notificações de Level Up */
+.levelup-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  animation: slideInRight 0.5s ease-out;
+}
+
+.levelup-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
+}
+
+.levelup-icon {
+  font-size: 2rem;
+}
+
+.levelup-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.levelup-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.levelup-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* Animações */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Botão de sucesso */
+.success-btn {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+.success-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+  .user-gamification {
+    margin-right: 0.5rem;
+  }
+  
+  .gamification-info {
+    gap: 0.2rem;
+  }
+  
+  .user-level {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+  
+  .xp-bar {
+    width: 40px;
+    height: 3px;
+  }
+  
+  .xp-text {
+    font-size: 0.65rem;
+  }
+  
+  .xp-notification,
+  .levelup-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .xp-content {
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .levelup-content {
+    padding: 0.8rem 1rem;
+  }
+}
+
+/* ==========================================================================
    1. Design System (CSS Variables)
    ========================================================================== */
 /* ==========================================================================
@@ -2335,44 +2527,6 @@ html[data-daltonismo] .logo img,
 /* ==========================================================================
    16. Ranking Page (ranking.html) Styles - VERSÃO MELHORADA
    ========================================================================== */
-
-/* Banner informativo sobre sistema de ranking */
-.ranking-info-banner {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  background: linear-gradient(135deg, var(--primary), var(--primary-foreground));
-  color: white;
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  margin-bottom: 2rem;
-  box-shadow: var(--shadow);
-}
-
-.info-icon {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 0.25rem;
-}
-
-.info-content h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.info-content p {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  opacity: 0.9;
-}
 
 .header-subtitle {
     font-size: 1rem;
