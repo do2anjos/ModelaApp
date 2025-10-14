@@ -109,7 +109,6 @@
                 </a>
             </div>
             <div class="user-profile-menu">
-                <div id="user-gamification" class="user-gamification"></div>
                 <button class="user-avatar-button" id="user-menu-button" aria-label="Abrir menu do usuário">
                     MD
                 </button>
@@ -346,126 +345,6 @@
         const exerciseFeedback = document.getElementById('exercise-feedback');
         const exerciseForm = document.getElementById('exercise-form');
 
-        // --- SISTEMA DE GAMIFICAÇÃO ---
-        let userStats = {
-            level: 'Iniciante',
-            xp: 0,
-            totalLessons: 0,
-            badges: []
-        };
-
-        // Carrega estatísticas do usuário
-        function loadUserStats() {
-            const saved = localStorage.getItem('modelaUserStats');
-            if (saved) {
-                userStats = JSON.parse(saved);
-            }
-            updateGamificationDisplay();
-        }
-
-        // Salva estatísticas do usuário
-        function saveUserStats() {
-            localStorage.setItem('modelaUserStats', JSON.stringify(userStats));
-        }
-
-        // Atualiza XP do usuário
-        function updateUserXP(xpGained) {
-            if (xpGained > 0) {
-                userStats.xp += xpGained;
-                updateUserLevel();
-                updateGamificationDisplay();
-                saveUserStats();
-                showXPNotification(xpGained);
-            }
-        }
-
-        // Atualiza nível do usuário
-        function updateUserLevel() {
-            const oldLevel = userStats.level;
-            if (userStats.xp >= 2000) userStats.level = 'Expert';
-            else if (userStats.xp >= 1000) userStats.level = 'Avançado';
-            else if (userStats.xp >= 500) userStats.level = 'Intermediário';
-            else userStats.level = 'Iniciante';
-            
-            if (oldLevel !== userStats.level) {
-                showLevelUpNotification(oldLevel, userStats.level);
-            }
-        }
-
-        // Auto-conclusão da aula
-        function autoCompleteLesson(lessonTitle) {
-            const activeLessonLink = document.querySelector('.lesson-list a.active');
-            if (!activeLessonLink) return;
-
-            const activeIcon = activeLessonLink.querySelector('.lesson-icon');
-            
-            // Marca a aula como concluída
-            activeIcon.classList.remove('play', 'todo', 'video-watched');
-            activeIcon.classList.add('completed');
-
-            // Atualiza estado
-            if (!userProgress[lessonTitle]) {
-                userProgress[lessonTitle] = {};
-            }
-            userProgress[lessonTitle].completed = true;
-            userProgress[lessonTitle].completedAt = new Date().toISOString();
-
-            // Atualiza estatísticas
-            userStats.totalLessons++;
-            saveUserStats();
-
-            // Mostra botão próxima aula
-            showNextLessonButton();
-            
-            // Atualiza o contador do tópico atual
-            const parentAccordion = activeLessonLink.closest('.topic-accordion');
-            updateTopicProgress(parentAccordion);
-            
-            // Desbloqueia próxima aula
-            unlockNextLesson(lessonTitle);
-        }
-
-        // Mostra notificação de XP
-        function showXPNotification(xpGained) {
-            const notification = document.createElement('div');
-            notification.className = 'xp-notification';
-            notification.innerHTML = `
-                <div class="xp-content">
-                    <span class="xp-icon">⭐</span>
-                    <span class="xp-text">+${xpGained} XP</span>
-                </div>
-            `;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 3000);
-        }
-
-        // Mostra notificação de level up
-        function showLevelUpNotification(oldLevel, newLevel) {
-            const notification = document.createElement('div');
-            notification.className = 'levelup-notification';
-            notification.innerHTML = `
-                <div class="levelup-content">
-                    <span class="levelup-icon">🎉</span>
-                    <div class="levelup-text">
-                        <div class="levelup-title">Level Up!</div>
-                        <div class="levelup-subtitle">${oldLevel} → ${newLevel}</div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 5000);
-        }
-
         // --- DADOS E ESTADO ---
         const lessonData = {
             "Conceitos e História da UML": {
@@ -474,9 +353,7 @@
                 correctAnswers: {
                     q1: "a",
                     q2: "a",
-                    q3: "a",
-                    q4: "c",
-                    q5: "b"
+                    q3: "a"
                 },
                 explanations: {
                     q1: {
@@ -502,24 +379,6 @@
                             b: "O W3C padroniza tecnologias web, não a UML.",
                             c: "A ISO padroniza normas internacionais, mas não foi a responsável pela padronização inicial da UML."
                         }
-                    },
-                    q4: {
-                        correct: "A UML 2.x possui 14 tipos de diagramas divididos em estruturais (7) e comportamentais (7).",
-                        incorrect: {
-                            a: "Esta é uma informação incorreta sobre a UML.",
-                            b: "Esta é uma informação incorreta sobre a UML.",
-                            c: "",
-                            d: "Esta é uma informação incorreta sobre a UML."
-                        }
-                    },
-                    q5: {
-                        correct: "A UML unificou as melhores práticas das três metodologias mais populares da época, criando um padrão único e abrangente.",
-                        incorrect: {
-                            a: "Esta é uma análise incorreta do impacto da UML.",
-                            b: "",
-                            c: "Esta é uma análise incorreta do impacto da UML.",
-                            d: "Esta é uma análise incorreta do impacto da UML."
-                        }
                     }
                 }
             },
@@ -529,9 +388,7 @@
                 correctAnswers: {
                     q1: "a",
                     q2: "b",
-                    q3: "c",
-                    q4: "a",
-                    q5: "b"
+                    q3: "c"
                 },
                 explanations: {
                     q1: {
@@ -557,24 +414,6 @@
                             b: "Esta é uma característica da associação.",
                             c: ""
                         }
-                    },
-                    q4: {
-                        correct: "A multiplicidade 1..* indica que pode haver um ou muitos elementos no relacionamento.",
-                        incorrect: {
-                            a: "",
-                            b: "0..* indica zero ou muitos elementos.",
-                            c: "1..1 indica exatamente um elemento.",
-                            d: "* indica zero ou muitos elementos."
-                        }
-                    },
-                    q5: {
-                        correct: "A composição representa um relacionamento mais forte que a agregação, onde as partes não podem existir sem o todo.",
-                        incorrect: {
-                            a: "Esta é uma característica da agregação, não da composição.",
-                            b: "",
-                            c: "Esta é uma característica da associação, não da composição.",
-                            d: "Esta é uma característica da herança, não da composição."
-                        }
                     }
                 }
             },
@@ -584,9 +423,7 @@
                 correctAnswers: {
                     q1: "b",
                     q2: "a",
-                    q3: "c",
-                    q4: "b",
-                    q5: "a"
+                    q3: "c"
                 },
                 explanations: {
                     q1: {
@@ -611,372 +448,6 @@
                             a: "Esta é a definição do relacionamento 'include'.",
                             b: "Esta é a definição da generalização.",
                             c: ""
-                        }
-                    },
-                    q4: {
-                        correct: "O ator pode ser tanto um usuário humano quanto um sistema externo que interage com o sistema sendo modelado.",
-                        incorrect: {
-                            a: "Esta é uma limitação incorreta dos atores em UML.",
-                            b: "",
-                            c: "Esta é uma definição incorreta de atores.",
-                            d: "Esta é uma definição incorreta de atores."
-                        }
-                    },
-                    q5: {
-                        correct: "Um caso de uso complexo com múltiplos atores deve mostrar claramente as interações entre todos os atores envolvidos.",
-                        incorrect: {
-                            a: "",
-                            b: "Esta é uma abordagem incorreta para casos de uso complexos.",
-                            c: "Esta é uma abordagem incorreta para casos de uso complexos.",
-                            d: "Esta é uma abordagem incorreta para casos de uso complexos."
-                        }
-                    }
-                }
-            },
-            "Diagrama de Classes": {
-                reading: "<p>O diagrama de classes é o mais importante da UML, mostrando a estrutura estática do sistema através de classes, seus atributos, métodos e relacionamentos.</p>",
-                exerciseUrl: "/exercicios/uml-classes.html",
-                correctAnswers: {
-                    q1: "c",
-                    q2: "a",
-                    q3: "b",
-                    q4: "d",
-                    q5: "c"
-                },
-                explanations: {
-                    q1: {
-                        correct: "A visibilidade privada (-) indica que o atributo só pode ser acessado dentro da própria classe.",
-                        incorrect: {
-                            a: "Esta é a visibilidade pública (+).",
-                            b: "Esta é a visibilidade protegida (#).",
-                            c: "",
-                            d: "Esta é a visibilidade de pacote (~)."
-                        }
-                    },
-                    q2: {
-                        correct: "A herança representa um relacionamento 'é um tipo de', onde uma classe especializada herda características de uma classe mais geral.",
-                        incorrect: {
-                            a: "",
-                            b: "Esta é a definição de agregação.",
-                            c: "Esta é a definição de composição.",
-                            d: "Esta é a definição de associação."
-                        }
-                    },
-                    q3: {
-                        correct: "O polimorfismo permite que métodos com mesmo nome tenham implementações diferentes em classes relacionadas por herança.",
-                        incorrect: {
-                            a: "Esta é a definição de encapsulamento.",
-                            b: "",
-                            c: "Esta é a definição de abstração.",
-                            d: "Esta é a definição de herança."
-                        }
-                    },
-                    q4: {
-                        correct: "A multiplicidade 0..1 indica que pode haver zero ou um objeto no relacionamento.",
-                        incorrect: {
-                            a: "Esta é a multiplicidade 1..1.",
-                            b: "Esta é a multiplicidade 1..*.",
-                            c: "Esta é a multiplicidade *.",
-                            d: ""
-                        }
-                    },
-                    q5: {
-                        correct: "Uma classe abstrata não pode ser instanciada diretamente e serve como base para outras classes.",
-                        incorrect: {
-                            a: "Esta é a definição de interface.",
-                            b: "Esta é a definição de classe concreta.",
-                            c: "",
-                            d: "Esta é a definição de classe final."
-                        }
-                    }
-                }
-            },
-            "Diagrama de Sequência": {
-                reading: "<p>O diagrama de sequência mostra as interações entre objetos ao longo do tempo, detalhando como mensagens são trocadas entre eles.</p>",
-                exerciseUrl: "/exercicios/uml-sequencia.html",
-                correctAnswers: {
-                    q1: "b",
-                    q2: "c",
-                    q3: "a",
-                    q4: "d",
-                    q5: "b"
-                },
-                explanations: {
-                    q1: {
-                        correct: "A linha de vida representa a existência de um objeto durante a interação.",
-                        incorrect: {
-                            a: "Esta é a definição de mensagem.",
-                            b: "",
-                            c: "Esta é a definição de ativação.",
-                            d: "Esta é a definição de fragmento."
-                        }
-                    },
-                    q2: {
-                        correct: "A seta com linha sólida representa uma mensagem síncrona, onde o remetente aguarda resposta.",
-                        incorrect: {
-                            a: "Esta é a seta para mensagem assíncrona.",
-                            b: "Esta é a seta para mensagem de retorno.",
-                            c: "",
-                            d: "Esta é a seta para mensagem de criação."
-                        }
-                    },
-                    q3: {
-                        correct: "A caixa de ativação mostra quando um objeto está executando uma operação.",
-                        incorrect: {
-                            a: "",
-                            b: "Esta é a definição de linha de vida.",
-                            c: "Esta é a definição de mensagem.",
-                            d: "Esta é a definição de fragmento."
-                        }
-                    },
-                    q4: {
-                        correct: "O fragmento 'alt' representa uma escolha condicional entre diferentes cenários.",
-                        incorrect: {
-                            a: "Este é o fragmento 'loop'.",
-                            b: "Este é o fragmento 'opt'.",
-                            c: "Este é o fragmento 'par'.",
-                            d: ""
-                        }
-                    },
-                    q5: {
-                        correct: "A mensagem assíncrona permite que o remetente continue executando sem aguardar resposta.",
-                        incorrect: {
-                            a: "Esta é a característica da mensagem síncrona.",
-                            b: "",
-                            c: "Esta é a característica da mensagem de retorno.",
-                            d: "Esta é a característica da mensagem de criação."
-                        }
-                    }
-                }
-            },
-            "Diagrama de Atividades": {
-                reading: "<p>O diagrama de atividades modela fluxos de trabalho e processos, mostrando a sequência de atividades e decisões.</p>",
-                exerciseUrl: "/exercicios/uml-atividades.html",
-                correctAnswers: {
-                    q1: "a",
-                    q2: "c",
-                    q3: "b",
-                    q4: "d",
-                    q5: "a"
-                },
-                explanations: {
-                    q1: {
-                        correct: "O losango representa um nó de decisão que determina qual caminho seguir.",
-                        incorrect: {
-                            a: "",
-                            b: "Esta é a definição de nó inicial.",
-                            c: "Esta é a definição de nó final.",
-                            d: "Esta é a definição de atividade."
-                        }
-                    },
-                    q2: {
-                        correct: "A barra de sincronização permite que múltiplas atividades sejam executadas em paralelo.",
-                        incorrect: {
-                            a: "Esta é a definição de nó de decisão.",
-                            b: "Esta é a definição de atividade.",
-                            c: "",
-                            d: "Esta é a definição de nó inicial."
-                        }
-                    },
-                    q3: {
-                        correct: "O nó inicial marca o início do fluxo de atividades.",
-                        incorrect: {
-                            a: "Esta é a definição de nó final.",
-                            b: "",
-                            c: "Esta é a definição de atividade.",
-                            d: "Esta é a definição de nó de decisão."
-                        }
-                    },
-                    q4: {
-                        correct: "O fragmento 'loop' representa a repetição de atividades até que uma condição seja atendida.",
-                        incorrect: {
-                            a: "Este é o fragmento 'alt'.",
-                            b: "Este é o fragmento 'opt'.",
-                            c: "Este é o fragmento 'par'.",
-                            d: ""
-                        }
-                    },
-                    q5: {
-                        correct: "Um diagrama de atividades complexo deve mostrar claramente todos os caminhos possíveis e suas condições.",
-                        incorrect: {
-                            a: "",
-                            b: "Esta é uma abordagem incorreta para diagramas complexos.",
-                            c: "Esta é uma abordagem incorreta para diagramas complexos.",
-                            d: "Esta é uma abordagem incorreta para diagramas complexos."
-                        }
-                    }
-                }
-            },
-            "Diagrama de Estados": {
-                reading: "<p>O diagrama de estados modela o comportamento de objetos através de diferentes estados e transições entre eles.</p>",
-                exerciseUrl: "/exercicios/uml-estados.html",
-                correctAnswers: {
-                    q1: "c",
-                    q2: "b",
-                    q3: "a",
-                    q4: "d",
-                    q5: "b"
-                },
-                explanations: {
-                    q1: {
-                        correct: "O estado inicial marca o ponto de entrada no diagrama de estados.",
-                        incorrect: {
-                            a: "Esta é a definição de estado final.",
-                            b: "Esta é a definição de estado.",
-                            c: "",
-                            d: "Esta é a definição de transição."
-                        }
-                    },
-                    q2: {
-                        correct: "A transição mostra a mudança de um estado para outro quando uma condição é atendida.",
-                        incorrect: {
-                            a: "Esta é a definição de estado.",
-                            b: "",
-                            c: "Esta é a definição de ação.",
-                            d: "Esta é a definição de guarda."
-                        }
-                    },
-                    q3: {
-                        correct: "O estado final marca o ponto de saída do diagrama de estados.",
-                        incorrect: {
-                            a: "",
-                            b: "Esta é a definição de estado inicial.",
-                            c: "Esta é a definição de estado.",
-                            d: "Esta é a definição de transição."
-                        }
-                    },
-                    q4: {
-                        correct: "Um estado composto contém subestados e pode ter comportamentos próprios além dos subestados.",
-                        incorrect: {
-                            a: "Esta é a definição de estado simples.",
-                            b: "Esta é a definição de estado final.",
-                            c: "Esta é a definição de estado inicial.",
-                            d: ""
-                        }
-                    },
-                    q5: {
-                        correct: "O histórico permite que um estado composto retorne ao último subestado ativo.",
-                        incorrect: {
-                            a: "Esta é a definição de estado composto.",
-                            b: "",
-                            c: "Esta é a definição de transição.",
-                            d: "Esta é a definição de guarda."
-                        }
-                    }
-                }
-            },
-            "Diagrama de Componentes": {
-                reading: "<p>O diagrama de componentes mostra a organização física do sistema em componentes reutilizáveis e suas dependências.</p>",
-                exerciseUrl: "/exercicios/uml-componentes.html",
-                correctAnswers: {
-                    q1: "b",
-                    q2: "a",
-                    q3: "c",
-                    q4: "d",
-                    q5: "a"
-                },
-                explanations: {
-                    q1: {
-                        correct: "Um componente representa uma parte funcional do sistema que pode ser reutilizada.",
-                        incorrect: {
-                            a: "Esta é a definição de interface.",
-                            b: "",
-                            c: "Esta é a definição de dependência.",
-                            d: "Esta é a definição de assembly."
-                        }
-                    },
-                    q2: {
-                        correct: "A interface define um contrato que especifica quais operações um componente deve implementar.",
-                        incorrect: {
-                            a: "",
-                            b: "Esta é a definição de componente.",
-                            c: "Esta é a definição de dependência.",
-                            d: "Esta é a definição de assembly."
-                        }
-                    },
-                    q3: {
-                        correct: "A dependência indica que um componente precisa de outro para funcionar corretamente.",
-                        incorrect: {
-                            a: "Esta é a definição de interface.",
-                            b: "Esta é a definição de componente.",
-                            c: "",
-                            d: "Esta é a definição de assembly."
-                        }
-                    },
-                    q4: {
-                        correct: "Um assembly conecta interfaces fornecidas e requeridas entre componentes.",
-                        incorrect: {
-                            a: "Esta é a definição de dependência.",
-                            b: "Esta é a definição de interface.",
-                            c: "Esta é a definição de componente.",
-                            d: ""
-                        }
-                    },
-                    q5: {
-                        correct: "A arquitetura de componentes deve priorizar baixo acoplamento e alta coesão para facilitar manutenção.",
-                        incorrect: {
-                            a: "",
-                            b: "Esta é uma abordagem incorreta para arquitetura.",
-                            c: "Esta é uma abordagem incorreta para arquitetura.",
-                            d: "Esta é uma abordagem incorreta para arquitetura."
-                        }
-                    }
-                }
-            },
-            "Estudo de Caso Prático": {
-                reading: "<p>Esta aula integra todos os conceitos UML através de um estudo de caso prático, mostrando como aplicar diferentes diagramas em um projeto real.</p>",
-                exerciseUrl: "/exercicios/uml-caso-pratico.html",
-                correctAnswers: {
-                    q1: "c",
-                    q2: "b",
-                    q3: "a",
-                    q4: "d",
-                    q5: "b"
-                },
-                explanations: {
-                    q1: {
-                        correct: "A análise de requisitos deve ser o primeiro passo, identificando funcionalidades e restrições do sistema.",
-                        incorrect: {
-                            a: "Esta é uma etapa posterior no processo.",
-                            b: "Esta é uma etapa posterior no processo.",
-                            c: "",
-                            d: "Esta é uma etapa posterior no processo."
-                        }
-                    },
-                    q2: {
-                        correct: "Os diagramas estruturais mostram a organização estática, enquanto os comportamentais mostram a dinâmica.",
-                        incorrect: {
-                            a: "Esta é uma distinção incorreta entre os tipos de diagramas.",
-                            b: "",
-                            c: "Esta é uma distinção incorreta entre os tipos de diagramas.",
-                            d: "Esta é uma distinção incorreta entre os tipos de diagramas."
-                        }
-                    },
-                    q3: {
-                        correct: "A consistência entre diagramas é fundamental para garantir que o modelo represente corretamente o sistema.",
-                        incorrect: {
-                            a: "",
-                            b: "Esta é uma abordagem incorreta para modelagem.",
-                            c: "Esta é uma abordagem incorreta para modelagem.",
-                            d: "Esta é uma abordagem incorreta para modelagem."
-                        }
-                    },
-                    q4: {
-                        correct: "A validação com stakeholders garante que o modelo atenda às expectativas e requisitos do projeto.",
-                        incorrect: {
-                            a: "Esta é uma abordagem incompleta para validação.",
-                            b: "Esta é uma abordagem incompleta para validação.",
-                            c: "Esta é uma abordagem incompleta para validação.",
-                            d: ""
-                        }
-                    },
-                    q5: {
-                        correct: "A refatoração contínua mantém o modelo atualizado e alinhado com as mudanças nos requisitos.",
-                        incorrect: {
-                            a: "Esta é uma abordagem incorreta para manutenção.",
-                            b: "",
-                            c: "Esta é uma abordagem incorreta para manutenção.",
-                            d: "Esta é uma abordagem incorreta para manutenção."
                         }
                     }
                 }
@@ -1480,7 +951,59 @@
             });
         });
 
-        // Botão de completar aula removido - conclusão automática implementada
+        // Evento de clique no botão de completar aula
+        completeButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            const activeLessonLink = document.querySelector('.lesson-list a.active');
+            if (!activeLessonLink) return;
+
+            const activeIcon = activeLessonLink.querySelector('.lesson-icon');
+            const allSpans = activeLessonLink.querySelectorAll('span');
+            let titleSpan = null;
+            for (let span of allSpans) {
+                if (!span.classList.contains('lesson-duration') && !span.classList.contains('lesson-icon')) {
+                    titleSpan = span;
+                    break;
+                }
+            }
+            const lessonTitle = titleSpan ? titleSpan.textContent : 'Aula sem título';
+            
+            // Verifica se o exercício foi completado
+            const progress = userProgress[lessonTitle];
+            if (!progress || !progress.exerciseCompleted) {
+                alert('Você precisa completar o exercício antes de marcar a aula como concluída.');
+                return;
+            }
+            
+            // Marca a aula como concluída
+            activeIcon.classList.remove('play', 'todo', 'video-watched');
+            activeIcon.classList.add('completed');
+
+            // Atualiza estado (em memória apenas)
+            if (!userProgress[lessonTitle]) {
+                userProgress[lessonTitle] = {};
+            }
+            userProgress[lessonTitle].completed = true;
+            userProgress[lessonTitle].completedAt = new Date().toISOString();
+
+            // Atualiza a interface
+            completeButton.classList.add('completed', 'disabled');
+            completeButton.textContent = '✅ Concluído';
+            completeButton.style.pointerEvents = 'none';
+            
+            showNextLessonButton();
+            hideCompleteButton();
+            
+            // Atualiza o contador do tópico atual
+            const parentAccordion = activeLessonLink.closest('.topic-accordion');
+            updateTopicProgress(parentAccordion);
+            
+            // Desbloqueia próxima aula
+            unlockNextLesson(lessonTitle);
+
+            // Volta para a seção do vídeo
+            backToVideoSection();
+        });
 
         // Evento de clique no botão de exercício - MOSTRA A SEÇÃO DE EXERCÍCIOS
         viewExerciseBtn.addEventListener('click', function(event) {
@@ -1532,36 +1055,6 @@
             const lessonTitle = titleSpan ? titleSpan.textContent : 'Aula sem título';
             const result = checkExerciseAnswers(lessonTitle);
             
-            // Sistema de primeira tentativa - apenas primeira pontuação conta para ranking
-            if (!userProgress[lessonTitle]) {
-                userProgress[lessonTitle] = {};
-            }
-            
-            // Verifica se é a primeira tentativa
-            const isFirstAttempt = !userProgress[lessonTitle].firstAttemptScore;
-            if (isFirstAttempt) {
-                // Salva apenas a primeira pontuação para ranking
-                userProgress[lessonTitle].firstAttemptScore = result.score;
-                userProgress[lessonTitle].firstAttemptTotal = result.total;
-                userProgress[lessonTitle].firstAttemptPercentage = Math.round((result.score / result.total) * 100);
-                userProgress[lessonTitle].firstAttemptDate = new Date().toISOString();
-            }
-            
-            // Incrementa contador de tentativas
-            userProgress[lessonTitle].totalAttempts = (userProgress[lessonTitle].totalAttempts || 0) + 1;
-            
-            // Calcula XP baseado na primeira tentativa
-            if (isFirstAttempt) {
-                const percentage = userProgress[lessonTitle].firstAttemptPercentage;
-                let xpGained = 0;
-                if (percentage >= 100) xpGained = 100;
-                else if (percentage >= 80) xpGained = 75;
-                else if (percentage >= 70) xpGained = 50;
-                
-                // Atualiza XP do usuário
-                updateUserXP(xpGained);
-            }
-            
             // Gera feedback detalhado
             const feedbackHTML = generateDetailedFeedback(lessonTitle, result);
             exerciseFeedback.innerHTML = feedbackHTML;
@@ -1572,58 +1065,64 @@
                 smoothScrollToElement(exerciseFeedback, 100);
             }, 100);
             
-            // Marca exercício como completado
+            // Atualiza estado (em memória apenas) - SEMPRE marca o exercício como completado após verificação
+            if (!userProgress[lessonTitle]) {
+                userProgress[lessonTitle] = {};
+            }
             userProgress[lessonTitle].exerciseCompleted = true;
             
-            // Verifica se passou (70% ou mais)
-            const percentage = Math.round((result.score / result.total) * 100);
-            const passed = percentage >= 70;
+            // Mostra o botão "Marcar como concluído" no header
+            showCompleteButton();
             
-            if (passed) {
-                // Auto-conclusão da aula
-                autoCompleteLesson(lessonTitle);
-                
-                // Botões para aula concluída
-                const actionButtonsHTML = `
-                    <div class="feedback-actions">
-                        <button class="button feedback-next-btn success-btn" id="feedback-next-btn">Próxima Aula</button>
-                    </div>
-                `;
-                exerciseFeedback.insertAdjacentHTML('beforeend', actionButtonsHTML);
-            } else {
-                // Botões para tentar novamente
-                const actionButtonsHTML = `
-                    <div class="feedback-actions">
-                        <button class="button feedback-try-again-btn" id="try-again-btn">Tentar Novamente</button>
-                    </div>
-                `;
-                exerciseFeedback.insertAdjacentHTML('beforeend', actionButtonsHTML);
-            }
+            // SEMPRE adiciona botões de ação no feedback, independente do resultado
+            const actionButtonsHTML = `
+                <div class="feedback-actions">
+                    <button class="button feedback-complete-btn" id="feedback-complete-btn">Marcar como concluído</button>
+                    <button class="button feedback-try-again-btn" id="try-again-btn">Tentar Novamente</button>
+                    <button class="button feedback-next-btn" id="feedback-next-btn">Próxima Aula</button>
+                </div>
+            `;
+            exerciseFeedback.insertAdjacentHTML('beforeend', actionButtonsHTML);
             
             // Adiciona eventos aos botões do feedback
-            if (passed) {
-                document.getElementById('feedback-next-btn').addEventListener('click', function() {
-                    nextLessonBtn.click();
-                });
-            } else {
-                document.getElementById('try-again-btn').addEventListener('click', function() {
-                    resetExerciseForm();
-                    exerciseFeedback.innerHTML = '';
+            document.getElementById('feedback-complete-btn').addEventListener('click', function() {
+                completeButton.click();
+                
+                // Atualiza o estado dos botões no feedback após marcar como concluído
+                const progress = userProgress[lessonTitle];
+                if (progress && progress.completed) {
+                    this.classList.add('completed', 'disabled');
+                    this.textContent = '✅ Concluído';
+                    this.style.pointerEvents = 'none';
+                    this.style.backgroundColor = '#4CAF50';
+                    this.style.color = 'white';
                     
-                    // Rola para o topo dos exercícios
+                    document.getElementById('feedback-next-btn').style.backgroundColor = '#3C83F6';
+                    document.getElementById('feedback-next-btn').style.color = 'white';
+                }
+            });
+            
+            document.getElementById('try-again-btn').addEventListener('click', function() {
+                resetExerciseForm();
+                exerciseFeedback.innerHTML = '';
+                
+                // Rola para o topo dos exercícios
+                setTimeout(() => {
+                    smoothScrollToElement(exerciseSection, 100);
+                }, 50);
+                
+                // Foca na primeira questão para facilitar o novo tentativa
+                const firstQuestion = document.querySelector('.exercise-question:first-child input[type="radio"]');
+                if (firstQuestion) {
                     setTimeout(() => {
-                        smoothScrollToElement(exerciseSection, 100);
-                    }, 50);
-                    
-                    // Foca na primeira questão para facilitar o novo tentativa
-                    const firstQuestion = document.querySelector('.exercise-question:first-child input[type="radio"]');
-                    if (firstQuestion) {
-                        setTimeout(() => {
-                            firstQuestion.focus();
-                        }, 200);
-                    }
-                });
-            }
+                        firstQuestion.focus();
+                    }, 200);
+                }
+            });
+            
+            document.getElementById('feedback-next-btn').addEventListener('click', function() {
+                nextLessonBtn.click();
+            });
         });
 
         // Lógica para o accordion "sanfona"
@@ -1642,54 +1141,8 @@
 
         // Menu do usuário é gerenciado pelo dark-mode.js
 
-        // Atualiza display de gamificação no header
-        function updateGamificationDisplay() {
-            const gamificationElement = document.getElementById('user-gamification');
-            if (gamificationElement) {
-                const nextLevelXP = getNextLevelXP(userStats.level);
-                const currentLevelXP = getCurrentLevelXP(userStats.level);
-                const progress = ((userStats.xp - currentLevelXP) / (nextLevelXP - currentLevelXP)) * 100;
-                
-                gamificationElement.innerHTML = `
-                    <div class="gamification-info">
-                        <div class="user-level">${userStats.level}</div>
-                        <div class="user-xp">
-                            <div class="xp-bar">
-                                <div class="xp-fill" style="width: ${Math.min(progress, 100)}%"></div>
-                            </div>
-                            <span class="xp-text">${userStats.xp} XP</span>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        // Funções auxiliares para cálculo de XP
-        function getCurrentLevelXP(level) {
-            switch(level) {
-                case 'Iniciante': return 0;
-                case 'Intermediário': return 500;
-                case 'Avançado': return 1000;
-                case 'Expert': return 2000;
-                default: return 0;
-            }
-        }
-
-        function getNextLevelXP(level) {
-            switch(level) {
-                case 'Iniciante': return 500;
-                case 'Intermediário': return 1000;
-                case 'Avançado': return 2000;
-                case 'Expert': return 10000;
-                default: return 500;
-            }
-        }
-
         // Inicialização: aulas bloqueadas já estão marcadas no HTML
         function initializeProgress() {
-            // Carrega estatísticas do usuário
-            loadUserStats();
-            
             // Atualiza contadores de progresso
             accordions.forEach(accordion => {
                 updateTopicProgress(accordion);
