@@ -53,6 +53,19 @@
             pointer-events: auto !important;
             user-select: none !important;
         }
+
+        /* Estilo para módulos bloqueados - cursor not-allowed apenas no SVG do cadeado */
+        .path-module-accordion.is-locked .button svg {
+            cursor: not-allowed;
+        }
+
+        .path-module-accordion.is-locked .button {
+            opacity: 0.5;
+        }
+
+        .path-module-accordion.is-locked .button:hover {
+            opacity: 0.5;
+        }
     </style>
     <script>
   (function() {
