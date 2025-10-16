@@ -657,7 +657,7 @@ html[data-daltonismo] .logo img,
 /* Muda a cor do título (h4) para branco */
 .stat-card h4 {
   color: var(--background); /* Texto claro */
-  opacity: 0.8; /* Hierarquia visual */
+  opacity: 1; /* Mesmo tom que o p */
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
 }
