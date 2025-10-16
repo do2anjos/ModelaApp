@@ -27,13 +27,86 @@
 
         /* Filtros de daltonismo aplicados imediatamente (alinhados com style.css) */
         html[data-daltonismo="protanopia"] {
-            filter: contrast(1.3) saturate(0.8) brightness(1.1) sepia(0.2);
+            filter: hue-rotate(10deg) saturate(1.2) contrast(1.15) brightness(1.05);
         }
         html[data-daltonismo="deuteranopia"] {
-            filter: contrast(1.25) saturate(1.1) brightness(0.95) hue-rotate(-15deg);
+            filter: hue-rotate(-5deg) saturate(1.1) contrast(1.2) brightness(0.98);
         }
         html[data-daltonismo="tritanopia"] {
-            filter: contrast(1.2) saturate(0.9) brightness(1.05) hue-rotate(30deg);
+            filter: hue-rotate(15deg) saturate(1.3) contrast(1.25) brightness(1.02);
+        }
+
+        /* Melhorias específicas para configurações */
+        /* Toggle switches com melhor contraste */
+        .toggle-slider {
+            background-color: hsl(0, 0%, 85%) !important;
+            border: 2px solid hsl(0, 0%, 75%) !important;
+        }
+
+        [data-theme="dark"] .toggle-slider {
+            background-color: hsl(0, 0%, 25%) !important;
+            border: 2px solid hsl(0, 0%, 35%) !important;
+        }
+
+        .toggle-slider:before {
+            background-color: white !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        [data-theme="dark"] .toggle-slider:before {
+            background-color: hsl(0, 0%, 15%) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        /* Toggle ativo com melhor contraste */
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: hsl(217, 91%, 60%) !important;
+            border-color: hsl(217, 91%, 60%) !important;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            background-color: white !important;
+        }
+
+        /* Dropdown do daltonismo com melhor contraste */
+        .daltonism-select {
+            background-color: white !important;
+            color: hsl(0, 0%, 15%) !important;
+            border: 2px solid hsl(0, 0%, 80%) !important;
+        }
+
+        [data-theme="dark"] .daltonism-select {
+            background-color: hsl(0, 0%, 15%) !important;
+            color: hsl(0, 0%, 90%) !important;
+            border: 2px solid hsl(0, 0%, 35%) !important;
+        }
+
+        .daltonism-select:focus {
+            border-color: hsl(217, 91%, 60%) !important;
+            box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.2) !important;
+        }
+
+        .daltonism-select:disabled {
+            background-color: hsl(0, 0%, 95%) !important;
+            color: hsl(0, 0%, 60%) !important;
+            border-color: hsl(0, 0%, 85%) !important;
+        }
+
+        [data-theme="dark"] .daltonism-select:disabled {
+            background-color: hsl(0, 0%, 20%) !important;
+            color: hsl(0, 0%, 50%) !important;
+            border-color: hsl(0, 0%, 25%) !important;
+        }
+
+        /* Opções do select com melhor contraste */
+        .daltonism-select option {
+            background-color: white !important;
+            color: hsl(0, 0%, 15%) !important;
+        }
+
+        [data-theme="dark"] .daltonism-select option {
+            background-color: hsl(0, 0%, 15%) !important;
+            color: hsl(0, 0%, 90%) !important;
         }
     </style>
     <script>
@@ -63,7 +136,7 @@
 
     <div class="dashboard-wrapper">
         <aside class="dashboard-sidebar">
-            <div class="sidebar-logo"><a href="/home.html"><img src="/Modela+a.png" alt="Logo da Modela+"></a></div>
+            <div class="sidebar-logo"><a href="/home.html"><img src="/images/Modela+a.png" alt="Logo da Modela+"></a></div>
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="/home.html"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Painel</a></li>
@@ -229,9 +302,9 @@
     </div>
 
     <!-- INCLUIR O dark-mode.js e daltonism-mode.js ANTES do script personalizado -->
-    <script src="/dark-mode.js"></script>
-    <script src="/daltonism-mode.js"></script>
-    <script src="/usability.js"></script>
+    <script src="/js/dark-mode.js"></script>
+    <script src="/js/daltonism-mode.js"></script>
+    <script src="/js/usability.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
