@@ -3411,6 +3411,10 @@ body {
   pointer-events: none;
 }
 
+.locked-topic .topic-progress {
+  pointer-events: auto;
+}
+
 .locked-topic summary {
   cursor: not-allowed;
   color: var(--muted-foreground);
@@ -3424,6 +3428,7 @@ body {
 .locked-topic .topic-progress svg {
   opacity: 0.5;
   color: var(--muted-foreground);
+  cursor: not-allowed;
 }
 
 .locked-content {
