@@ -248,19 +248,19 @@
                             <line x1="16" y1="17" x2="8" y2="17"></line>
                         </svg>
                         <span>Exercício</span>
-                        <span class="lock-indicator">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
-                        </span>
+                        <span class="lock-indicator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
                     </button>
                 </div>
                 <div class="header-actions">    
                 
                 <div class="player-controls" role="toolbar" aria-label="Controles da aula">
-                    <button class="button button-primary hidden" id="complete-lesson-btn" aria-label="Marcar aula como concluída">Marcar como concluído</button>
-                    <button class="button button-primary hidden" id="next-lesson-btn" aria-label="Ir para próxima aula">Próxima Aula</button>
+                    <button class="button button-primary hidden" id="next-lesson-btn" aria-label="Ir para próxima aula" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"></path>
+                        </svg>
+                        <span>Próxima Aula</span>
+                        <span class="next-lesson-lock-indicator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+                    </button>
                 </div>
                 </div>
             </div>
@@ -365,7 +365,6 @@
         const lessonLinks = document.querySelectorAll('.lesson-list a');
         const videoWrapper = document.querySelector('.video-player-wrapper');
         const lessonTitleHeader = document.getElementById('lesson-title-header');
-        const completeButton = document.getElementById('complete-lesson-btn');
         const nextLessonBtn = document.getElementById('next-lesson-btn');
         const readingTitle = document.getElementById('reading-title');
         const readingText = document.getElementById('reading-text');
@@ -744,12 +743,7 @@
             exerciseTab.disabled = false;
             const lockIndicator = exerciseTab.querySelector('.lock-indicator');
             if (lockIndicator) {
-                lockIndicator.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                        <polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                `;
+                lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>';
             }
             exerciseTab.style.opacity = '1';
             console.log('🔓 Tab de exercício desbloqueada');
@@ -759,25 +753,11 @@
             exerciseTab.disabled = true;
             const lockIndicator = exerciseTab.querySelector('.lock-indicator');
             if (lockIndicator) {
-                lockIndicator.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                `;
+                lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
             }
             exerciseTab.style.opacity = '0.5';
         }
 
-        function showCompleteButton() {
-            completeButton.classList.remove('hidden');
-            completeButton.classList.add('visible');
-        }
-
-        function hideCompleteButton() {
-            completeButton.classList.add('hidden');
-            completeButton.classList.remove('visible');
-        }
 
         function showNextLessonButton() {
             nextLessonBtn.classList.remove('hidden');
@@ -787,6 +767,26 @@
         function hideNextLessonButton() {
             nextLessonBtn.classList.add('hidden');
             nextLessonBtn.classList.remove('visible');
+        }
+
+        function lockNextLessonButton() {
+            nextLessonBtn.disabled = true;
+            const lockIndicator = nextLessonBtn.querySelector('.next-lesson-lock-indicator');
+            if (lockIndicator) {
+                lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
+            }
+            nextLessonBtn.style.opacity = '0.5';
+            console.log('🔒 Botão "Próxima Aula" bloqueado');
+        }
+
+        function unlockNextLessonButton() {
+            nextLessonBtn.disabled = false;
+            const lockIndicator = nextLessonBtn.querySelector('.next-lesson-lock-indicator');
+            if (lockIndicator) {
+                lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>';
+            }
+            nextLessonBtn.style.opacity = '1';
+            console.log('🔓 Botão "Próxima Aula" desbloqueado');
         }
 
         // Atualiza o estado dos botões
@@ -802,25 +802,13 @@
                 lockExerciseTab();
             }
             
-            // Botão "Marcar como concluído" - aparece apenas se o exercício foi completado
-            if (progress && progress.exerciseCompleted && !progress.completed) {
-                showCompleteButton();
-            } else {
-                hideCompleteButton();
-            }
-            
-            // Botão "Próxima aula" - aparece apenas se a aula foi concluída
+            // Botão "Próxima aula" - aparece apenas se a aula foi concluída (100% no exercício)
             if (progress && progress.completed) {
                 showNextLessonButton();
+                unlockNextLessonButton();
             } else {
-                hideNextLessonButton();
-            }
-            
-            // Aula já concluída - estado final
-            if (progress && progress.completed) {
-                completeButton.classList.add('completed', 'disabled');
-                completeButton.textContent = '✅ Concluído';
-                completeButton.style.pointerEvents = 'none';
+                showNextLessonButton(); // Mostra o botão mesmo bloqueado
+                lockNextLessonButton(); // Mas mantém bloqueado
             }
         }
 
@@ -1015,59 +1003,6 @@
             });
         });
 
-        // Evento de clique no botão de completar aula
-        completeButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            const activeLessonLink = document.querySelector('.lesson-list a.active');
-            if (!activeLessonLink) return;
-
-            const activeIcon = activeLessonLink.querySelector('.lesson-icon');
-            const allSpans = activeLessonLink.querySelectorAll('span');
-            let titleSpan = null;
-            for (let span of allSpans) {
-                if (!span.classList.contains('lesson-duration') && !span.classList.contains('lesson-icon')) {
-                    titleSpan = span;
-                    break;
-                }
-            }
-            const lessonTitle = titleSpan ? titleSpan.textContent : 'Aula sem título';
-            
-            // Verifica se o exercício foi completado
-            const progress = userProgress[lessonTitle];
-            if (!progress || !progress.exerciseCompleted) {
-                alert('Você precisa completar o exercício antes de marcar a aula como concluída.');
-                return;
-            }
-            
-            // Marca a aula como concluída
-            activeIcon.classList.remove('play', 'todo', 'video-watched');
-            activeIcon.classList.add('completed');
-
-            // Atualiza estado (em memória apenas)
-            if (!userProgress[lessonTitle]) {
-                userProgress[lessonTitle] = {};
-            }
-            userProgress[lessonTitle].completed = true;
-            userProgress[lessonTitle].completedAt = new Date().toISOString();
-
-            // Atualiza a interface
-            completeButton.classList.add('completed', 'disabled');
-            completeButton.textContent = '✅ Concluído';
-            completeButton.style.pointerEvents = 'none';
-            
-            showNextLessonButton();
-            hideCompleteButton();
-            
-            // Atualiza o contador do tópico atual
-            const parentAccordion = activeLessonLink.closest('.topic-accordion');
-            updateTopicProgress(parentAccordion);
-            
-            // Desbloqueia próxima aula
-            unlockNextLesson(lessonTitle);
-
-            // Volta para a tab de vídeo
-            switchTab('video');
-        });
 
         // Event listeners para as tabs
         videoTab.addEventListener('click', function() {
@@ -1150,37 +1085,53 @@
             }
             userProgress[lessonTitle].exerciseCompleted = true;
             
-            // Mostra o botão "Marcar como concluído" no header
-            showCompleteButton();
+            // CONCLUI A AULA AUTOMATICAMENTE APENAS se acertou TODAS as questões (100%)
+            if (result.allCorrect) {
+                userProgress[lessonTitle].completed = true;
+                userProgress[lessonTitle].completedAt = new Date().toISOString();
+                
+                // Atualiza o ícone da aula para completed
+                const currentLessonLink = document.querySelector('.lesson-list a.active');
+                if (currentLessonLink) {
+                    const activeIcon = currentLessonLink.querySelector('.lesson-icon');
+                    if (activeIcon) {
+                        activeIcon.classList.remove('play', 'todo', 'video-watched');
+                        activeIcon.classList.add('completed');
+                    }
+                }
+                
+                // Atualiza contador do tópico
+                const parentAccordion = currentLessonLink.closest('.topic-accordion');
+                updateTopicProgress(parentAccordion);
+                
+                // Desbloqueia próxima aula
+                unlockNextLesson(lessonTitle);
+                
+                // Mostra e desbloqueia botão "Próxima Aula"
+                showNextLessonButton();
+                unlockNextLessonButton();
+            } else {
+                // Se não acertou todas, NÃO conclui a aula e NÃO desbloqueia próxima
+                console.log('❌ Pontuação insuficiente. Necessário 100% para avançar.');
+            }
             
-            // SEMPRE adiciona botões de ação no feedback, independente do resultado
-            const actionButtonsHTML = `
+            // Adiciona botões de ação baseados na pontuação
+            let actionButtonsHTML = `
                 <div class="feedback-actions">
-                    <button class="button feedback-complete-btn" id="feedback-complete-btn">Marcar como concluído</button>
                     <button class="button feedback-try-again-btn" id="try-again-btn">Tentar Novamente</button>
-                    <button class="button feedback-next-btn" id="feedback-next-btn">Próxima Aula</button>
-                </div>
             `;
+            
+            // Só mostra botão "Próxima Aula" se acertou todas as questões
+            if (result.allCorrect) {
+                actionButtonsHTML += `<button class="button feedback-next-btn" id="feedback-next-btn">Próxima Aula</button>`;
+            } else {
+                actionButtonsHTML += `<button class="button feedback-next-btn disabled" id="feedback-next-btn" disabled>Próxima Aula (100% necessário)</button>`;
+            }
+            
+            actionButtonsHTML += `</div>`;
             exerciseFeedback.insertAdjacentHTML('beforeend', actionButtonsHTML);
             
             // Adiciona eventos aos botões do feedback
-            document.getElementById('feedback-complete-btn').addEventListener('click', function() {
-                completeButton.click();
-                
-                // Atualiza o estado dos botões no feedback após marcar como concluído
-                const progress = userProgress[lessonTitle];
-                if (progress && progress.completed) {
-                    this.classList.add('completed', 'disabled');
-                    this.textContent = '✅ Concluído';
-                    this.style.pointerEvents = 'none';
-                    this.style.backgroundColor = '#4CAF50';
-                    this.style.color = 'white';
-                    
-                    document.getElementById('feedback-next-btn').style.backgroundColor = '#3C83F6';
-                    document.getElementById('feedback-next-btn').style.color = 'white';
-                }
-            });
-            
             document.getElementById('try-again-btn').addEventListener('click', function() {
                 resetExerciseForm();
                 exerciseFeedback.innerHTML = '';
@@ -1200,7 +1151,12 @@
             });
             
             document.getElementById('feedback-next-btn').addEventListener('click', function() {
-                nextLessonBtn.click();
+                // Só permite ir para próxima aula se acertou todas as questões
+                if (result.allCorrect) {
+                    nextLessonBtn.click();
+                } else {
+                    alert('Você precisa acertar todas as questões (100%) para avançar para a próxima aula!');
+                }
             });
         });
 
@@ -1224,6 +1180,9 @@
         function initializeProgress() {
             // Inicializa tabs na posição padrão (vídeo)
             lockExerciseTab();
+            
+            // Inicializa botão "Próxima Aula" bloqueado
+            lockNextLessonButton();
             
             // Atualiza contadores de progresso
             accordions.forEach(accordion => {
@@ -1367,14 +1326,6 @@
                 opacity: 0.8;
             }
             
-            .feedback-complete-btn {
-                background-color: #3C83F6 !important;
-            }
-            
-            .feedback-complete-btn.completed {
-                background-color: #4CAF50 !important;
-                opacity: 1 !important;
-            }
             
             .feedback-try-again-btn {
                 background-color: #3C83F6 !important;
@@ -1382,6 +1333,74 @@
             
             .feedback-next-btn {
                 background-color: #3C83F6 !important;
+            }
+            
+            .feedback-next-btn.disabled {
+                background-color: #F3F4F6 !important;
+                color: #9CA3AF !important;
+                cursor: not-allowed !important;
+                opacity: 1 !important;
+                border: 2px solid #E5E7EB !important;
+            }
+            
+            .feedback-next-btn.disabled:hover {
+                background-color: #E5E7EB !important;
+                color: #6B7280 !important;
+                border-color: #D1D5DB !important;
+            }
+            
+            /* Estilo do botão "Próxima Aula" similar aos tabs */
+            #next-lesson-btn {
+                padding: 0.875rem 1.5rem !important;
+                font-size: 0.95rem !important;
+                font-family: var(--font-heading) !important;
+                font-weight: 600 !important;
+                border-radius: var(--radius) !important;
+                transition: all 0.3s ease !important;
+                min-height: 48px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 0.5rem !important;
+                background: transparent !important;
+                border: none !important;
+                border-bottom: 3px solid transparent !important;
+                color: var(--muted-foreground) !important;
+                position: relative !important;
+                margin-bottom: -2px !important;
+            }
+            
+            #next-lesson-btn:hover {
+                color: var(--foreground) !important;
+                background-color: var(--muted) !important;
+                border-bottom-color: var(--primary) !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            
+            #next-lesson-btn:not(.disabled) {
+                color: var(--primary) !important;
+                border-bottom-color: var(--primary) !important;
+                background-color: transparent !important;
+            }
+            
+            #next-lesson-btn svg {
+                width: 20px !important;
+                height: 20px !important;
+                stroke-width: 2.5 !important;
+            }
+            
+            #next-lesson-btn:disabled {
+                opacity: 0.5 !important;
+                cursor: not-allowed !important;
+                color: var(--muted-foreground) !important;
+                background-color: transparent !important;
+                border-bottom-color: transparent !important;
+            }
+            
+            .next-lesson-lock-indicator {
+                font-size: 0.85rem;
+                margin-left: 0.25rem;
             }
             
             .fade-in {
