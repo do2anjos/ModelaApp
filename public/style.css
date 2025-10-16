@@ -441,8 +441,10 @@ html[data-daltonismo] .logo img,
 }
 .header-actions {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column; /* Coloca os itens em coluna */
+  align-items: flex-end;   /* Alinha a coluna à direita */
+  gap: 0.75rem;
+  align-items: center; font-family: var(--font-heading); font-weight: 700;
 }
 .dashboard-content { 
     display: grid; 
@@ -1726,6 +1728,11 @@ html[data-daltonismo] .logo img,
 .header-main-content {
     flex-grow: 1; /* Garante que o conteúdo principal ocupe o espaço e empurre o menu do usuário para a direita */
 }
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
 .back-link {
     display: inline-flex;
     align-items: center;
@@ -2079,7 +2086,66 @@ html[data-daltonismo] .logo img,
   position: relative;
 }
 
-/* Removido CSS específico para aulas.html - agora usa o padrão unificado */
+/* ✅ EXCEÇÃO APENAS PARA A PÁGINA DE AULAS - MESMO TAMANHO DA HOME */
+.lesson-body .user-profile-menu {
+  margin-left: auto;
+  margin-right: -4rem; /* ✅ VALOR IDEAL ENCONTRADO */
+}
+
+/* Removido CSS específico para aulas.html - usa o padrão igual às outras páginas */
+
+.lesson-body .dropdown-menu {
+  width: 240px; /* ✅ MESMA LARGURA DA HOME */
+}
+
+.lesson-body .dropdown-header {
+  padding: 1rem; /* ✅ MESMO PADDING DA HOME */
+}
+
+.lesson-body .dropdown-header .user-name {
+  color: var(--foreground) !important;
+  font-family: var(--font-heading);
+  font-weight: 600; /* ✅ MESMO PESO DA HOME */
+  font-size: 1rem; /* ✅ MESMO TAMANHO DA HOME */
+}
+
+.lesson-body .dropdown-header .user-email {
+  font-family: var(--font-body);
+  font-size: 0.85rem; /* ✅ MESMO TAMANHO DA HOME */
+  color: var(--muted-foreground);
+}
+
+.lesson-body .dropdown-menu ul {
+  padding: 0.5rem; /* ✅ MESMO PADDING DA HOME */
+}
+
+.lesson-body .dropdown-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem; /* ✅ MESMO PADDING DA HOME */
+  border-radius: calc(var(--radius) - 4px);
+  font-size: 0.9rem; /* ✅ MESMO TAMANHO DA HOME */
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.lesson-body .dropdown-menu li a:hover {
+  background-color: var(--muted);
+}
+
+.lesson-body .dropdown-menu li a svg {
+  width: 16px; /* ✅ MESMO TAMANHO DA HOME */
+  height: 16px;
+  stroke: var(--muted-foreground);
+}
+
+.lesson-body .dropdown-menu .separator {
+  height: 1px;
+  background-color: var(--border);
+  margin: 0.5rem 0; /* ✅ MESMA MARGEM DA HOME */
+}
 
 /* Estilos gerais (para outras páginas) */
 .user-avatar-button {
