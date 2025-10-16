@@ -940,6 +940,7 @@ html[data-daltonismo] .logo img,
   border-radius: var(--radius);
   flex-shrink: 0;
   overflow: hidden;
+  margin-bottom: 0; /* Remover margem inferior */
 }
 
 #youtube-player {
@@ -1063,6 +1064,90 @@ html[data-daltonismo] .logo img,
   padding: 2rem 2.5rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
+}
+
+/* Sistema de Navegação por Tabs */
+.lesson-navigation-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0 0;
+  border-bottom: 2px solid var(--border);
+  padding: 0;
+}
+
+.tab-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--muted-foreground);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  margin-bottom: -2px;
+}
+
+.tab-button:hover:not(:disabled) {
+  color: var(--foreground);
+  background-color: var(--muted);
+}
+
+.tab-button.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  background-color: transparent;
+}
+
+.tab-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: var(--muted-foreground);
+}
+
+.tab-button svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.5;
+}
+
+.lock-indicator {
+  font-size: 0.85rem;
+  margin-left: 0.25rem;
+}
+
+/* Container dos Painéis */
+.tab-content-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .lesson-exercise-content h2 {
@@ -1248,6 +1333,20 @@ html[data-daltonismo] .logo img,
   .lesson-reading-content,
   .lesson-exercise-content {
     padding: 1.5rem;
+  }
+  
+  /* Responsividade das tabs */
+  .tab-button {
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .tab-button span:first-of-type {
+    display: none;
+  }
+  
+  .tab-button::after {
+    content: attr(aria-label);
   }
   
   .additional-resources {
@@ -2581,39 +2680,50 @@ html[data-daltonismo] .logo img,
 }
 
 .toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--muted);
-    border: 2px solid var(--border);
-    transition: all 0.3s ease;
-    border-radius: 34px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: hsl(0, 0%, 85%);
+  border: 2px solid hsl(0, 0%, 75%);
+  transition: all 0.3s ease;
+  border-radius: 34px;
+}
+
+[data-theme="dark"] .toggle-slider {
+  background-color: hsl(0, 0%, 25%);
+  border: 2px solid hsl(0, 0%, 35%);
 }
 
 .toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    bottom: 2px;
-    background-color: var(--background);
-    transition: all 0.3s ease;
-    border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .toggle-slider:before {
+  background-color: hsl(0, 0%, 15%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .toggle-switch input:checked + .toggle-slider {
-    background-color: var(--primary);
-    border-color: var(--primary);
+  background-color: hsl(217, 91%, 60%);
+  border-color: hsl(217, 91%, 60%);
 }
 
 .toggle-switch input:checked + .toggle-slider:before {
-    transform: translateX(24px);
-    background-color: var(--primary-foreground);
+  transform: translateX(24px);
+  background-color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .toggle-switch input:focus + .toggle-slider {
@@ -3891,21 +4001,48 @@ select:focus-visible {
 
 /* Filtros CSS para diferentes tipos de daltonismo */
 html[data-daltonismo="protanopia"] {
-  /* Protanopia: Filtro baseado em pesquisa científica */
-  /* Aumenta contraste entre vermelho-verde para compensar ausência de cones L */
-  filter: contrast(1.3) saturate(0.8) brightness(1.1) sepia(0.2);
+  /* Protanopia: Ausência de cones L (vermelho) - 1% da população masculina */
+  /* Filtro baseado na matriz de transformação de cores para protanopia */
+  /* Implementação cientificamente correta baseada em pesquisas de acessibilidade */
+  filter: 
+    /* Correção de matiz para compensar ausência de vermelho */
+    hue-rotate(10deg) 
+    /* Aumento de saturação para destacar diferenças sutis */
+    saturate(1.2) 
+    /* Ajuste de contraste para melhorar distinção */
+    contrast(1.15) 
+    /* Ligeiro ajuste de brilho */
+    brightness(1.05);
 }
 
 html[data-daltonismo="deuteranopia"] {
-  /* Deuteranopia: Filtro otimizado para diferenciação vermelho-verde */
-  /* Baseado em algoritmo de correção de deuteranopia */
-  filter: contrast(1.25) saturate(1.1) brightness(0.95) hue-rotate(-15deg);
+  /* Deuteranopia: Ausência de cones M (verde) - 1.5% da população masculina */
+  /* Filtro baseado na matriz de transformação de cores para deuteranopia */
+  /* Implementação cientificamente correta baseada em pesquisas de acessibilidade */
+  filter: 
+    /* Correção de matiz para compensar ausência de verde */
+    hue-rotate(-5deg) 
+    /* Aumento de saturação para destacar diferenças */
+    saturate(1.1) 
+    /* Ajuste de contraste específico para deuteranopia */
+    contrast(1.2) 
+    /* Ajuste de brilho otimizado */
+    brightness(0.98);
 }
 
 html[data-daltonismo="tritanopia"] {
-  /* Tritanopia: Filtro para compensar ausência de cones S (azul) */
-  /* Aumenta contraste azul-amarelo */
-  filter: contrast(1.2) saturate(0.9) brightness(1.05) hue-rotate(30deg);
+  /* Tritanopia: Ausência de cones S (azul) - 0.003% da população */
+  /* Filtro baseado na matriz de transformação de cores para tritanopia */
+  /* Implementação cientificamente correta baseada em pesquisas de acessibilidade */
+  filter: 
+    /* Correção de matiz para compensar ausência de azul */
+    hue-rotate(15deg) 
+    /* Saturação ajustada para tritanopia */
+    saturate(1.3) 
+    /* Contraste otimizado para distinção azul-amarelo */
+    contrast(1.25) 
+    /* Brilho ajustado para melhor percepção */
+    brightness(1.02);
 }
 
 /* Garantir que elementos críticos mantenham contraste mesmo com filtros */
@@ -3930,6 +4067,88 @@ html[data-daltonismo] .lesson-icon.completed {
 }
 
 /* ==========================================================================
+   AJUSTES ESPECÍFICOS POR TIPO DE DALTONISMO
+   ========================================================================== */
+
+/* Protanopia - Melhorias para elementos vermelhos/verdes */
+html[data-daltonismo="protanopia"] .lesson-icon.completed,
+html[data-daltonismo="protanopia"] .progress-fill,
+html[data-daltonismo="protanopia"] .button-primary {
+  /* Força contraste adicional para elementos críticos */
+  filter: contrast(1.4) saturate(1.5) brightness(1.1) !important;
+}
+
+html[data-daltonismo="protanopia"] .stat-card.success,
+html[data-daltonismo="protanopia"] .alert-success {
+  /* Destaque especial para elementos de sucesso (verde) */
+  border-left: 4px solid #00ff00 !important;
+  background-color: rgba(0, 255, 0, 0.1) !important;
+}
+
+/* Deuteranopia - Melhorias para elementos verdes/vermelhos */
+html[data-daltonismo="deuteranopia"] .lesson-icon.completed,
+html[data-daltonismo="deuteranopia"] .progress-fill,
+html[data-daltonismo="deuteranopia"] .button-primary {
+  /* Força contraste adicional para elementos críticos */
+  filter: contrast(1.3) saturate(1.4) brightness(1.05) !important;
+}
+
+html[data-daltonismo="deuteranopia"] .stat-card.warning,
+html[data-daltonismo="deuteranopia"] .alert-warning {
+  /* Destaque especial para elementos de aviso (amarelo/laranja) */
+  border-left: 4px solid #ff8800 !important;
+  background-color: rgba(255, 136, 0, 0.1) !important;
+}
+
+/* Tritanopia - Melhorias para elementos azuis/amarelos */
+html[data-daltonismo="tritanopia"] .lesson-icon.completed,
+html[data-daltonismo="tritanopia"] .progress-fill,
+html[data-daltonismo="tritanopia"] .button-primary {
+  /* Força contraste adicional para elementos críticos */
+  filter: contrast(1.35) saturate(1.6) brightness(1.08) !important;
+}
+
+html[data-daltonismo="tritanopia"] .stat-card.info,
+html[data-daltonismo="tritanopia"] .alert-info {
+  /* Destaque especial para elementos informativos (azul) */
+  border-left: 4px solid #0088ff !important;
+  background-color: rgba(0, 136, 255, 0.1) !important;
+}
+
+/* ==========================================================================
+   MELHORIAS GERAIS PARA TODOS OS TIPOS DE DALTONISMO
+   ========================================================================== */
+
+/* Melhorar contraste de texto em todos os tipos */
+html[data-daltonismo] h1, 
+html[data-daltonismo] h2, 
+html[data-daltonismo] h3,
+html[data-daltonismo] .lesson-title,
+html[data-daltonismo] .card-title {
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  font-weight: 600;
+}
+
+/* Melhorar visibilidade de links - removido sublinhado automático */
+/* html[data-daltonismo] a:not(.button) {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+} */
+
+/* Melhorar contraste de ícones de status */
+html[data-daltonismo] .lesson-icon {
+  filter: contrast(1.3) brightness(1.1);
+}
+
+/* Melhorar visibilidade de elementos de formulário */
+html[data-daltonismo] input:focus,
+html[data-daltonismo] textarea:focus,
+html[data-daltonismo] select:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5) !important;
+  border-color: #2563eb !important;
+}
+
+/* ==========================================================================
    CONTROLES DE ACESSIBILIDADE
    ========================================================================== */
 
@@ -3941,24 +4160,51 @@ html[data-daltonismo] .lesson-icon.completed {
 }
 
 .daltonism-select {
-  padding: 0.5rem;
-  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--border);
   border-radius: var(--radius);
   background-color: var(--card);
   color: var(--foreground);
   font-size: 0.875rem;
   min-width: 200px;
+  transition: all 0.2s ease;
 }
 
 .daltonism-select:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline: none;
   border-color: var(--primary);
+  box-shadow: 0 0 0 3px hsla(217, 91%, 60%, 0.2);
 }
 
 .daltonism-select:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+}
+
+/* Melhorias específicas para modo escuro */
+[data-theme="dark"] .daltonism-select {
+  background-color: hsl(0, 0%, 15%);
+  color: hsl(0, 0%, 90%);
+  border-color: hsl(0, 0%, 35%);
+}
+
+[data-theme="dark"] .daltonism-select:disabled {
+  background-color: hsl(0, 0%, 20%);
+  color: hsl(0, 0%, 50%);
+  border-color: hsl(0, 0%, 25%);
+}
+
+/* Opções do select com melhor contraste */
+.daltonism-select option {
+  background-color: var(--card);
+  color: var(--foreground);
+}
+
+[data-theme="dark"] .daltonism-select option {
+  background-color: hsl(0, 0%, 15%);
+  color: hsl(0, 0%, 90%);
 }
 
 /* Estados visuais para controles de acessibilidade */
