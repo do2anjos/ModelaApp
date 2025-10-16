@@ -1161,64 +1161,7 @@ html[data-daltonismo] .logo img,
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Estilo para dropdown do usuário */
-.user-profile-menu {
-  position: relative;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  width: 240px;
-  z-index: 1000;
-  margin-top: 8px;
-  border: 1px solid var(--border);
-}
-
-.dropdown-menu.hidden {
-  display: none;
-}
-
-.dropdown-header {
-  padding: 1rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.user-name {
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  color: var(--foreground);
-}
-
-.user-email {
-  font-size: 0.85rem;
-  color: var(--muted-foreground);
-}
-
-.dropdown-menu ul {
-  list-style: none;
-  padding: 0.5rem 0;
-  margin: 0;
-}
-
-.dropdown-menu li a {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  text-decoration: none;
-  color: var(--foreground);
-  transition: background-color 0.2s;
-  font-size: 0.9rem;
-}
-
-.dropdown-menu li a:hover {
-  background-color: var(--muted);
-}
+/* CSS antigo removido - usando novo padrão unificado */
 
 /* Responsividade para mobile */
 @media (max-width: 768px) {
@@ -2080,101 +2023,60 @@ html[data-daltonismo] .logo img,
 
 
 /* ==========================================================================
-   Componente: Menu Dropdown do Usuário (FONTES E MARGENS CORRIGIDAS)
+   Componente: Menu Dropdown do Usuário - PADRONIZADO
    ========================================================================== */
+
+/* Estilo base para todos os user-profile-menu */
 .user-profile-menu {
   position: relative;
-}
-
-/* ✅ EXCEÇÃO APENAS PARA A PÁGINA DE AULAS - MESMO TAMANHO DA HOME */
-.lesson-body .user-profile-menu {
-  margin-left: auto;
-  margin-right: -4rem; /* ✅ VALOR IDEAL ENCONTRADO */
-}
-
-/* Removido CSS específico para aulas.html - usa o padrão igual às outras páginas */
-
-.lesson-body .dropdown-menu {
-  width: 240px; /* ✅ MESMA LARGURA DA HOME */
-}
-
-.lesson-body .dropdown-header {
-  padding: 1rem; /* ✅ MESMO PADDING DA HOME */
-}
-
-.lesson-body .dropdown-header .user-name {
-  color: var(--foreground) !important;
-  font-family: var(--font-heading);
-  font-weight: 600; /* ✅ MESMO PESO DA HOME */
-  font-size: 1rem; /* ✅ MESMO TAMANHO DA HOME */
-}
-
-.lesson-body .dropdown-header .user-email {
-  font-family: var(--font-body);
-  font-size: 0.85rem; /* ✅ MESMO TAMANHO DA HOME */
-  color: var(--muted-foreground);
-}
-
-.lesson-body .dropdown-menu ul {
-  padding: 0.5rem; /* ✅ MESMO PADDING DA HOME */
-}
-
-.lesson-body .dropdown-menu li a {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem; /* ✅ MESMO PADDING DA HOME */
-  border-radius: calc(var(--radius) - 4px);
-  font-size: 0.9rem; /* ✅ MESMO TAMANHO DA HOME */
-  color: var(--foreground);
-  font-family: var(--font-body);
-  font-weight: 500;
+  justify-content: flex-end;
 }
 
-.lesson-body .dropdown-menu li a:hover {
-  background-color: var(--muted);
-}
-
-.lesson-body .dropdown-menu li a svg {
-  width: 16px; /* ✅ MESMO TAMANHO DA HOME */
-  height: 16px;
-  stroke: var(--muted-foreground);
-}
-
-.lesson-body .dropdown-menu .separator {
-  height: 1px;
-  background-color: var(--border);
-  margin: 0.5rem 0; /* ✅ MESMA MARGEM DA HOME */
-}
-
-/* Estilos gerais (para outras páginas) */
+/* Botão do avatar do usuário - padronizado */
 .user-avatar-button {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background-color: var(--primary);
   color: var(--primary-foreground);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: var(--font-heading);
-  font-weight: 700;
   border: none;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-soft);
 }
 
+.user-avatar-button:hover {
+  background-color: var(--primary);
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+.user-avatar-button:active {
+  transform: scale(0.95);
+}
+
+/* Dropdown menu - padronizado */
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 8px);
   right: 0;
-  background-color: var(--card);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-medium);
+  box-shadow: var(--shadow-lg);
   width: 240px;
-  z-index: 50;
-  overflow: hidden;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+  pointer-events: none;
 }
 
 .dropdown-menu.hidden {
@@ -2183,52 +2085,78 @@ html[data-daltonismo] .logo img,
   pointer-events: none;
 }
 
+.dropdown-menu:not(.hidden) {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Header do dropdown */
 .dropdown-header {
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--border);
 }
+
 .dropdown-header .user-name {
-  font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 1rem;
+  color: var(--foreground);
+  margin: 0 0 0.25rem 0;
+  font-size: 0.95rem;
 }
+
 .dropdown-header .user-email {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
   color: var(--muted-foreground);
+  font-size: 0.85rem;
+  margin: 0;
 }
 
+/* Lista de itens do dropdown */
 .dropdown-menu ul {
-  padding: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.dropdown-menu li a {
+.dropdown-menu li {
+  border-bottom: 1px solid var(--border);
+}
+
+.dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu a {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem;
-  border-radius: calc(var(--radius) - 4px);
-  font-size: 0.9rem;
+  padding: 0.75rem 1.25rem;
   color: var(--foreground);
-  font-family: var(--font-body);
-  font-weight: 500;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
 }
 
-.dropdown-menu li a:hover {
+.dropdown-menu a:hover {
   background-color: var(--muted);
+  color: var(--foreground);
 }
 
-.dropdown-menu li a svg {
+.dropdown-menu svg {
   width: 16px;
   height: 16px;
-  stroke: var(--muted-foreground);
+  flex-shrink: 0;
 }
 
-.dropdown-menu .separator {
-  height: 1px;
-  background-color: var(--border);
-  margin: 0.5rem 0;
+/* Responsividade */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    width: 220px;
+    right: -10px;
+  }
 }
+
+
+
 
 /* ==========================================================================
    15. Estilos da Página de Certificados (certificados.html)
