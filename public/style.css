@@ -59,21 +59,52 @@
    2. Global Styles & Resets
    ========================================================================== */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { 
+  scroll-behavior: smooth;
+  font-size: 14px; /* Base font size para melhor controle do zoom */
+}
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
   line-height: 1.6;
+  font-size: 1rem; /* 14px */
 }
 .container { width: 90%; max-width: 1200px; margin: 0 auto; }
 section { padding: 5rem 0; }
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
 h1, h2, h3 { font-family: var(--font-heading); font-weight: 700; }
-h1 { font-size: 3.5rem; line-height: 1.1; }
-h2 { font-size: 2.5rem; }
+h1 { font-size: 2.5rem; line-height: 1.1; } /* Reduzido de 3.5rem para 2.5rem */
+h2 { font-size: 1.875rem; } /* Reduzido de 2.5rem para 1.875rem */
 h3 { font-size: 1.25rem; }
+
+/* Ajustes responsivos de font-size para evitar zoom em telas menores */
+@media (max-width: 1024px) {
+  html { font-size: 13px; }
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.75rem; }
+  
+  .video-player-wrapper {
+    max-width: 750px; /* Tamanho intermediário para tablets */
+  }
+  
+  .lesson-main-content {
+    padding: 1.5rem 2rem; /* Reduz padding em tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  html { font-size: 12px; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  html { font-size: 12px; }
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.35rem; }
+}
 
 /* ==========================================================================
    3. Reusable Components (Buttons, etc.)
@@ -765,6 +796,7 @@ html[data-daltonismo] .logo img,
   display: grid;
   grid-template-columns: 320px 1fr;
   flex-grow: 1;
+  transition: grid-template-columns 0.3s ease;
 }
 
 /* Sidebar de Tópicos */
@@ -773,6 +805,29 @@ html[data-daltonismo] .logo img,
   border-right: 1px solid var(--border);
   padding: 1.5rem;
   overflow-y: auto;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Estados da sidebar dinâmica */
+.lesson-page-wrapper.sidebar-minimized {
+  grid-template-columns: 60px 1fr;
+}
+
+.lesson-sidebar.minimized {
+  padding: 1.5rem 0.75rem;
+}
+
+.lesson-sidebar.minimized .sidebar-content {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.lesson-sidebar:not(.minimized) .sidebar-content {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease 0.1s, visibility 0.3s ease 0.1s;
 }
 
 .sidebar-title-wrapper {
@@ -781,6 +836,65 @@ html[data-daltonismo] .logo img,
   align-items: center;
   margin-bottom: 1rem;
 }
+
+/* Botão de toggle da sidebar */
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 280px; /* Posição fixa alinhada com "Engenharia de Requisitos" */
+  right: 12px; /* Recuado 2 níveis para a esquerda */
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+  opacity: 0.7;
+  transform: translateY(-50%);
+  color: var(--muted-foreground);
+}
+
+
+.sidebar-toggle-btn:hover {
+  opacity: 1;
+  color: var(--primary);
+}
+
+.sidebar-toggle-btn:active {
+  opacity: 0.8;
+}
+
+.sidebar-toggle-btn svg {
+  width: 20px; /* Seta maior */
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-toggle-btn.minimized svg {
+  transform: rotate(180deg);
+}
+
+/* Estado minimizado - manter na linha divisória */
+.lesson-sidebar.minimized .sidebar-toggle-btn {
+  right: 12px; /* Consistente com o recuo */
+  top: 280px; /* Mesma posição fixa */
+  transform: translateY(-50%);
+}
+
+/* Melhorias para o estado minimizado */
+.lesson-sidebar.minimized {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.lesson-sidebar.minimized .sidebar-content {
+  width: 100%;
+}
+
 
 .lesson-sidebar h3 {
   font-family: var(--font-heading);
@@ -869,10 +983,12 @@ html[data-daltonismo] .logo img,
 
 /* Área do Player de Vídeo */
 .lesson-main-content {
-  padding: 2rem;
+  padding: 2rem 3rem; /* Aumenta o padding lateral */
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  max-width: 1400px; /* Largura máxima para o conteúdo */
+  margin: 0 auto; /* Centraliza o conteúdo */
 }
 
 .player-header {
@@ -903,6 +1019,7 @@ html[data-daltonismo] .logo img,
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 #view-exercise-btn {
@@ -935,12 +1052,14 @@ html[data-daltonismo] .logo img,
 
 .video-player-wrapper {
   width: 100%;
+  max-width: 900px; /* Largura máxima para o vídeo */
   aspect-ratio: 16 / 9;
   background-color: #000;
   border-radius: var(--radius);
   flex-shrink: 0;
   overflow: hidden;
-  margin-bottom: 0; /* Remover margem inferior */
+  margin: 0 auto 1.5rem auto; /* Centraliza o vídeo e adiciona margem inferior */
+  box-shadow: var(--shadow-medium); /* Adiciona sombra para destacar */
 }
 
 #youtube-player {
@@ -1024,6 +1143,9 @@ html[data-daltonismo] .logo img,
   padding: 2rem 2.5rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
+  max-width: 900px; /* Largura máxima confortável para leitura */
+  margin-left: auto;
+  margin-right: auto;
 }
 .lesson-reading-content h2 {
   font-family: var(--font-heading);
@@ -1064,6 +1186,9 @@ html[data-daltonismo] .logo img,
   padding: 2rem 2.5rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
+  max-width: 900px; /* Largura máxima confortável para leitura */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Sistema de Navegação por Tabs */
@@ -1315,8 +1440,17 @@ html[data-daltonismo] .logo img,
     display: none;
   }
   
+  .sidebar-toggle-btn {
+    display: none;
+  }
+  
   .lesson-main-content {
     padding: 1rem;
+  }
+  
+  .video-player-wrapper {
+    max-width: 100%; /* Vídeo ocupa toda a largura em mobile */
+    margin-bottom: 1rem;
   }
   
   .player-header {
@@ -3993,6 +4127,258 @@ select:focus-visible {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ==========================================================================
+   ESTILOS PARA ATIVIDADE PRÁTICA
+   ========================================================================== */
+.lesson-practical-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.practical-step {
+  background-color: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.uml-editor-container {
+  min-height: 600px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.editor-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.saved-work-preview {
+  margin: 1.5rem 0;
+}
+
+.saved-work-preview.hidden {
+  display: none;
+}
+
+#diagram-thumbnail {
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.practical-feedback {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  background-color: var(--success-light);
+  color: var(--success-dark);
+  border: 1px solid var(--success);
+}
+
+.practical-feedback.hidden {
+  display: none;
+}
+
+/* Botão de próxima aula no feedback */
+.next-lesson-container {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+#feedback-next-lesson-btn {
+  background-color: var(--primary) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: var(--radius) !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+#feedback-next-lesson-btn:hover {
+  background-color: var(--primary-dark) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-medium) !important;
+}
+
+/* Removido para evitar conflitos - o botão é controlado pelo JavaScript */
+
+/* Área de upload de arquivo */
+.file-upload-area {
+  margin: 1.5rem 0;
+}
+
+.file-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  background-color: var(--background-alt);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.file-upload-label:hover {
+  border-color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.file-upload-label svg {
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+.file-upload-label span {
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+
+.file-input {
+  display: none;
+}
+
+.file-status {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--success-dark);
+  text-align: center;
+}
+
+/* Modal genérico */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-backdrop.hidden {
+  display: none;
+}
+
+.modal-card {
+  background: var(--card);
+  color: var(--foreground);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  width: min(520px, 92vw);
+}
+
+.modal-card h3 {
+  margin: 0 0 .5rem 0;
+  font-size: 1.125rem;
+}
+
+.modal-card p {
+  margin: 0 0 1rem 0;
+  color: var(--muted-foreground);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+}
+
+/* Botão "Enviar Atividade" com azul do projeto */
+#submit-practical-btn {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+#submit-practical-btn:hover:not(:disabled) {
+  background-color: var(--primary-dark) !important;
+}
+
+#submit-practical-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Navegação por passos da atividade prática */
+.step-nav {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  justify-content: flex-end;
+  margin: .25rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.step-counter {
+  font-weight: 600;
+  color: var(--foreground);
+  min-width: 3rem;
+  text-align: center;
+}
+
+.step-prev:disabled,
+.step-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Transições suaves para mostrar/esconder passos */
+.practical-step {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.practical-step[style*="display: none"] {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* Indicador visual do passo ativo */
+.practical-step .step-number {
+  transition: all 0.3s ease;
+}
+
+.practical-step[style*="display: none"] .step-number {
+  opacity: 0.5;
 }
 
 /* ==========================================================================

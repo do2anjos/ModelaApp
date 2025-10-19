@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>Aula | Modela+</title>
     <script>
         // Inicialização precoce - definir tema antes do carregamento
@@ -135,15 +135,23 @@
 
     <div class="lesson-page-wrapper">
         <aside class="lesson-sidebar">
-            <div class="sidebar-title-wrapper">
-            <h3>Tópicos do Curso</h3>
-            <a href="/home.html" class="sidebar-back-button">
+            <!-- Botão de toggle da sidebar -->
+            <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Minimizar sidebar" title="Minimizar sidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m15 18-6-6 6-6"/>
+                    <path d="m15 18-6-6 6-6"/>
                 </svg>
-                <span>Voltar</span>
-            </a>
-            </div>
+            </button>
+            
+            <div class="sidebar-content">
+                <div class="sidebar-title-wrapper">
+                    <h3>Tópicos do Curso</h3>
+                    <a href="/home.html" class="sidebar-back-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                        <span>Voltar</span>
+                    </a>
+                </div>
 
             <nav class="lesson-topics-nav">
                 <details class="topic-accordion">
@@ -152,7 +160,7 @@
     <span class="topic-progress">1/9</span>
                 </summary>
                 <ul class="lesson-list">
-                    <li><a href="#" class="active" data-video-id="d4j02XdB77g"><span class="lesson-icon play"></span><span>Conceitos e História da UML</span><span class="lesson-duration">15:56</span></a></li>
+                    <li><a href="#" class="active" data-video-id="i5Y69m5lebY"><span class="lesson-icon play"></span><span>Conceitos e História da UML</span><span class="lesson-duration">15:56</span></a></li>
                     <li class="lesson-locked"><a href="#" data-video-id="rDidOn6KN9k">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                         <span>Relacionamentos: Associação e Agregação</span><span class="lesson-duration">11:13</span></a></li>
@@ -217,6 +225,7 @@
                 </details>
 
             </nav>
+            </div> <!-- Fecha sidebar-content -->
         </aside>
 
         <main class="lesson-main-content" id="main-content">
@@ -224,7 +233,7 @@
                 <div class="header-main-content">
                     <nav class="breadcrumb" aria-label="Navegação estrutural">
                         <ol>
-                            <li><a href="/">Início</a></li>
+                            <li><a href="/home.html">Início</a></li>
                             <li><a href="/home.html">Painel</a></li>
                             <li aria-current="page">Aulas</li>
                         </ol>
@@ -248,6 +257,14 @@
                             <line x1="16" y1="17" x2="8" y2="17"></line>
                         </svg>
                         <span>Exercício</span>
+                        <span class="lock-indicator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+                    </button>
+                    <button class="tab-button" id="practical-tab" role="tab" aria-selected="false" aria-controls="practical-content" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        <span>Atividade Prática</span>
                         <span class="lock-indicator"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
                     </button>
                 </div>
@@ -327,8 +344,143 @@
                         <div id="exercise-feedback" role="region" aria-live="polite" aria-label="Resultado do exercício"></div>
                     </section>
                 </div>
+
+                <!-- Painel da Atividade Prática -->
+                <div class="tab-content" id="practical-content" role="tabpanel" aria-labelledby="practical-tab">
+                    <section class="lesson-practical-content" aria-labelledby="practical-title">
+                        <h2 id="practical-title">Atividade Prática</h2>
+
+                        <!-- Navegação por passos -->
+                        <div class="step-nav" aria-label="Navegação por passos">
+                            <button class="button step-prev" aria-label="Passo anterior" disabled>◀</button>
+                            <span class="step-counter" aria-live="polite">
+                                <strong>1</strong> / <span class="step-total">3</span>
+                            </span>
+                            <button class="button step-next" aria-label="Próximo passo">▶</button>
+                        </div>
+
+                        <!-- Passo 1: Modelo Orientativo -->
+                        <div class="practical-step" id="practical-step-1">
+                            <div class="step-header">
+                                <div class="step-number">1</div>
+                                <h3>Modelo Orientativo</h3>
+                            </div>
+                            <p>Baixe o modelo e siga as instruções para criar o seu diagrama.</p>
+                            <div class="editor-controls">
+                                <button class="button" id="download-model-btn">Baixar Modelo (PDF)</button>
+                            </div>
+                        </div>
+
+                        <!-- Passo 2: Editor Draw.io -->
+                        <div class="practical-step" id="practical-step-2">
+                            <div class="step-header">
+                                <div class="step-number">2</div>
+                                <h3>Crie seu Diagrama</h3>
+                            </div>
+                            <div class="editor-help">
+                                <details open>
+                                    <summary>Guia rápido do editor</summary>
+                                    <div>
+                                        <h4 style="margin: .5rem 0">Comece assim</h4>
+                                        <ul>
+                                            <li>Selecione um <strong>Tipo</strong> no dropdown abaixo para carregar um <em>template mínimo</em> correspondente.</li>
+                                            <li>Você pode editar, apagar ou adicionar elementos livremente após o carregamento.</li>
+                                        </ul>
+                                        <h4 style="margin: .75rem 0 .25rem">Exportar</h4>
+                                        <ul>
+                                            <li>No menu do editor: <strong>File → Export as</strong> (PNG, SVG, PDF, etc.).</li>
+                                            <li>Dica: para imagem nítida, escolha um <em>scale</em> maior (ex.: 2x).</li>
+                                        </ul>
+                                        <h4 style="margin: .75rem 0 .25rem">Atalhos úteis</h4>
+                                        <ul>
+                                            <li><kbd>Ctrl</kbd> + <kbd>Z</kbd>: desfazer • <kbd>Ctrl</kbd> + <kbd>Y</kbd>: refazer</li>
+                                            <li><kbd>Del</kbd>: apagar seleção • <kbd>Shift</kbd> + arrastar: seleção múltipla</li>
+                                            <li><kbd>Ctrl</kbd> + <kbd>C</kbd>/<kbd>V</kbd>: copiar/colar • <kbd>Ctrl</kbd> + <kbd>D</kbd>: duplicar</li>
+                                        </ul>
+                                        <h4 style="margin: .75rem 0 .25rem">Como enviar?</h4>
+                                        <ul>
+                                            <li><kbd>Para enviar, clique na seta para avança para o passo 3</kbd></li>
+                                        </ul>
+                                    </div>
+                                </details>
+                            </div>
+                            <div class="editor-controls">
+                                <label class="select-group" for="uml-diagram-type" style="display:flex;align-items:center;gap:.5rem;">
+                                    <span>Tipo:</span>
+                                    <select id="uml-diagram-type" aria-label="Tipo de diagrama UML">
+                                        <option value="">Selecione um tipo...</option>
+                                        <option value="classes">Diagrama de Classes</option>
+                                        <option value="casos-uso">Diagrama de Casos de Uso</option>
+                                        <option value="sequencia">Diagrama de Sequência</option>
+                                        <option value="atividades">Diagrama de Atividades</option>
+                                        <option value="estados">Diagrama de Estados</option>
+                                        <option value="componentes">Diagrama de Componentes</option>
+                                    </select>
+                                </label>
+                                <span id="editor-status" class="status-indicator">Pronto</span>
+                            </div>
+                            <div class="uml-editor-container">
+                                <iframe id="uml-editor-iframe" src="https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=uml;general&grid=1&nav=1&shadow=0&splash=0" width="100%" height="600"></iframe>
+                            </div>
+                            
+                            <div id="saved-work-preview" class="saved-work-preview hidden">
+                                <h4>Seu trabalho salvo:</h4>
+                                <img id="diagram-thumbnail" alt="Pré-visualização do diagrama" />
+                            </div>
+                        </div>
+
+                        <!-- Passo 3: Envio -->
+                        <div class="practical-step" id="practical-step-3">
+                            <div class="step-header">
+                                <div class="step-number">3</div>
+                                <h3>Envie seu Trabalho</h3>
+                            </div>
+
+                            <!-- Área de upload de arquivo -->
+                            <div class="file-upload-area">
+                                <label for="diagram-file-input" class="file-upload-label">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                    <span>Clique para selecionar o arquivo do diagrama</span>
+                                </label>
+                                <input type="file" id="diagram-file-input" accept=".png,.jpg,.jpeg,.svg,.pdf" class="file-input">
+                                <div id="file-status" class="file-status">Nenhum arquivo selecionado</div>
+                            </div>
+
+                            <button class="button button-success" id="submit-practical-btn" disabled>Enviar Atividade</button>
+                            <div id="practical-feedback" class="practical-feedback hidden">
+                                <strong>Atividade enviada com sucesso!</strong>
+                                <p>Você já pode avançar para a próxima aula.</p>
+                                <div class="next-lesson-container" style="margin-top: 1rem; text-align: right;">
+                                    <button class="button button-primary" id="feedback-next-lesson-btn" aria-label="Ir para próxima aula">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M9 18l6-6-6-6"></path>
+                                        </svg>
+                                        <span>Próxima Aula</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
         </main>
+    </div>
+
+    <!-- Modal de confirmação de upload de arquivo -->
+    <div id="file-upload-modal" class="modal-backdrop hidden" aria-hidden="true" role="dialog" aria-labelledby="file-upload-modal-title">
+        <div class="modal-card" role="document">
+            <h3 id="file-upload-modal-title">Arquivo carregado com sucesso</h3>
+            <p>Seu arquivo foi anexado. Clique em OK para continuar.</p>
+            <div class="modal-actions">
+                <button class="button button-primary" id="file-upload-ok-btn" aria-label="Fechar aviso de arquivo carregado">OK</button>
+            </div>
+        </div>
     </div>
 
 <!-- Scripts para gerenciar dark mode, daltonism mode e usabilidade -->
@@ -374,11 +526,84 @@
         const exerciseFeedback = document.getElementById('exercise-feedback');
         const exerciseForm = document.getElementById('exercise-form');
         
+        // Seletores da sidebar dinâmica
+        const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+        const lessonSidebar = document.querySelector('.lesson-sidebar');
+        const lessonPageWrapper = document.querySelector('.lesson-page-wrapper');
+        
         // Seletores das tabs
         const videoTab = document.getElementById('video-tab');
         const exerciseTab = document.getElementById('exercise-tab');
+        const practicalTab = document.getElementById('practical-tab');
         const videoContent = document.getElementById('video-content');
         const exerciseContent = document.getElementById('exercise-content');
+        const practicalContent = document.getElementById('practical-content');
+        const downloadModelBtn = document.getElementById('download-model-btn');
+        const umlEditorIframe = document.getElementById('uml-editor-iframe');
+        const saveDiagramBtn = document.getElementById('save-diagram-btn');
+        const savedWorkPreview = document.getElementById('saved-work-preview');
+        const diagramThumbnail = document.getElementById('diagram-thumbnail');
+        const submitPracticalBtn = document.getElementById('submit-practical-btn');
+        const umlDiagramTypeSelect = document.getElementById('uml-diagram-type');
+        const practicalFeedback = document.getElementById('practical-feedback');
+        const editorStatus = document.getElementById('editor-status');
+        const diagramFileInput = document.getElementById('diagram-file-input');
+        const fileStatus = document.getElementById('file-status');
+        const fileUploadModal = document.getElementById('file-upload-modal');
+        const fileUploadOkBtn = document.getElementById('file-upload-ok-btn');
+        const feedbackNextLessonBtn = document.getElementById('feedback-next-lesson-btn');
+
+        // Navegação entre passos da Atividade Prática
+        const practicalRoot = document.querySelector('.lesson-practical-content');
+        const stepElems = practicalRoot ? practicalRoot.querySelectorAll('.practical-step') : [];
+        const stepPrevBtn = practicalRoot ? practicalRoot.querySelector('.step-prev') : null;
+        const stepNextBtn = practicalRoot ? practicalRoot.querySelector('.step-next') : null;
+        const stepCounter = practicalRoot ? practicalRoot.querySelector('.step-counter strong') : null;
+        const stepTotal = practicalRoot ? practicalRoot.querySelector('.step-total') : null;
+
+        let currentStepIndex = 0;
+
+        function updateStepUI() {
+            if (!stepElems.length) return;
+            // Mostra apenas o passo atual, esconde os outros
+            stepElems.forEach((el, i) => {
+                el.style.display = i === currentStepIndex ? 'block' : 'none';
+            });
+            if (stepCounter) stepCounter.textContent = String(currentStepIndex + 1);
+            if (stepPrevBtn) stepPrevBtn.disabled = currentStepIndex === 0;
+            if (stepNextBtn) stepNextBtn.disabled = currentStepIndex === stepElems.length - 1;
+        }
+
+        function goToStep(index) {
+            if (!stepElems.length) return;
+            const i = Math.max(0, Math.min(stepElems.length - 1, index));
+            currentStepIndex = i;
+            // Primeiro atualiza UI para mostrar/esconder passos
+            updateStepUI();
+            // Depois faz scroll suave para o passo atual
+            stepElems[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Inicializa total e estado inicial
+        if (stepTotal) stepTotal.textContent = String(stepElems.length || 0);
+        updateStepUI();
+
+        // Eventos dos botões
+        if (stepPrevBtn) stepPrevBtn.addEventListener('click', () => goToStep(currentStepIndex - 1));
+        if (stepNextBtn) stepNextBtn.addEventListener('click', () => goToStep(currentStepIndex + 1));
+
+        // Bônus: setas do teclado (← →) navegam entre passos quando a aba prática está ativa
+        document.addEventListener('keydown', (e) => {
+            const practicalTabActive = document.getElementById('practical-content')?.classList.contains('active');
+            if (!practicalTabActive) return;
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                goToStep(currentStepIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                goToStep(currentStepIndex + 1);
+            }
+        });
 
         // --- DADOS E ESTADO ---
         const lessonData = {
@@ -494,8 +719,130 @@
         let currentYouTubePlayer = null;
         let videoProgressInterval = null;
         let currentLessonTitle = "";
+        let currentDiagramData = { xml: null, image: null };
+        // Estado de conexão com o editor (draw.io)
+        let editorReady = false;
+        let editorRetries = 0;
+        const maxEditorRetries = 2;
+        const pendingEditorMessages = [];
+        const EDITOR_BASE_URL = 'https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=uml;general&grid=1&nav=1&shadow=0&splash=0';
+
+        function setEditorSrc(url) {
+            if (!umlEditorIframe) return;
+            editorReady = false;
+            // Cache-buster para evitar estado antigo
+            const cacheUrl = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+            umlEditorIframe.src = cacheUrl;
+            if (editorStatus) editorStatus.textContent = 'Carregando editor...';
+        }
+
+        function sendToEditor(msgObj) {
+            try {
+                const payload = JSON.stringify(msgObj);
+                if (editorReady && umlEditorIframe && umlEditorIframe.contentWindow) {
+                    umlEditorIframe.contentWindow.postMessage(payload, '*');
+                } else {
+                    pendingEditorMessages.push(payload);
+                }
+            } catch(e) {
+                console.error('Falha ao enfileirar/enviar mensagem ao editor:', e);
+            }
+        }
+
+        function drainEditorQueue() {
+            if (!umlEditorIframe || !umlEditorIframe.contentWindow) return;
+            while (pendingEditorMessages.length) {
+                const payload = pendingEditorMessages.shift();
+                umlEditorIframe.contentWindow.postMessage(payload, '*');
+            }
+        }
+
+        function ensureEditorReadyWithRetry() {
+            return new Promise((resolve) => {
+                if (editorReady) return resolve(true);
+                // Timeout de segurança: se não receber init em 2s, tenta recarregar
+                const start = Date.now();
+                const check = () => {
+                    if (editorReady) return resolve(true);
+                    if (Date.now() - start > 2000) {
+                        if (editorRetries < maxEditorRetries) {
+                            editorRetries++;
+                            setEditorSrc(EDITOR_BASE_URL);
+                            // aguarda novo ciclo
+                            setTimeout(check, 1200);
+                        } else {
+                            resolve(false);
+                        }
+                    } else {
+                        requestAnimationFrame(check);
+                    }
+                };
+                check();
+            });
+        }
+
+        // Persistência do progresso
+        function loadProgressFromStorage() {
+            try {
+                const saved = localStorage.getItem('userProgress');
+                if (saved) userProgress = JSON.parse(saved);
+            } catch (e) { console.error('Erro ao carregar progresso:', e); }
+        }
+
+        function saveProgressToStorage() {
+            try {
+                localStorage.setItem('userProgress', JSON.stringify(userProgress));
+            } catch (e) { console.error('Erro ao salvar progresso:', e); }
+        }
+
+        function updateUserProgress(lessonTitle, updates) {
+            if (!userProgress[lessonTitle]) userProgress[lessonTitle] = {};
+            Object.assign(userProgress[lessonTitle], updates);
+            saveProgressToStorage();
+        }
 
         // --- FUNÇÕES ---
+
+        // --- FUNÇÕES DA SIDEBAR DINÂMICA ---
+        
+        // Inicializa o estado da sidebar baseado no localStorage
+        function initializeSidebarState() {
+            const isMinimized = localStorage.getItem('sidebarMinimized') === 'true';
+            if (isMinimized) {
+                minimizeSidebar();
+            }
+        }
+        
+        // Minimiza a sidebar
+        function minimizeSidebar() {
+            lessonSidebar.classList.add('minimized');
+            lessonPageWrapper.classList.add('sidebar-minimized');
+            sidebarToggleBtn.classList.add('minimized');
+            sidebarToggleBtn.setAttribute('aria-label', 'Maximizar sidebar');
+            sidebarToggleBtn.setAttribute('title', 'Maximizar sidebar');
+            localStorage.setItem('sidebarMinimized', 'true');
+            console.log('🔽 Sidebar minimizada');
+        }
+        
+        // Maximiza a sidebar
+        function maximizeSidebar() {
+            lessonSidebar.classList.remove('minimized');
+            lessonPageWrapper.classList.remove('sidebar-minimized');
+            sidebarToggleBtn.classList.remove('minimized');
+            sidebarToggleBtn.setAttribute('aria-label', 'Minimizar sidebar');
+            sidebarToggleBtn.setAttribute('title', 'Minimizar sidebar');
+            localStorage.setItem('sidebarMinimized', 'false');
+            console.log('🔼 Sidebar maximizada');
+        }
+        
+        // Alterna o estado da sidebar
+        function toggleSidebar() {
+            if (lessonSidebar.classList.contains('minimized')) {
+                maximizeSidebar();
+            } else {
+                minimizeSidebar();
+            }
+        }
 
         // Função para rolar suavemente para um elemento com offset
         function smoothScrollToElement(element, offset = 80) {
@@ -508,16 +855,22 @@
             });
         }
 
-        // Alterna entre as tabs de vídeo e exercício
+        // Alterna entre as tabs de vídeo, exercício e prática
         function switchTab(tabName) {
             if (tabName === 'video') {
                 videoTab.classList.add('active');
                 videoTab.setAttribute('aria-selected', 'true');
                 exerciseTab.classList.remove('active');
                 exerciseTab.setAttribute('aria-selected', 'false');
+                if (typeof practicalTab !== 'undefined') {
+                    practicalTab.classList.remove('active');
+                    practicalTab.setAttribute('aria-selected', 'false');
+                }
                 
                 videoContent.classList.add('active');
                 exerciseContent.classList.remove('active');
+                const practicalContent = document.getElementById('practical-content');
+                if (practicalContent) practicalContent.classList.remove('active');
             } else if (tabName === 'exercise') {
                 if (exerciseTab.disabled) {
                     alert('Complete o vídeo para acessar o exercício.');
@@ -528,11 +881,34 @@
                 exerciseTab.setAttribute('aria-selected', 'true');
                 videoTab.classList.remove('active');
                 videoTab.setAttribute('aria-selected', 'false');
+                if (typeof practicalTab !== 'undefined') {
+                    practicalTab.classList.remove('active');
+                    practicalTab.setAttribute('aria-selected', 'false');
+                }
                 
                 exerciseContent.classList.add('active');
                 videoContent.classList.remove('active');
+                const practicalContent = document.getElementById('practical-content');
+                if (practicalContent) practicalContent.classList.remove('active');
                 
                 // Rola suavemente para o topo
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (tabName === 'practical') {
+                const practicalTab = document.getElementById('practical-tab');
+                if (!practicalTab || practicalTab.disabled) {
+                    alert('Complete o exercício com 100% para acessar a atividade prática.');
+                    return;
+                }
+                const practicalContent = document.getElementById('practical-content');
+                practicalTab.classList.add('active');
+                practicalTab.setAttribute('aria-selected', 'true');
+                videoTab.classList.remove('active');
+                videoTab.setAttribute('aria-selected', 'false');
+                exerciseTab.classList.remove('active');
+                exerciseTab.setAttribute('aria-selected', 'false');
+                if (practicalContent) practicalContent.classList.add('active');
+                videoContent.classList.remove('active');
+                exerciseContent.classList.remove('active');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
@@ -759,6 +1135,27 @@
         }
 
 
+        // Controle da aba de Atividade Prática
+        function unlockPracticalTab() {
+            if (!practicalTab) return;
+            practicalTab.disabled = false;
+            const lockIndicator = practicalTab.querySelector('.lock-indicator');
+            if (lockIndicator) {
+                lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>';
+            }
+            practicalTab.style.opacity = '1';
+        }
+
+        function lockPracticalTab() {
+            if (!practicalTab) return;
+            practicalTab.disabled = true;
+            const lockIndicator = practicalTab.querySelector('.lock-indicator');
+            if (lockIndicator) {
+                lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
+            }
+            practicalTab.style.opacity = '0.5';
+        }
+
         function showNextLessonButton() {
             nextLessonBtn.classList.remove('hidden');
             nextLessonBtn.classList.add('visible');
@@ -791,24 +1188,34 @@
 
         // Atualiza o estado dos botões
         function updateButtonStates(lessonTitle, activeIcon) {
-            const progress = userProgress[lessonTitle];
-            
-            console.log('🔧 updateButtonStates - progress:', progress, 'lessonTitle:', lessonTitle);
-            
-            // Controla estado da tab de exercício
-            if (progress && progress.videoCompleted && !progress.completed) {
-                unlockExerciseTab();
-            } else {
-                lockExerciseTab();
+            const p = userProgress[lessonTitle] || {};
+            console.log('🔧 updateButtonStates - progress:', p, 'lessonTitle:', lessonTitle);
+
+            // Tab Exercício
+            p.videoCompleted ? unlockExerciseTab() : lockExerciseTab();
+
+            // Tab Atividade Prática
+            if (typeof unlockPracticalTab === 'function') {
+                p.exerciseCompleted ? unlockPracticalTab() : lockPracticalTab();
             }
-            
-            // Botão "Próxima aula" - aparece apenas se a aula foi concluída (100% no exercício)
-            if (progress && progress.completed) {
+
+            // Exibição do botão Próxima Aula (fluxo estrito)
+            const canShow = !!(p.videoCompleted && p.exerciseCompleted && p.modelDownloaded && p.diagramSaved && p.practicalSubmitted);
+            console.log('🔍 updateButtonStates - canShow:', canShow, 'progress:', p);
+            if (canShow) {
                 showNextLessonButton();
                 unlockNextLessonButton();
+                console.log('✅ Botão "Próxima Aula" mostrado e desbloqueado');
+                // Scroll automático para o botão quando ele aparece
+                setTimeout(() => {
+                    if (nextLessonBtn && !nextLessonBtn.classList.contains('hidden')) {
+                        nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        console.log('📜 Scroll automático para botão "Próxima Aula"');
+                    }
+                }, 300);
             } else {
-                showNextLessonButton(); // Mostra o botão mesmo bloqueado
-                lockNextLessonButton(); // Mas mantém bloqueado
+                hideNextLessonButton();
+                console.log('❌ Botão "Próxima Aula" oculto - critérios não atendidos');
             }
         }
 
@@ -1013,6 +1420,12 @@
             switchTab('exercise');
         });
 
+        if (practicalTab) {
+            practicalTab.addEventListener('click', function() {
+                switchTab('practical');
+            });
+        }
+
         // Atalhos de teclado para navegação entre tabs
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === '1') {
@@ -1022,6 +1435,10 @@
             if (e.ctrlKey && e.key === '2') {
                 e.preventDefault();
                 switchTab('exercise');
+            }
+            if (e.ctrlKey && e.key === '3') {
+                e.preventDefault();
+                switchTab('practical');
             }
         });
 
@@ -1037,13 +1454,8 @@
             if (nextListItem) {
                 const nextLessonLink = nextListItem.querySelector('a');
                 
-                // Verifica se a próxima aula está bloqueada
-                if (nextListItem.classList.contains('lesson-locked')) {
-                    alert('Complete a aula atual para desbloquear a próxima.');
-                    return;
-                }
-                
-                // Carrega a próxima aula
+                // Neste fluxo, este botão só é exibido quando a aula atual foi concluída.
+                // Portanto, a próxima aula deve estar desbloqueada aqui. Navega diretamente.
                 nextLessonLink.click();
                 
                 // Volta para a tab de vídeo
@@ -1052,6 +1464,208 @@
                 alert('Não há mais aulas neste tópico.');
             }
         });
+
+        // Evento: Download do Modelo Orientativo
+        if (downloadModelBtn) {
+            downloadModelBtn.addEventListener('click', function() {
+                if (!currentLessonTitle) return;
+                updateUserProgress(currentLessonTitle, { modelDownloaded: true });
+                console.log('📥 Modelo orientativo baixado');
+            });
+        }
+
+        // Integração com Draw.io (postMessage)
+        window.addEventListener('message', function(evt) {
+            try {
+                if (!evt || !evt.data) return;
+                const msg = JSON.parse(evt.data);
+                if (msg.event === 'init') {
+                    // Sinaliza pronto e processa fila
+                    editorReady = true;
+                    editorRetries = 0;
+                    if (editorStatus) editorStatus.textContent = 'Editor pronto';
+                    drainEditorQueue();
+                }
+                if (msg.event === 'export') {
+                    currentDiagramData.image = 'data:image/png;base64,' + msg.data;
+                    if (typeof msg.xml === 'string') currentDiagramData.xml = msg.xml;
+                    if (diagramThumbnail) diagramThumbnail.src = currentDiagramData.image;
+                    if (savedWorkPreview) savedWorkPreview.classList.remove('hidden');
+                    if (submitPracticalBtn) submitPracticalBtn.disabled = false;
+                    if (editorStatus) editorStatus.textContent = 'Diagrama salvo';
+                }
+                // Sem carregamento automático de template neste modo
+            } catch (e) {
+                // Ignora mensagens externas não-JSON
+            }
+        });
+
+        // Solicita export do diagrama (salvar)
+        // Botão de salvar desativado no modo atual (export pelo menu do editor)
+
+        // Templates mínimos por tipo
+        const UML_TEMPLATES = {
+            'classes': `<?xml version="1.0" encoding="UTF-8"?>\
+<mxfile host=\"app.diagrams.net\"><diagram id=\"CLASSES\" name=\"Classes\"><mxGraphModel dx=\"1062\" dy=\"609\" grid=\"1\" gridSize=\"10\" guides=\"1\" tooltips=\"1\" connect=\"1\" arrows=\"1\" fold=\"1\" page=\"1\" pageScale=\"1\" pageWidth=\"1169\" pageHeight=\"827\" math=\"0\" shadow=\"0\"><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><mxCell id=\"2\" value=\"ClasseA\" style=\"shape=umlClass;align=left;verticalAlign=top;spacingLeft=10;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"120\" y=\"150\" width=\"160\" height=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"3\" value=\"ClasseB\" style=\"shape=umlClass;align=left;verticalAlign=top;spacingLeft=10;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"380\" y=\"150\" width=\"160\" height=\"120\" as=\"geometry\"/></mxCell><mxCell id=\"4\" edge=\"1\" parent=\"1\" source=\"2\" target=\"3\" style=\"endArrow=block;endFill=1;\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></root></mxGraphModel></diagram></mxfile>`,
+            'casos-uso': `<?xml version="1.0" encoding="UTF-8"?>\
+<mxfile host=\"app.diagrams.net\"><diagram id=\"USECASE\" name=\"Casos de Uso\"><mxGraphModel dx=\"1062\" dy=\"609\" grid=\"1\" gridSize=\"10\" guides=\"1\" tooltips=\"1\" connect=\"1\" arrows=\"1\" fold=\"1\" page=\"1\" pageScale=\"1\" pageWidth=\"1169\" pageHeight=\"827\" math=\"0\" shadow=\"0\"><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><mxCell id=\"2\" value=\"Ator\" style=\"shape=umlActor;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"120\" y=\"160\" width=\"40\" height=\"80\" as=\"geometry\"/></mxCell><mxCell id=\"3\" value=\"Caso de Uso\" style=\"shape=ellipse;whiteSpace=wrap;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"300\" y=\"170\" width=\"160\" height=\"60\" as=\"geometry\"/></mxCell><mxCell id=\"4\" edge=\"1\" parent=\"1\" source=\"2\" target=\"3\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></root></mxGraphModel></diagram></mxfile>`,
+            'sequencia': `<?xml version="1.0" encoding="UTF-8"?>\
+<mxfile host=\"app.diagrams.net\"><diagram id=\"SEQ\" name=\"Sequencia\"><mxGraphModel dx=\"1062\" dy=\"609\" grid=\"1\" gridSize=\"10\" guides=\"1\" tooltips=\"1\" connect=\"1\" arrows=\"1\" fold=\"1\" page=\"1\" pageScale=\"1\" pageWidth=\"1169\" pageHeight=\"827\" math=\"0\" shadow=\"0\"><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><mxCell id=\"2\" value=\"A\" style=\"shape=umlLifeline;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"160\" y=\"120\" width=\"100\" height=\"300\" as=\"geometry\"/></mxCell><mxCell id=\"3\" value=\"B\" style=\"shape=umlLifeline;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"380\" y=\"120\" width=\"100\" height=\"300\" as=\"geometry\"/></mxCell><mxCell id=\"4\" edge=\"1\" parent=\"1\" source=\"2\" target=\"3\" style=\"endArrow=open;dashed=0;\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></root></mxGraphModel></diagram></mxfile>`,
+            'atividades': `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+<mxfile host=\"app.diagrams.net\"><diagram id=\"ACT\" name=\"Atividades\"><mxGraphModel dx=\"1062\" dy=\"609\" grid=\"1\" gridSize=\"10\" guides=\"1\" tooltips=\"1\" connect=\"1\" arrows=\"1\" fold=\"1\" page=\"1\" pageScale=\"1\" pageWidth=\"1169\" pageHeight=\"827\" math=\"0\" shadow=\"0\"><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><mxCell id=\"2\" value=\"Início\" style=\"shape=ellipse;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"150\" y=\"150\" width=\"60\" height=\"60\" as=\"geometry\"/></mxCell><mxCell id=\"3\" value=\"Ação\" style=\"shape=process;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"280\" y=\"150\" width=\"120\" height=\"60\" as=\"geometry\"/></mxCell><mxCell id=\"4\" edge=\"1\" parent=\"1\" source=\"2\" target=\"3\" style=\"endArrow=block;\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></root></mxGraphModel></diagram></mxfile>`,
+            'estados': `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+<mxfile host=\"app.diagrams.net\"><diagram id=\"STATE\" name=\"Estados\"><mxGraphModel dx=\"1062\" dy=\"609\" grid=\"1\" gridSize=\"10\" guides=\"1\" tooltips=\"1\" connect=\"1\" arrows=\"1\" fold=\"1\" page=\"1\" pageScale=\"1\" pageWidth=\"1169\" pageHeight=\"827\" math=\"0\" shadow=\"0\"><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><mxCell id=\"2\" value=\"Estado A\" style=\"shape=umlState;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"160\" y=\"160\" width=\"160\" height=\"80\" as=\"geometry\"/></mxCell><mxCell id=\"3\" value=\"Estado B\" style=\"shape=umlState;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"380\" y=\"160\" width=\"160\" height=\"80\" as=\"geometry\"/></mxCell><mxCell id=\"4\" edge=\"1\" parent=\"1\" source=\"2\" target=\"3\" style=\"endArrow=block;\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></root></mxGraphModel></diagram></mxfile>`,
+            'componentes': `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+<mxfile host=\"app.diagrams.net\"><diagram id=\"COMP\" name=\"Componentes\"><mxGraphModel dx=\"1062\" dy=\"609\" grid=\"1\" gridSize=\"10\" guides=\"1\" tooltips=\"1\" connect=\"1\" arrows=\"1\" fold=\"1\" page=\"1\" pageScale=\"1\" pageWidth=\"1169\" pageHeight=\"827\" math=\"0\" shadow=\"0\"><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><mxCell id=\"2\" value=\"Componente A\" style=\"shape=component;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"180\" y=\"160\" width=\"140\" height=\"80\" as=\"geometry\"/></mxCell><mxCell id=\"3\" value=\"Componente B\" style=\"shape=component;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"380\" y=\"160\" width=\"140\" height=\"80\" as=\"geometry\"/></mxCell><mxCell id=\"4\" edge=\"1\" parent=\"1\" source=\"2\" target=\"3\" style=\"endArrow=block;endFill=1;\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></root></mxGraphModel></diagram></mxfile>`
+        };
+
+        // Recarrega editor com libs apropriadas e template mínimo
+        if (umlDiagramTypeSelect && umlEditorIframe) {
+            umlDiagramTypeSelect.addEventListener('change', async function() {
+                const value = umlDiagramTypeSelect.value;
+                const libs = 'uml;general';
+                try {
+                    setEditorSrc(`https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=${encodeURIComponent(libs)}&grid=1&nav=1&shadow=0&splash=0`);
+                    const ok = await ensureEditorReadyWithRetry();
+                    if (editorStatus) editorStatus.textContent = ok ? 'Editor recarregado' : 'Falha ao recarregar editor';
+
+                    const xml = UML_TEMPLATES[value];
+                    if (xml && ok) {
+                        sendToEditor({ action: 'load', xml, autosave: 1, spin: 'Carregando template...' });
+                    }
+                } catch (e) {
+                    console.error('Erro ao recarregar editor:', e);
+                }
+            });
+        }
+
+        // Modo livre: sem template pré-carregado
+        // Controle do upload de arquivo
+        let selectedFile = null;
+
+        if (diagramFileInput) {
+            diagramFileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    selectedFile = file;
+                    if (fileStatus) fileStatus.innerHTML = `<strong>Arquivo carregado com sucesso:</strong> ${file.name} <span style="color: var(--muted-foreground)">(${(file.size / 1024).toFixed(1)} KB)</span>`;
+
+                    // Marca diagrama como salvo quando arquivo é selecionado
+                    updateUserProgress(currentLessonTitle, { diagramSaved: true });
+
+                    // Libera imediatamente o botão "Próxima Aula" do header ao anexar arquivo (para fins de demonstração)
+                    updateUserProgress(currentLessonTitle, { modelDownloaded: true, practicalSubmitted: true, fullyCompleted: true, completed: true });
+                    unlockNextLesson(currentLessonTitle);
+                    showNextLessonButton();
+                    unlockNextLessonButton();
+                    setTimeout(() => {
+                        if (nextLessonBtn && !nextLessonBtn.classList.contains('hidden')) {
+                            nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 200);
+
+                    if (submitPracticalBtn) submitPracticalBtn.disabled = false;
+                    console.log('📁 Arquivo selecionado e diagrama marcado como salvo');
+
+                    // Exibe modal de confirmação
+                    if (fileUploadModal) {
+                        fileUploadModal.classList.remove('hidden');
+                        fileUploadModal.setAttribute('aria-hidden', 'false');
+                    }
+                } else {
+                    selectedFile = null;
+                    if (fileStatus) fileStatus.textContent = 'Nenhum arquivo selecionado';
+                    if (submitPracticalBtn) submitPracticalBtn.disabled = true;
+                }
+            });
+        }
+
+        // Fecha modal ao clicar em OK
+        if (fileUploadOkBtn && fileUploadModal) {
+            fileUploadOkBtn.addEventListener('click', function() {
+                fileUploadModal.classList.add('hidden');
+                fileUploadModal.setAttribute('aria-hidden', 'true');
+            });
+        }
+
+        // Envio da Atividade
+        if (submitPracticalBtn) {
+            submitPracticalBtn.addEventListener('click', function() {
+                if (!currentLessonTitle) return;
+                if (!selectedFile) {
+                    alert('Selecione um arquivo antes de enviar.');
+                    return;
+                }
+                // Marca atividade como enviada e conclui a aula atual
+                updateUserProgress(currentLessonTitle, { practicalSubmitted: true, fullyCompleted: true, completed: true });
+                // Desbloqueia explicitamente a próxima aula
+                unlockNextLesson(currentLessonTitle);
+
+                // Modo protótipo: não persistir, apenas feedback e gating visual
+                if (practicalFeedback) practicalFeedback.classList.remove('hidden');
+
+                // Oculta o botão do cabeçalho e mostra no feedback
+                if (nextLessonBtn) nextLessonBtn.classList.add('hidden');
+                if (feedbackNextLessonBtn) {
+                    feedbackNextLessonBtn.classList.remove('hidden');
+                    feedbackNextLessonBtn.style.display = 'inline-flex'; // Força exibição
+                    console.log('🔘 Botão de próxima aula no feedback mostrado');
+                    console.log('🔍 Estado do botão:', {
+                        classList: Array.from(feedbackNextLessonBtn.classList),
+                        style: feedbackNextLessonBtn.style.display,
+                        parentElement: feedbackNextLessonBtn.parentElement?.className
+                    });
+                }
+            });
+        }
+
+        // Evento para o botão de próxima aula no feedback (movido para o final para garantir que nextLessonBtn esteja disponível)
+        setTimeout(() => {
+            if (feedbackNextLessonBtn && nextLessonBtn) {
+                feedbackNextLessonBtn.addEventListener('click', function() {
+                    console.log('🔘 Botão de próxima aula no feedback clicado');
+
+                    // Executa a mesma lógica do botão original diretamente
+                    const activeLessonLink = document.querySelector('.lesson-list a.active');
+                    if (!activeLessonLink) {
+                        console.error('❌ Nenhuma aula ativa encontrada');
+                        return;
+                    }
+
+                    const currentListItem = activeLessonLink.parentElement;
+                    const nextListItem = currentListItem.nextElementSibling;
+
+                    if (nextListItem) {
+                        const nextLessonLink = nextListItem.querySelector('a');
+                        console.log('🔗 Carregando próxima aula:', nextLessonLink);
+
+                        // Como o botão só aparece quando tudo está completo, não precisamos verificar bloqueio aqui
+                        // A verificação já foi feita quando o botão foi mostrado no feedback
+                
+                // Carrega a próxima aula
+                nextLessonLink.click();
+                
+                // Volta para a tab de vídeo
+                switchTab('video');
+
+                        // Rola automaticamente até o botão "Próxima Aula" no cabeçalho após navegação
+                        setTimeout(() => {
+                            if (nextLessonBtn && !nextLessonBtn.classList.contains('hidden')) {
+                                nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                console.log('📜 Scroll automático para botão "Próxima Aula" no cabeçalho');
+                            }
+                        }, 500);
+            } else {
+                alert('Não há mais aulas neste tópico.');
+            }
+        });
+                console.log('✅ Evento de clique adicionado ao botão de feedback');
+            } else {
+                console.error('❌ Não foi possível adicionar evento - elementos não encontrados');
+                console.log('feedbackNextLessonBtn:', feedbackNextLessonBtn);
+                console.log('nextLessonBtn:', nextLessonBtn);
+            }
+        }, 100);
 
         // Evento de clique no botão de verificar exercício
         submitExerciseBtn.addEventListener('click', function() {
@@ -1085,79 +1699,56 @@
             }
             userProgress[lessonTitle].exerciseCompleted = true;
             
-            // CONCLUI A AULA AUTOMATICAMENTE APENAS se acertou TODAS as questões (100%)
+            // Fluxo Estrito: ao acertar 100%, desbloqueia apenas a Atividade Prática
             if (result.allCorrect) {
-                userProgress[lessonTitle].completed = true;
-                userProgress[lessonTitle].completedAt = new Date().toISOString();
-                
-                // Atualiza o ícone da aula para completed
-                const currentLessonLink = document.querySelector('.lesson-list a.active');
-                if (currentLessonLink) {
-                    const activeIcon = currentLessonLink.querySelector('.lesson-icon');
-                    if (activeIcon) {
-                        activeIcon.classList.remove('play', 'todo', 'video-watched');
-                        activeIcon.classList.add('completed');
-                    }
+                updateUserProgress(lessonTitle, { exerciseCompleted: true });
+                if (typeof unlockPracticalTab === 'function') {
+                    unlockPracticalTab();
                 }
-                
-                // Atualiza contador do tópico
-                const parentAccordion = currentLessonLink.closest('.topic-accordion');
-                updateTopicProgress(parentAccordion);
-                
-                // Desbloqueia próxima aula
-                unlockNextLesson(lessonTitle);
-                
-                // Mostra e desbloqueia botão "Próxima Aula"
-                showNextLessonButton();
-                unlockNextLessonButton();
+                // Mostra o botão Próxima Aula ainda oculto/bloqueado pela regra global
+                hideNextLessonButton();
             } else {
-                // Se não acertou todas, NÃO conclui a aula e NÃO desbloqueia próxima
                 console.log('❌ Pontuação insuficiente. Necessário 100% para avançar.');
             }
             
             // Adiciona botões de ação baseados na pontuação
-            let actionButtonsHTML = `
-                <div class="feedback-actions">
-                    <button class="button feedback-try-again-btn" id="try-again-btn">Tentar Novamente</button>
-            `;
+            let actionButtonsHTML = `<div class="feedback-actions">`;
             
-            // Só mostra botão "Próxima Aula" se acertou todas as questões
             if (result.allCorrect) {
-                actionButtonsHTML += `<button class="button feedback-next-btn" id="feedback-next-btn">Próxima Aula</button>`;
+                // Ao acertar tudo: ir para atividade prática (não mostrar "Tentar Novamente")
+                actionButtonsHTML += `<button class=\"button feedback-next-btn\" id=\"go-practical-btn\">Ir para Atividade Prática</button>`;
             } else {
-                actionButtonsHTML += `<button class="button feedback-next-btn disabled" id="feedback-next-btn" disabled>Próxima Aula (100% necessário)</button>`;
+                // Quando não acertar tudo: mostrar "Tentar Novamente" e manter info da próxima aula desabilitada
+                actionButtonsHTML += `<button class=\"button feedback-try-again-btn\" id=\"try-again-btn\">Tentar Novamente</button>`;
+                actionButtonsHTML += `<button class=\"button feedback-next-btn disabled\" id=\"feedback-next-btn\" disabled>Próxima Aula (100% acertos necessários para avançar)</button>`;
             }
             
             actionButtonsHTML += `</div>`;
             exerciseFeedback.insertAdjacentHTML('beforeend', actionButtonsHTML);
             
-            // Adiciona eventos aos botões do feedback
-            document.getElementById('try-again-btn').addEventListener('click', function() {
+            // Eventos condicionais
+            const tryAgainBtn = document.getElementById('try-again-btn');
+            if (tryAgainBtn) {
+                tryAgainBtn.addEventListener('click', function() {
                 resetExerciseForm();
                 exerciseFeedback.innerHTML = '';
-                
-                // Rola para o topo dos exercícios
                 setTimeout(() => {
                     smoothScrollToElement(exerciseSection, 100);
                 }, 50);
-                
-                // Foca na primeira questão para facilitar o novo tentativa
                 const firstQuestion = document.querySelector('.exercise-question:first-child input[type="radio"]');
                 if (firstQuestion) {
-                    setTimeout(() => {
-                        firstQuestion.focus();
-                    }, 200);
-                }
-            });
-            
-            document.getElementById('feedback-next-btn').addEventListener('click', function() {
-                // Só permite ir para próxima aula se acertou todas as questões
-                if (result.allCorrect) {
-                    nextLessonBtn.click();
-                } else {
-                    alert('Você precisa acertar todas as questões (100%) para avançar para a próxima aula!');
-                }
-            });
+                        setTimeout(() => { firstQuestion.focus(); }, 200);
+                    }
+                });
+            }
+
+            const goPracticalBtn = document.getElementById('go-practical-btn');
+            if (goPracticalBtn) {
+                goPracticalBtn.addEventListener('click', function() {
+                    // A atividade prática já foi desbloqueada acima ao acertar 100%
+                    switchTab('practical');
+                });
+            }
         });
 
         // Lógica para o accordion "sanfona"
@@ -1176,6 +1767,27 @@
 
         // Menu do usuário é gerenciado pelo dark-mode.js
 
+        // Event listener para o botão de toggle da sidebar
+        sidebarToggleBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            toggleSidebar();
+        });
+        
+        // Atalho de teclado para toggle da sidebar (Ctrl + B)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                toggleSidebar();
+            }
+        });
+        
+        // Documentação da funcionalidade:
+        // - Sidebar pode ser minimizada/maximizada via botão ou Ctrl+B
+        // - Estado é persistido no localStorage
+        // - Transições suaves com CSS
+        // - Totalmente acessível com ARIA labels
+        // - Responsivo (oculto em mobile)
+
         // Inicialização: aulas bloqueadas já estão marcadas no HTML
         function initializeProgress() {
             // Inicializa tabs na posição padrão (vídeo)
@@ -1190,7 +1802,13 @@
             });
         }
 
-        initializeProgress();
+        // Inicialização completa
+        function initializeAll() {
+            initializeProgress();
+            initializeSidebarState();
+        }
+
+        initializeAll();
 
         // Adiciona CSS para os novos estilos de feedback
         const style = document.createElement('style');
