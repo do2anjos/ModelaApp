@@ -388,20 +388,18 @@ validateField(field, validator, inputGroup) {
 ## 🚀 **12. Melhorias Implementadas Recentemente**
 
 ### ✅ **Sistema de Tabs Interativo (Nova Implementação)**
-**📅 Implementado em: 15 de Outubro de 2025**
+**📅 Implementado em: 19 de Outubro de 2025**
 
-- **Navegação Moderna**: Eliminação de rolagem desnecessária entre vídeo e exercício
-- **Estados Visuais Claros**: Tab de exercício bloqueada com indicador SVG até vídeo ser assistido
-- **Desbloqueio Automático**: Tab habilitada automaticamente quando vídeo atinge 90%
-- **Atalhos de Teclado**: Ctrl+1 para vídeo e Ctrl+2 para exercício
-- **Transições Suaves**: Animações CSS para melhor experiência
-- **Ícones SVG Consistentes**: Uso de ícones SVG padrão (cadeado/checkmark) em toda interface
-- **Conclusão Automática**: Sistema que conclui aulas automaticamente após exercício completado
-- **Gamificação Rigorosa**: Usuário deve acertar 100% das questões para avançar
-- **Interface Simplificada**: Remoção de botões "Marcar como concluído" desnecessários
-- **Acessibilidade Total**: Suporte completo a ARIA e navegação por teclado
-- **Sistema de Bloqueio Visual**: Botão "Próxima Aula" com indicador de cadeado/check
-- **Estados Visuais Claros**: Feedback imediato sobre disponibilidade de avanço
+- **Navegação Moderna**: Eliminação de rolagem desnecessária com fluxo sequencial em 3 abas: Vídeo → Exercício → Atividade Prática.
+- **Estados Visuais Claros**: Cada aba é desbloqueada com um ícone (🔒 → ✅) apenas após a conclusão da etapa anterior.
+- **Atalhos de Teclado**: `Ctrl+1` (Vídeo), `Ctrl+2` (Exercício) e `Ctrl+3` (Atividade Prática).
+- **Navegação por Passos na Atividade Prática**:
+    - Setas (◀/▶) e teclado (←/→) permitem navegar entre as etapas: "Modelo Orientativo", "Crie seu Diagrama" e "Envie seu Trabalho".
+    - A interface mostra apenas uma etapa por vez, focando a atenção do usuário.
+- **Modal de Confirmação**: Feedback claro ("Arquivo carregado com sucesso") após o upload do diagrama, melhorando a visibilidade do status do sistema.
+- **Gamificação Rigorosa**: Usuário deve acertar 100% das questões e enviar a atividade para avançar.
+- **Interface Simplificada**: Remoção de botões "Marcar como concluído" e automação do progresso.
+- **Sistema de Bloqueio Visual**: Botão "Próxima Aula" só aparece e é ativado após a conclusão de todas as etapas.
 
 ### ✅ **Organização de Arquivos Profissional**
 **📅 Implementado em: 15 de Outubro de 2025**
