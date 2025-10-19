@@ -2,6 +2,32 @@
 
 Este arquivo documenta todas as mudanças significativas implementadas no projeto Modela App.
 
+## [v1.1.0] - Atividade Prática Interativa (aulas.html)
+**Data**: 19 de Outubro de 2025
+
+### Adicionado
+- **Tab "Atividade Prática"**: Nova seção com fluxo de desbloqueio sequencial (Vídeo → Exercício → Atividade).
+- **Editor Draw.io Embarcado**: Integração via `iframe` para criação de diagramas UML.
+- **Dropdown de Tipos de Diagrama**: Permite selecionar o tipo de diagrama (Classes, Casos de Uso, etc.) e carrega um template mínimo correspondente.
+- **Navegação por Passos**: Setas (◀/▶) e teclado (←/→) para navegar entre as três etapas da atividade:
+  1. Modelo Orientativo
+  2. Crie seu Diagrama (com editor)
+  3. Envie seu Trabalho
+- **Upload de Arquivo**: Funcionalidade para anexar o diagrama exportado, liberando o envio.
+- **Modal de Confirmação**: Card de "Arquivo carregado com sucesso" após o upload.
+
+### Modificado
+- **Fluxo de Conclusão**: O botão "Próxima Aula" só é liberado após o envio do arquivo da atividade prática.
+- **Interface do Editor**: Adicionado guia rápido e removido botão de salvar redundante, incentivando o uso do menu `File > Export as`.
+- **Estilos de Botões**: Padronizado o botão "Enviar Atividade" com o azul primário do projeto.
+
+### Corrigido
+- **Conexão com Draw.io**: Implementado sistema de retries e fila de mensagens para garantir a comunicação com o `iframe`, eliminando a necessidade de recargas manuais.
+- **Navegação da Próxima Aula**: Corrigido o bug que exibia "Complete a aula anterior" indevidamente ao clicar no botão "Próxima Aula" do feedback.
+- **Visibilidade do Botão**: Garantido que o botão "Próxima Aula" no feedback sempre apareça e funcione como esperado.
+
+---
+
 ## [2025-10-15] - Sistema de Aulas Interativo e Gamificação
 
 ### 🎯 **Sistema de Tabs Moderno**
@@ -270,5 +296,5 @@ function unlockNextLessonButton() {
 ---
 
 **📅 Última atualização**: 15 de Outubro de 2025  
-**👨‍💻 Desenvolvedor**: Assistente IA  
+**👨‍💻 Desenvolvedor**: _Do2anjos
 **📋 Versão**: 1.0.0
