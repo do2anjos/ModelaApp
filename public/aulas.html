@@ -297,30 +297,30 @@
 
                     <div id="lesson-steps">
                         <div class="lesson-step" id="video-step">
-                            <div class="video-player-wrapper">
+                    <div class="video-player-wrapper">
                                 <!-- O player de vídeo será inserido aqui -->
                                 <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/825944186?h=16b52755d6&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="O que é UML?"></iframe></div>
                             </div>
-                        </div>
-                        
+                    </div>
+                    
                         <div class="lesson-step" id="reading-step" style="display: none;">
-                            <section class="lesson-reading-content">
-                                <h2>Conteúdo da Aula</h2>
-                                <h3 id="reading-title">Conceitos e História da UML</h3>
-                                <div id="reading-text">
-                                    <p>
-                                        A Linguagem de Modelagem Unificada (UML - Unified Modeling Language) é uma linguagem de modelagem visual de propósito geral no campo da engenharia de software, que se destina a fornecer uma maneira padrão de visualizar o design de um sistema.
-                                    </p>
-                                    <p>
-                                        Criada por Grady Booch, Ivar Jacobson e James Rumbaugh (os "Três Amigos") na Rational Software durante a década de 1990, a UML foi concebida para unificar as notações de modelagem orientada a objetos que existiam na época. A sua padronização pelo Object Management Group (OMG) em 1997 consolidou-a como a linguagem de modelagem padrão da indústria.
-                                    </p>
-                                </div>
-                                <div class="additional-resources">
-                                    <h4>Recursos Adicionais</h4>
-                                    <a href="#">Baixar material em PDF</a>
-                                    <a href="#">Link para documentação oficial</a>
-                                </div>
-                            </section>
+                    <section class="lesson-reading-content">
+                        <h2>Conteúdo da Aula</h2>
+                        <h3 id="reading-title">Conceitos e História da UML</h3>
+                        <div id="reading-text">
+                            <p>
+                                A Linguagem de Modelagem Unificada (UML - Unified Modeling Language) é uma linguagem de modelagem visual de propósito geral no campo da engenharia de software, que se destina a fornecer uma maneira padrão de visualizar o design de um sistema.
+                            </p>
+                            <p>
+                                Criada por Grady Booch, Ivar Jacobson e James Rumbaugh (os "Três Amigos") na Rational Software durante a década de 1990, a UML foi concebida para unificar as notações de modelagem orientada a objetos que existiam na época. A sua padronização pelo Object Management Group (OMG) em 1997 consolidou-a como a linguagem de modelagem padrão da indústria.
+                            </p>
+                        </div>
+                        <div class="additional-resources">
+                            <h4>Recursos Adicionais</h4>
+                            <a href="#">Baixar material em PDF</a>
+                            <a href="#">Link para documentação oficial</a>
+                        </div>
+                    </section>
                         </div>
                     </div>
                 </div>
@@ -333,38 +333,47 @@
                         
                         <div class="exercise-wrapper">
                             <div class="exercise-slide active" id="exercise-form-slide">
-                                <form id="exercise-form" aria-label="Formulário de exercício">
+                        <form id="exercise-form" aria-label="Formulário de exercício">
+                            <fieldset class="exercise-question">
+                                <legend>1. CESPE / CEBRASPE – 2025 – AEB – Tecnologista Júnior – Especialidade: TI<br>Acerca dos diagramas da UML, assinale a opção correta.</legend>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="q1" value="a" required> a) No diagrama de estados, uma transição entre dois estados só pode ocorrer se houver uma ação explícita associada a ela.</label>
+                                    <label><input type="radio" name="q1" value="b" required> b) No diagrama de atividades, as swimlanes não podem expressar paralelismo no fluxo de atividades.</label>
+                                    <label><input type="radio" name="q1" value="c" required> c) O diagrama de componentes da UML é usado para modelar interações entre usuários e o sistema.</label>
+                                    <label><input type="radio" name="q1" value="d" required> d) Em um diagrama de casos de uso, atores precisam necessariamente ser pessoas (seres humanos).</label>
+                                </div>
+                            </fieldset>
+                            <fieldset class="exercise-question">
+                                <legend>2. Quadrix – 2023 – COFFITO – Analista de Tecnologia da Informação<br>A UML é uma linguagem gráfica utilizada para modelar e visualizar sistemas de software, facilitando a comunicação entre desenvolvedores, analistas e clientes do projeto.</legend>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="q2" value="a" required> a) Certo</label>
+                                    <label><input type="radio" name="q2" value="b" required> b) Errado</label>
+                                </div>
+                            </fieldset>
+                            <fieldset class="exercise-question">
+                                <legend>3. FGV – 2023 – AL-MA – Analista de Sistemas<br>A especificação UML tem uma abordagem padrão para desenhar diagramas de classe com três itens referentes à classe. Assinale a alternativa correta:</legend>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="q3" value="a" required> a) Entidade, eventos e métodos.</label>
+                                    <label><input type="radio" name="q3" value="b" required> b) Objeto, classificação e nome.</label>
+                                    <label><input type="radio" name="q3" value="c" required> c) Atributos, métodos e entidade.</label>
+                                    <label><input type="radio" name="q3" value="d" required> d) Nome, atributos e métodos.</label>
+                                    <label><input type="radio" name="q3" value="e" required> e) Métodos, objeto e eventos.</label>
+                                </div>
+                            </fieldset>
                                     <fieldset class="exercise-question">
-                                        <legend>1. O que significa a sigla UML?</legend>
+                                        <legend>4. CESPE / CEBRASPE – 2024 – TCE-AC – Analista de TI (Sistemas de Informação)<br>Em um sistema de elementos comunicantes, o diagrama de estrutura composta da UML 2 é uma escolha adequada para modelar a colaboração entre entidades cooperativas na execução de uma função específica.</legend>
                                         <div class="radio-group">
-                                            <label><input type="radio" name="q1" value="a" required> a) Unified Modeling Language</label>
-                                            <label><input type="radio" name="q1" value="b" required> b) Universal Modeling Language</label>
-                                            <label><input type="radio" name="q1" value="c" required> c) Unique Modeling Language</label>
+                                            <label><input type="radio" name="q4" value="a" required> a) Certo</label>
+                                            <label><input type="radio" name="q4" value="b" required> b) Errado</label>
                                         </div>
                                     </fieldset>
-                                    <fieldset class="exercise-question">
-                                        <legend>2. Quais são os três autores principais da UML?</legend>
-                                        <div class="radio-group">
-                                            <label><input type="radio" name="q2" value="a" required> a) Grady Booch, Ivar Jacobson, James Rumbaugh</label>
-                                            <label><input type="radio" name="q2" value="b" required> b) Martin Fowler, Kent Beck, Erich Gamma</label>
-                                            <label><input type="radio" name="q2" value="c" required> c) Alan Turing, John von Neumann, Alonzo Church</label>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="exercise-question">
-                                        <legend>3. Qual organização padronizou a UML?</legend>
-                                        <div class="radio-group">
-                                            <label><input type="radio" name="q3" value="a" required> a) Object Management Group (OMG)</label>
-                                            <label><input type="radio" name="q3" value="b" required> b) World Wide Web Consortium (W3C)</label>
-                                            <label><input type="radio" name="q3" value="c" required> c) International Organization for Standardization (ISO)</label>
-                                        </div>
-                                    </fieldset>
-                                    <div class="exercise-actions">
-                                        <button type="button" id="submit-exercise" class="button button-primary">Verificar Respostas</button>
-                                    </div>
-                                </form>
+                            <div class="exercise-actions">
+                                <button type="button" id="submit-exercise" class="button button-primary">Verificar Respostas</button>
+                            </div>
+                        </form>
                             </div>
                             <div class="exercise-slide" id="exercise-feedback-slide">
-                                <div id="exercise-feedback" role="region" aria-live="polite" aria-label="Resultado do exercício"></div>
+                        <div id="exercise-feedback" role="region" aria-live="polite" aria-label="Resultado do exercício"></div>
                                 <div class="exercise-actions">
                                     <button type="button" id="try-again-btn" class="button">Tentar Novamente</button>
                                 </div>

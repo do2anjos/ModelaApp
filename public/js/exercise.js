@@ -10,28 +10,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = exerciseContent.querySelector('#exercise-form');
     const tryAgainContainer = feedbackSlide.querySelector('.exercise-actions');
 
-    const answers = { q1: 'a', q2: 'a', q3: 'a' };
+    const answers = { q1: 'a', q2: 'a', q3: 'd', q4: 'a' };
 
     function showFeedback() {
         let score = 0;
-        const totalQuestions = Object.keys(answers).length;
-        let feedbackHTML = '<h4>Resultados:</h4><ul>';
+        const questionIds = Object.keys(answers).sort();
+        const totalQuestions = questionIds.length;
+        const feedbackItems = [];
 
-        for (const q in answers) {
-            const selected = form.querySelector(`input[name="${q}"]:checked`);
-            if (selected) {
-                if (selected.value === answers[q]) {
-                    score++;
-                    feedbackHTML += `<li><strong>Questão ${q.slice(1)}:</strong> Correta</li>`;
-                } else {
-                    feedbackHTML += `<li><strong>Questão ${q.slice(1)}:</strong> Incorreta (Correta: ${answers[q].toUpperCase()})</li>`;
-                }
+        questionIds.forEach((qid) => {
+            const correct = answers[qid];
+            const selectedInput = form.querySelector(`input[name="${qid}"]:checked`);
+            const selected = selectedInput ? selectedInput.value : null;
+            const num = qid.replace('q', '');
+            if (selected && selected === correct) {
+                score++;
+                feedbackItems.push(`<li>Questão ${num}: Correta (Sua: ${selected.toUpperCase()})</li>`);
+            } else if (selected) {
+                feedbackItems.push(`<li>Questão ${num}: Incorreta (Sua: ${selected.toUpperCase()} · Correta: ${correct.toUpperCase()})</li>`);
             } else {
-                feedbackHTML += `<li><strong>Questão ${q.slice(1)}:</strong> Não respondida</li>`;
+                feedbackItems.push(`<li>Questão ${num}: Não respondida (Correta: ${correct.toUpperCase()})</li>`);
             }
-        }
-        feedbackHTML += '</ul>';
-        
+        });
+
+        const gabaritoResumo = questionIds
+            .map((qid, idx) => `${idx + 1}) ${answers[qid]}`)
+            .join(', ');
+
         const allCorrect = score === totalQuestions;
         const feedbackClass = allCorrect ? 'feedback-success' : 'feedback-error';
         const finalMessage = allCorrect 
@@ -40,13 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         feedbackContainer.innerHTML = `
             <div class="${feedbackClass}">
-                ${feedbackHTML}
+                <h4>Resultados:</h4>
+                <ul>${feedbackItems.join('')}</ul>
                 <p class="final-score"><strong>Sua pontuação: ${score} de ${totalQuestions}</strong></p>
+                <p><strong>Gabarito:</strong> ${gabaritoResumo}</p>
                 <p>${finalMessage}</p>
             </div>
         `;
 
-        // Apenas controla o "Tentar novamente" conforme acerto total
         if (allCorrect) {
             if (tryAgainContainer) tryAgainContainer.style.display = 'none';
         } else {
