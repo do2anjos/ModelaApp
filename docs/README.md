@@ -26,6 +26,7 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 ## 🎓 **Sistema de Aprendizado**
 - **Plataforma de Cursos**: Sistema completo de aulas com vídeos do YouTube
 - **Exercícios Interativos**: Questões de múltipla escolha com feedback detalhado
+- **Atividade Prática com Diagramas UML**: Editor Draw.io embarcado para criação de modelos *(19/10/2025)*
 - **Progresso do Usuário**: Acompanhamento de aulas concluídas e exercícios realizados
 - **Sistema de Certificação**: Geração de certificados após conclusão dos módulos
 - **Ranking de Alunos**: Sistema de gamificação com pontuação e ranking
@@ -49,7 +50,7 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 - **Frontend Modular**: JavaScript organizado em classes (DarkModeManager, DaltonismManager, UsabilityManager)
 - **CSS Variables**: Sistema de design consistente com variáveis CSS (4000+ linhas)
 - **Performance**: Lazy loading, animações otimizadas e código modular
-- **Organização Profissional**: Estrutura de pastas separada por tipo de arquivo
+- **Draw.io API Integration**: Editor de diagramas embarcado via `iframe` *(19/10/2025)*
 - **Sistema de Tabs**: Navegação moderna sem rolagem entre seções *(15/10/2025)*
 - **YouTube API**: Integração completa com player de vídeos *(15/10/2025)*
 - **Sistema de Fórum**: Plataforma completa de discussão e interação *(15/10/2025)*
@@ -72,6 +73,7 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 - **CSS3** - Variáveis CSS, Grid, Flexbox, Animações
 - **JavaScript (ES6+)** - Classes, Modules, Async/Await, LocalStorage
 - **YouTube API** - Integração com player de vídeos
+- **Draw.io API** - Editor de diagramas UML embarcado *(19/10/2025)*
 
 ## **Design e UX**
 - **Google Fonts** - Tipografia (Montserrat + Roboto)
@@ -166,12 +168,13 @@ ModelaApp/
 #### **🎥 Sistema de Aulas (`aulas.html`)**
 - **Player de vídeos integrado** com YouTube API
 - **Sistema de progresso por vídeo** (90% para desbloquear exercícios)
-- **Sistema de tabs interativo** - Navegação entre vídeo e exercício sem rolagem
+- **Sistema de tabs interativo** - Navegação entre vídeo, exercício e atividade prática
 - **Exercícios integrados** com feedback detalhado e explicações
+- **Atividade prática com editor Draw.io** - Criação de diagramas UML com navegação por passos e upload de arquivo
 - **Navegação sequencial** entre aulas com desbloqueio progressivo
 - **Sistema de bloqueio progressivo** - Aulas desbloqueadas conforme progresso
 - **Estados visuais dinâmicos** - Ícones que mudam conforme progresso (todo, play, video-watched, completed)
-- **Atalhos de teclado** - Ctrl+1 (vídeo) e Ctrl+2 (exercício)
+- **Atalhos de teclado** - Ctrl+1 (vídeo), Ctrl+2 (exercício), Ctrl+3 (atividade)
 - **Feedback detalhado** - Explicações para cada questão com correções
 
 #### **🎯 Sistema de Exercícios (`exercicios.html`)**
