@@ -78,67 +78,96 @@ ModelaApp/
 
 ## 🎥 Sistema de Aulas Interativo
 
-### **Sistema de Tabs Moderno**
-**📅 Implementado em: 15 de Outubro de 2025**
+### **Sistema de Tabs Moderno e Fluxo Sequencial**
+**📅 Implementado em: 19 de Outubro de 2025**
 
-O sistema de aulas implementa um **sistema de navegação por tabs** que revoluciona a experiência do usuário:
+O sistema de aulas implementa um **sistema de navegação por tabs** que guia o usuário por um fluxo de aprendizado sequencial e rigoroso:
 
 #### **Características Principais:**
-- **Navegação sem rolagem** - Alternância instantânea entre vídeo e exercício
-- **Estados visuais claros** - Tab de exercício bloqueada (SVG cadeado) até vídeo ser assistido
-- **Desbloqueio automático** - Tab habilitada quando vídeo atinge 90% de visualização
-- **Atalhos de teclado** - Ctrl+1 (vídeo) e Ctrl+2 (exercício)
-- **Transições suaves** - Animações CSS para melhor UX
-- **Acessibilidade completa** - Suporte a ARIA e navegação por teclado
-- **Conclusão automática** - Sistema que conclui aulas automaticamente após exercício
-- **Gamificação rigorosa** - Usuário deve acertar 100% das questões para avançar
-- **Interface simplificada** - Remoção de botões desnecessários
-- **Sistema de bloqueio visual** - Botão "Próxima Aula" com indicadores de estado
-- **Estados visuais claros** - Feedback imediato sobre disponibilidade de avanço
+- **Navegação sem rolagem** - Alternância instantânea entre Vídeo, Exercício e Atividade Prática.
+- **Fluxo de Desbloqueio Progressivo**:
+  1. **Vídeo (≥90%)**: Libera o Exercício.
+  2. **Exercício (100% de acertos)**: Libera a Atividade Prática.
+  3. **Atividade Prática (Enviada)**: Libera a "Próxima Aula".
+- **Estados visuais claros** - Tabs bloqueadas com ícones (🔒) até a etapa anterior ser concluída.
+- **Atalhos de teclado** - `Ctrl+1` (Vídeo), `Ctrl+2` (Exercício), `Ctrl+3` (Atividade Prática).
+- **Gamificação rigorosa** - Usuário deve acertar 100% das questões para avançar.
+- **Conclusão automática** - A aula é marcada como concluída apenas após o envio da atividade prática.
 
 #### **Implementação Técnica:**
 ```html
-<!-- Sistema de tabs -->
+<!-- Sistema de tabs com fluxo sequencial -->
 <div class="lesson-navigation-tabs" role="tablist">
-    <button class="tab-button active" id="video-tab" role="tab">
-        <svg><!-- Ícone play --></svg>
-        <span>Vídeo e Conteúdo</span>
-    </button>
-    <button class="tab-button" id="exercise-tab" role="tab" disabled>
-        <svg><!-- Ícone documento --></svg>
-        <span>Exercício</span>
-        <span class="lock-indicator">🔒</span>
-    </button>
+    <button id="video-tab" role="tab" aria-selected="true">📹 Vídeo</button>
+    <button id="exercise-tab" role="tab" aria-selected="false" disabled>📝 Exercício <span class="lock-indicator">🔒</span></button>
+    <button id="practical-tab" role="tab" aria-selected="false" disabled>🎨 Atividade Prática <span class="lock-indicator">🔒</span></button>
 </div>
 
 <!-- Painéis de conteúdo -->
-<div class="tab-content-wrapper">
-    <div class="tab-content active" id="video-content" role="tabpanel">
-        <!-- Conteúdo do vídeo -->
-    </div>
-    <div class="tab-content" id="exercise-content" role="tabpanel">
-        <!-- Conteúdo do exercício -->
-    </div>
+<div id="video-content" role="tabpanel">...</div>
+<div id="exercise-content" role="tabpanel" class="hidden">...</div>
+<div id="practical-content" role="tabpanel" class="hidden">
+    <!-- Navegação por Passos (Modelo, Editor, Envio) -->
 </div>
 ```
 
 #### **Lógica JavaScript:**
 ```javascript
-// Alternância entre tabs
-function switchTab(tabName) {
-    if (tabName === 'exercise' && exerciseTab.disabled) {
-        alert('Complete o vídeo para acessar o exercício.');
-        return;
-    }
-    // Lógica de alternância...
+// Desbloqueio da Atividade Prática
+function unlockPracticalTab() {
+    practicalTab.disabled = false;
+    practicalTab.querySelector('.lock-indicator').textContent = '✅';
 }
 
-// Desbloqueio automático
-function unlockExerciseTab() {
-    exerciseTab.disabled = false;
-    exerciseTab.querySelector('.lock-indicator').textContent = '✅';
-}
+// Lógica de conclusão no envio da atividade
+submitPracticalBtn.addEventListener('click', () => {
+    // ... lógica de envio ...
+    updateUserProgress(currentLessonTitle, { practicalSubmitted: true, completed: true });
+    unlockNextLesson(currentLessonTitle);
+    updateButtonStates(currentLessonTitle);
+});
 ```
+
+### **Integração com Draw.io e Navegação por Passos**
+**📅 Implementado em: 19 de Outubro de 2025**
+
+A aba "Atividade Prática" contém um editor de diagramas UML embarcado (Draw.io) e uma navegação interna por passos.
+
+#### **Comunicação com `iframe` do Draw.io:**
+- **Carregamento Assíncrono**: O `iframe` é carregado dinamicamente.
+- **Fila de Mensagens**: Uma fila (`messageQueue`) garante que as mensagens (`postMessage`) só sejam enviadas após o editor confirmar que está pronto (`init` event).
+- **Templates Dinâmicos**: O usuário seleciona um tipo de diagrama (Ex: Diagrama de Classes) e um template XML mínimo é injetado no editor.
+
+```javascript
+// Envio de mensagem para o iframe com fila
+function postMessageToEditor(action) {
+    if (editorReady) {
+        umlEditorIframe.contentWindow.postMessage(JSON.stringify(action), '*');
+    } else {
+        messageQueue.push(action);
+    }
+}
+
+// Recebimento de eventos do editor
+window.addEventListener('message', (event) => {
+    if (event.source === umlEditorIframe.contentWindow) {
+        const data = JSON.parse(event.data);
+        if (data.event === 'init') {
+            editorReady = true;
+            // Processa mensagens na fila
+            messageQueue.forEach(action => postMessageToEditor(action));
+            messageQueue = [];
+        }
+    }
+});
+```
+
+#### **Navegação por Passos:**
+A seção é dividida em três etapas, controladas por botões de avançar/voltar e atalhos de teclado (←/→).
+
+1.  **Modelo Orientativo**: Apresenta um modelo para o aluno baixar.
+2.  **Crie seu Diagrama**: Contém o editor Draw.io.
+3.  **Envie seu Trabalho**: Área de upload para o arquivo exportado.
 
 ### **Sistema de Gamificação e Conclusão Automática**
 **📅 Implementado em: 15 de Outubro de 2025**
@@ -197,7 +226,7 @@ if (result.allCorrect) {
 **📅 Implementado em: 15 de Outubro de 2025**
 
 #### **Lógica de Estados do Botão**
-O sistema implementa um mecanismo de bloqueio visual similar ao header do exercício:
+O sistema implementa um mecanismo de bloqueio visual onde o botão "Próxima Aula" só aparece e é desbloqueado após a conclusão de todas as etapas da aula.
 
 ```javascript
 // Função para bloquear o botão
@@ -227,14 +256,13 @@ function unlockNextLessonButton() {
 
 #### **Integração com Sistema de Exercícios**
 ```javascript
-// Desbloqueio automático após 100% de acertos
-if (result.allCorrect) {
-    userProgress[lessonTitle].completed = true;
+// Desbloqueio automático após envio da atividade
+if (userProgress[lessonTitle].completed) {
     unlockNextLesson(lessonTitle);
     showNextLessonButton();
     unlockNextLessonButton(); // Desbloqueia o botão
 } else {
-    // Mantém bloqueado se não acertou 100%
+    // Mantém bloqueado
     lockNextLessonButton();
 }
 ```
