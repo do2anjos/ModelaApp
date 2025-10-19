@@ -285,26 +285,44 @@
             <div class="tab-content-wrapper">
                 <!-- Painel do Vídeo -->
                 <div class="tab-content active" id="video-content" role="tabpanel" aria-labelledby="video-tab">
-                    <div class="video-player-wrapper">
-                    </div>
                     
-                    <section class="lesson-reading-content">
-                        <h2>Conteúdo da Aula</h2>
-                        <h3 id="reading-title">Conceitos e História da UML</h3>
-                        <div id="reading-text">
-                            <p>
-                                A Linguagem de Modelagem Unificada (UML - Unified Modeling Language) é uma linguagem de modelagem visual de propósito geral no campo da engenharia de software, que se destina a fornecer uma maneira padrão de visualizar o design de um sistema.
-                            </p>
-                            <p>
-                                Criada por Grady Booch, Ivar Jacobson e James Rumbaugh (os "Três Amigos") na Rational Software durante a década de 1990, a UML foi concebida para unificar as notações de modelagem orientada a objetos que existiam na época. A sua padronização pelo Object Management Group (OMG) em 1997 consolidou-a como a linguagem de modelagem padrão da indústria.
-                            </p>
+                    <!-- Navegação por passos -->
+                    <div class="step-nav" aria-label="Navegação entre vídeo e conteúdo">
+                        <button class="button step-prev" aria-label="Passo anterior" disabled>◀</button>
+                        <span class="step-counter" aria-live="polite">
+                            <strong class="current-step">1</strong> / <span class="total-steps">2</span>
+                        </span>
+                        <button class="button step-next" aria-label="Próximo passo">▶</button>
+                    </div>
+
+                    <div id="lesson-steps">
+                        <div class="lesson-step" id="video-step">
+                            <div class="video-player-wrapper">
+                                <!-- O player de vídeo será inserido aqui -->
+                                <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/825944186?h=16b52755d6&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="O que é UML?"></iframe></div>
+                            </div>
                         </div>
-                        <div class="additional-resources">
-                            <h4>Recursos Adicionais</h4>
-                            <a href="#">Baixar material em PDF</a>
-                            <a href="#">Link para documentação oficial</a>
+                        
+                        <div class="lesson-step" id="reading-step" style="display: none;">
+                            <section class="lesson-reading-content">
+                                <h2>Conteúdo da Aula</h2>
+                                <h3 id="reading-title">Conceitos e História da UML</h3>
+                                <div id="reading-text">
+                                    <p>
+                                        A Linguagem de Modelagem Unificada (UML - Unified Modeling Language) é uma linguagem de modelagem visual de propósito geral no campo da engenharia de software, que se destina a fornecer uma maneira padrão de visualizar o design de um sistema.
+                                    </p>
+                                    <p>
+                                        Criada por Grady Booch, Ivar Jacobson e James Rumbaugh (os "Três Amigos") na Rational Software durante a década de 1990, a UML foi concebida para unificar as notações de modelagem orientada a objetos que existiam na época. A sua padronização pelo Object Management Group (OMG) em 1997 consolidou-a como a linguagem de modelagem padrão da indústria.
+                                    </p>
+                                </div>
+                                <div class="additional-resources">
+                                    <h4>Recursos Adicionais</h4>
+                                    <a href="#">Baixar material em PDF</a>
+                                    <a href="#">Link para documentação oficial</a>
+                                </div>
+                            </section>
                         </div>
-                    </section>
+                    </div>
                 </div>
                 
                 <!-- Painel do Exercício -->
@@ -312,36 +330,47 @@
                     <section class="lesson-exercise-content" id="exercise-section" aria-labelledby="exercise-title">
                         <h2 id="exercise-title">Exercício</h2>
                         <p class="exercise-description">Teste seus conhecimentos sobre o conteúdo da aula respondendo às questões abaixo.</p>
-                        <form id="exercise-form" aria-label="Formulário de exercício">
-                            <fieldset class="exercise-question">
-                                <legend>1. O que significa a sigla UML?</legend>
-                                <div class="radio-group">
-                                    <label><input type="radio" name="q1" value="a" required> a) Unified Modeling Language</label>
-                                    <label><input type="radio" name="q1" value="b" required> b) Universal Modeling Language</label>
-                                    <label><input type="radio" name="q1" value="c" required> c) Unique Modeling Language</label>
-                                </div>
-                            </fieldset>
-                            <fieldset class="exercise-question">
-                                <legend>2. Quais são os três autores principais da UML?</legend>
-                                <div class="radio-group">
-                                    <label><input type="radio" name="q2" value="a" required> a) Grady Booch, Ivar Jacobson, James Rumbaugh</label>
-                                    <label><input type="radio" name="q2" value="b" required> b) Martin Fowler, Kent Beck, Erich Gamma</label>
-                                    <label><input type="radio" name="q2" value="c" required> c) Alan Turing, John von Neumann, Alonzo Church</label>
-                                </div>
-                            </fieldset>
-                            <fieldset class="exercise-question">
-                                <legend>3. Qual organização padronizou a UML?</legend>
-                                <div class="radio-group">
-                                    <label><input type="radio" name="q3" value="a" required> a) Object Management Group (OMG)</label>
-                                    <label><input type="radio" name="q3" value="b" required> b) World Wide Web Consortium (W3C)</label>
-                                    <label><input type="radio" name="q3" value="c" required> c) International Organization for Standardization (ISO)</label>
-                                </div>
-                            </fieldset>
-                            <div class="exercise-actions">
-                                <button type="button" id="submit-exercise" class="button button-primary">Verificar Respostas</button>
+                        
+                        <div class="exercise-wrapper">
+                            <div class="exercise-slide active" id="exercise-form-slide">
+                                <form id="exercise-form" aria-label="Formulário de exercício">
+                                    <fieldset class="exercise-question">
+                                        <legend>1. O que significa a sigla UML?</legend>
+                                        <div class="radio-group">
+                                            <label><input type="radio" name="q1" value="a" required> a) Unified Modeling Language</label>
+                                            <label><input type="radio" name="q1" value="b" required> b) Universal Modeling Language</label>
+                                            <label><input type="radio" name="q1" value="c" required> c) Unique Modeling Language</label>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="exercise-question">
+                                        <legend>2. Quais são os três autores principais da UML?</legend>
+                                        <div class="radio-group">
+                                            <label><input type="radio" name="q2" value="a" required> a) Grady Booch, Ivar Jacobson, James Rumbaugh</label>
+                                            <label><input type="radio" name="q2" value="b" required> b) Martin Fowler, Kent Beck, Erich Gamma</label>
+                                            <label><input type="radio" name="q2" value="c" required> c) Alan Turing, John von Neumann, Alonzo Church</label>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="exercise-question">
+                                        <legend>3. Qual organização padronizou a UML?</legend>
+                                        <div class="radio-group">
+                                            <label><input type="radio" name="q3" value="a" required> a) Object Management Group (OMG)</label>
+                                            <label><input type="radio" name="q3" value="b" required> b) World Wide Web Consortium (W3C)</label>
+                                            <label><input type="radio" name="q3" value="c" required> c) International Organization for Standardization (ISO)</label>
+                                        </div>
+                                    </fieldset>
+                                    <div class="exercise-actions">
+                                        <button type="button" id="submit-exercise" class="button button-primary">Verificar Respostas</button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
-                        <div id="exercise-feedback" role="region" aria-live="polite" aria-label="Resultado do exercício"></div>
+                            <div class="exercise-slide" id="exercise-feedback-slide">
+                                <div id="exercise-feedback" role="region" aria-live="polite" aria-label="Resultado do exercício"></div>
+                                <div class="exercise-actions">
+                                    <button type="button" id="try-again-btn" class="button">Tentar Novamente</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </section>
                 </div>
 
@@ -456,14 +485,6 @@
                             <div id="practical-feedback" class="practical-feedback hidden">
                                 <strong>Atividade enviada com sucesso!</strong>
                                 <p>Você já pode avançar para a próxima aula.</p>
-                                <div class="next-lesson-container" style="margin-top: 1rem; text-align: right;">
-                                    <button class="button button-primary" id="feedback-next-lesson-btn" aria-label="Ir para próxima aula">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M9 18l6-6-6-6"></path>
-                                        </svg>
-                                        <span>Próxima Aula</span>
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </section>
@@ -487,6 +508,8 @@
 <script src="/js/dark-mode.js"></script>
 <script src="/js/daltonism-mode.js"></script>
 <script src="/js/usability.js"></script>
+<script src="/js/lesson-nav.js"></script>
+<script src="/js/exercise.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -1553,16 +1576,7 @@
                     // Marca diagrama como salvo quando arquivo é selecionado
                     updateUserProgress(currentLessonTitle, { diagramSaved: true });
 
-                    // Libera imediatamente o botão "Próxima Aula" do header ao anexar arquivo (para fins de demonstração)
-                    updateUserProgress(currentLessonTitle, { modelDownloaded: true, practicalSubmitted: true, fullyCompleted: true, completed: true });
-                    unlockNextLesson(currentLessonTitle);
-                    showNextLessonButton();
-                    unlockNextLessonButton();
-                    setTimeout(() => {
-                        if (nextLessonBtn && !nextLessonBtn.classList.contains('hidden')) {
-                            nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    }, 200);
+                    // Mantém o desbloqueio da próxima aula apenas no envio da atividade
 
                     if (submitPracticalBtn) submitPracticalBtn.disabled = false;
                     console.log('📁 Arquivo selecionado e diagrama marcado como salvo');
@@ -1601,21 +1615,25 @@
                 // Desbloqueia explicitamente a próxima aula
                 unlockNextLesson(currentLessonTitle);
 
-                // Modo protótipo: não persistir, apenas feedback e gating visual
+                // Feedback visual da prática
                 if (practicalFeedback) practicalFeedback.classList.remove('hidden');
 
-                // Oculta o botão do cabeçalho e mostra no feedback
-                if (nextLessonBtn) nextLessonBtn.classList.add('hidden');
+                // Mostra e desbloqueia o botão do cabeçalho
+                if (typeof showNextLessonButton === 'function') showNextLessonButton();
+                if (typeof unlockNextLessonButton === 'function') unlockNextLessonButton();
+
+                // Garante que o botão de próxima aula no feedback permaneça oculto
                 if (feedbackNextLessonBtn) {
-                    feedbackNextLessonBtn.classList.remove('hidden');
-                    feedbackNextLessonBtn.style.display = 'inline-flex'; // Força exibição
-                    console.log('🔘 Botão de próxima aula no feedback mostrado');
-                    console.log('🔍 Estado do botão:', {
-                        classList: Array.from(feedbackNextLessonBtn.classList),
-                        style: feedbackNextLessonBtn.style.display,
-                        parentElement: feedbackNextLessonBtn.parentElement?.className
-                    });
+                    feedbackNextLessonBtn.classList.add('hidden');
+                    feedbackNextLessonBtn.style.display = 'none';
                 }
+
+                // Rola automaticamente até o botão do cabeçalho
+                setTimeout(() => {
+                    if (nextLessonBtn && !nextLessonBtn.disabled) {
+                        nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 200);
             });
         }
 

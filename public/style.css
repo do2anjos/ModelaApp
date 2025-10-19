@@ -4326,8 +4326,11 @@ select:focus-visible {
   border: none !important;
 }
 
-#submit-practical-btn:hover:not(:disabled) {
-  background-color: var(--primary-dark) !important;
+/* Garante que o hover não altere a cor */
+#submit-practical-btn:hover {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border: none !important;
 }
 
 #submit-practical-btn:disabled {
@@ -4762,4 +4765,94 @@ html[data-daltonismo] select:focus {
 .sidebar-back-button svg {
   width: 16px;
   height: 16px;
+}
+
+/* Estilos para a navegação de passos da aula (vídeo/leitura) */
+.video-lesson-nav {
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+#lesson-steps {
+  padding-top: 1rem;
+}
+
+.lesson-step {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.theme-switch input:checked + .slider:before {
+    transform: translateX(20px);
+  }
+  
+  .accessibility-button-container {
+    display: flex;
+    gap: .5rem;
+  }
+  
+  .accessibility-button {
+    background-color: transparent;
+    border: none;
+    color: var(--foreground);
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+  }
+  
+  .accessibility-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+.radio-group label:last-child {
+  margin-bottom: 0;
+}
+
+.exercise-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.exercise-slide {
+  width: 100%;
+  transition: transform 0.5s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.exercise-slide:not(.active) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(100%);
+}
+
+.exercise-slide.active {
+  transform: translateX(0);
+}
+
+.exercise-slide.to-left {
+  transform: translateX(-100%);
+}
+
+#exercise-feedback {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9rem;
 }
