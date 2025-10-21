@@ -2,6 +2,29 @@
 
 Este arquivo documenta todas as mudanças significativas implementadas no projeto Modela App.
 
+## [v1.2.0] - Sistema de Certificados e Melhorias nos Exercícios
+**Data**: 21 de Outubro de 2025
+
+### Adicionado
+- **Sistema de Certificados Completo**: Modal de visualização e download de certificados com navegação em tela cheia
+- **Visualização em Tela Cheia**: Ao clicar em "Exibir Certificado", a página simula navegação para visualização dedicada
+- **Botão "Ir para Atividade Prática"**: Adicionado após 100% de acertos nos exercícios, com estilo azul padrão sem hover
+- **Questões de Concursos Atualizadas**: Q2 (Quadrix/COFFITO) e Q4 (CESPE/TCE-AC) reformuladas com alternativas múltiplas
+- **Feedback Detalhado por Questão**: Explicações específicas para cada alternativa (correta e incorretas)
+
+### Modificado
+- **Gabarito Atualizado**: Q1=B, Q2=C, Q3=D, Q4=A (4 questões corrigidas automaticamente)
+- **Modal de Certificado**: Design compacto (480px) e melhor alinhamento visual
+- **Estilos de Botões**: Padronização do azul primário sem efeito hover nos botões de exercício
+- **Fluxo de Conclusão**: Botão "Ir para Atividade Prática" aparece após exercício 100% correto
+
+### Corrigido
+- **Caminho da Imagem**: Corrigido de `aaa.png` para `aaa.jpg` no sistema de certificados
+- **Alinhamento do Modal**: Modal de certificado centralizado e responsivo
+- **Navegação de Certificado**: Botão "Voltar" retorna à página de certificados com scroll suave
+
+---
+
 ## [v1.1.0] - Atividade Prática Interativa (aulas.html)
 **Data**: 19 de Outubro de 2025
 

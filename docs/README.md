@@ -25,10 +25,10 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 
 ## 🎓 **Sistema de Aprendizado**
 - **Plataforma de Cursos**: Sistema completo de aulas com vídeos do YouTube
-- **Exercícios Interativos**: Questões de múltipla escolha com feedback detalhado
+- **Exercícios Interativos**: Questões de concursos (CESPE, Quadrix, FGV) com feedback detalhado *(21/10/2025)*
 - **Atividade Prática com Diagramas UML**: Editor Draw.io embarcado para criação de modelos *(19/10/2025)*
 - **Progresso do Usuário**: Acompanhamento de aulas concluídas e exercícios realizados
-- **Sistema de Certificação**: Geração de certificados após conclusão dos módulos
+- **Sistema de Certificação**: Modal interativo com visualização em tela cheia e download *(21/10/2025)*
 - **Ranking de Alunos**: Sistema de gamificação com pontuação e ranking
 
 ## 🎨 **Interface e Experiência**
@@ -169,7 +169,9 @@ ModelaApp/
 - **Player de vídeos integrado** com YouTube API
 - **Sistema de progresso por vídeo** (90% para desbloquear exercícios)
 - **Sistema de tabs interativo** - Navegação entre vídeo, exercício e atividade prática
-- **Exercícios integrados** com feedback detalhado e explicações
+- **Exercícios de concursos** - Questões de CESPE/CEBRASPE, Quadrix e FGV com feedback detalhado
+- **Correção automática** - 4 questões corrigidas com explicações específicas para cada alternativa
+- **Botão "Ir para Atividade Prática"** - Desbloqueado após 100% de acertos no exercício
 - **Atividade prática com editor Draw.io** - Criação de diagramas UML com navegação por passos e upload de arquivo
 - **Navegação sequencial** entre aulas com desbloqueio progressivo
 - **Sistema de bloqueio progressivo** - Aulas desbloqueadas conforme progresso
@@ -186,7 +188,10 @@ ModelaApp/
 #### **🏆 Sistema de Gamificação**
 - Ranking de alunos (`ranking.html`)
 - Sistema de pontos por atividades
-- Certificados de conclusão
+- Certificados de conclusão (`certificado.html`)
+  - Modal interativo com visualização e download
+  - Visualização em tela cheia simulando navegação
+  - Botão "Voltar" para retornar à lista de certificados
 - Progresso visual em dashboards
 
 #### **🎨 Sistema de Temas**
