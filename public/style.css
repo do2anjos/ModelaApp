@@ -1361,6 +1361,124 @@ html[data-daltonismo] .logo img,
   border: 1px solid hsl(0 84% 60% / 0.2);
 }
 
+.feedback-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.feedback-item {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.feedback-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-item:last-child {
+  margin-bottom: 0;
+}
+
+.feedback-item strong {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+  font-size: 0.95rem;
+}
+
+.feedback-item .correct {
+  color: hsl(142 76% 36%);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.feedback-item .incorrect {
+  color: hsl(0 84% 60%);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.feedback-item .unanswered {
+  color: var(--muted-foreground);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.feedback-item .explanation {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background-color: var(--muted);
+  border-radius: calc(var(--radius) - 2px);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--foreground);
+  border-left: 3px solid var(--primary);
+}
+
+.feedback-summary {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.feedback-summary .final-score {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.feedback-summary .gabarito {
+  color: var(--muted-foreground);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--muted);
+  border-radius: var(--radius);
+  display: inline-block;
+}
+
+.feedback-summary .message {
+  font-weight: 500;
+  color: var(--foreground);
+  font-size: 1rem;
+}
+
+/* Adiciona ícones aos status */
+.feedback-success h4 {
+  color: hsl(142 76% 36%);
+  margin-bottom: 1rem;
+}
+
+.feedback-error h4 {
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+
+/* Melhor espaçamento para o botão de ação */
+#exercise-feedback-slide .exercise-actions {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+#exercise-feedback-slide .exercise-actions .button {
+  min-width: 200px;
+}
+
 /* Animações para feedback */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-5px); }
@@ -4855,4 +4973,20 @@ html[data-daltonismo] select:focus {
   font-family: var(--font-body);
   font-weight: 500;
   font-size: 0.9rem;
+}
+
+#go-to-practical.button.button-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border: none !important;
+}
+
+#go-to-practical.button.button-primary:hover,
+#go-to-practical.button.button-primary:focus,
+#go-to-practical.button.button-primary:active {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border: none !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
 }
