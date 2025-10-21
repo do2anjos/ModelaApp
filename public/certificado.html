@@ -168,7 +168,7 @@
                             <h3>1. Modelagem com UML</h3>
                             <p>Carga Horária: 25 horas</p>
                         </div>
-                        <a href="#" class="button button-primary"Ver> Ver Certificado</a>
+                        <a href="#" class="button button-primary" id="open-certificate-btn" data-cert-src="/images/aaa.jpg">Ver Certificado</a>
                     </div>
 
                     <div class="certificate-card is-locked">
@@ -204,6 +204,18 @@
                         </div>
                     </div>
                 </div>
+                <!-- Seção de visualização completa do certificado -->
+                <section id="certificate-full-section" class="hidden" role="region" aria-label="Exibição de Certificado" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--background); z-index: 9999; overflow: auto; padding: 2rem;">
+                    <div style="max-width: 1200px; margin: 0 auto;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h2 style="margin: 0;">Certificado</h2>
+                            <button id="close-certificate-view" class="button" style="background: var(--primary); color: var(--primary-foreground);">Voltar</button>
+                        </div>
+                        <div class="certificate-full-card" style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow-soft);">
+                            <img id="certificate-full-image" alt="Certificado completo" style="width: 100%; height: auto; display: block; border-radius: var(--radius);" />
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
     </div>
@@ -240,5 +252,104 @@ document.addEventListener('DOMContentLoaded', function () {
 <script src="/js/dark-mode.js"></script>
 <script src="/js/daltonism-mode.js"></script>
 <script src="/js/usability.js"></script>
+    <!-- Modal de Certificado -->
+    <div id="certificate-modal" class="modal-backdrop hidden" aria-hidden="true" role="dialog" aria-labelledby="certificate-modal-title">
+        <div class="modal-card" role="document" style="max-width: 480px; width: 90%; background: var(--card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-lg);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                <h3 id="certificate-modal-title" style="margin: 0; font-size: 1.25rem; color: var(--foreground);">Certificado</h3>
+                <button id="certificate-modal-close" class="button" aria-label="Fechar" style="padding: 0.5rem 1rem; font-size: 0.9rem;">✕</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <button id="view-certificate-btn" class="button button-primary" style="width: 100%; padding: 0.875rem; font-size: 1rem;">Exibir Certificado</button>
+                <button id="download-certificate-btn" class="button button-primary" style="width: 100%; padding: 0.875rem; font-size: 1rem;">Baixar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Modal de Certificado
+    document.addEventListener('DOMContentLoaded', function() {
+        var openBtn = document.getElementById('open-certificate-btn');
+        var modal = document.getElementById('certificate-modal');
+        var closeBtn = document.getElementById('certificate-modal-close');
+        var viewBtn = document.getElementById('view-certificate-btn');
+        var downloadBtn = document.getElementById('download-certificate-btn');
+        var imgEl = document.getElementById('certificate-image');
+        var previewWrapper = document.getElementById('certificate-preview-wrapper');
+
+        function openModal() {
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeModal() {
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+            // Esconde a pré-visualização quando fechar
+            if (previewWrapper) previewWrapper.classList.add('hidden');
+        }
+
+        if (openBtn) {
+            openBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                var src = openBtn.getAttribute('data-cert-src') || '/images/aaa.jpg';
+                if (imgEl) imgEl.src = src;
+                openModal();
+            });
+        }
+
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+        if (viewBtn) {
+            viewBtn.addEventListener('click', function() {
+                var src = imgEl ? imgEl.src : (openBtn ? openBtn.getAttribute('data-cert-src') : '/images/aaa.jpg');
+                var fullSection = document.getElementById('certificate-full-section');
+                var fullImg = document.getElementById('certificate-full-image');
+                if (fullImg && src) fullImg.src = src;
+                if (fullSection) fullSection.classList.remove('hidden');
+                closeModal();
+                // Rola para o topo da seção (simula nova página)
+                setTimeout(function() {
+                    window.scrollTo({ top: 0, behavior: 'auto' });
+                }, 50);
+            });
+        }
+
+        // Botão Voltar da visualização completa
+        var closeViewBtn = document.getElementById('close-certificate-view');
+        if (closeViewBtn) {
+            closeViewBtn.addEventListener('click', function() {
+                var fullSection = document.getElementById('certificate-full-section');
+                if (fullSection) fullSection.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'auto' });
+            });
+        }
+
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function() {
+                var src = imgEl ? imgEl.src : '/images/aaa.jpg';
+                var a = document.createElement('a');
+                a.href = src;
+                a.download = 'certificado.jpg';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        }
+
+        // Fecha modal ao clicar fora do cartão
+        if (modal) {
+            modal.addEventListener('click', function(evt) {
+                var card = modal.querySelector('.modal-card');
+                if (card && !card.contains(evt.target)) {
+                    closeModal();
+                }
+            });
+        }
+    });
+    </script>
+
 </body>
 </html>
