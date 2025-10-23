@@ -27,46 +27,44 @@ document.addEventListener('DOMContentLoaded', () => {
             // Gabarito para o formulário dinâmico da Aula 2 (injetado em aulas.html)
             return { q1: 'b', q2: 'a', q3: 'c', q4: 'a' };
         }
-        // Introdução à UML - formulário padrão inicial
-        return { q1: 'd', q2: 'e', q3: 'b', q4: 'd' };
+        // Introdução à UML - Unified Modeling Language - formulário padrão inicial
+        return { q1: 'a', q2: 'c', q3: 'd', q4: 'a' };
     }
 
     // Explicações adicionais para feedback detalhado (Introdução)
     const explanationsIntro = {
         q1: {
-            correct: 'Correto: I Caso de Uso; II Classe; III Sequência; IV Atividade.',
+            correct: 'Correto. No diagrama de estados, uma transição entre dois estados realmente só pode ocorrer se houver uma ação, evento ou condição associada a ela.',
             incorrect: {
-                a: 'Incorreto: II não é Comunicação e III não é Componentes.',
-                b: 'Incorreto: I não é Componentes e II não é Objetos.',
-                c: 'Incorreto: I não é Atividade e III não é Objetos.',
-                e: 'Duplicada de d); a alternativa correta é d).'
+                b: 'Incorreto. As swimlanes (raias) no diagrama de atividades podem expressar paralelismo no fluxo de atividades.',
+                c: 'Incorreto. O diagrama de componentes modela a estrutura e organização de componentes de software, não as interações entre usuários e o sistema (isso seria o diagrama de casos de uso).',
+                d: 'Incorreto. Atores em diagramas de casos de uso podem ser pessoas, sistemas externos, hardwares ou qualquer entidade externa que interaja com o sistema.'
             }
         },
         q2: {
-            correct: 'Correto: "Contexto" não é diagrama padrão da UML.',
+            correct: 'Correto. A UML é uma linguagem gráfica que facilita a comunicação entre desenvolvedores, analistas e clientes do projeto, conforme afirmado no próprio enunciado.',
             incorrect: {
-                a: 'Incorreto: Casos de uso é diagrama da UML.',
-                b: 'Incorreto: Classes é diagrama da UML.',
-                c: 'Incorreto: Sequência é diagrama da UML.',
-                d: 'Incorreto: Estados (máquina de estados) é diagrama da UML.'
+                a: 'Incorreto. A UML não serve apenas para documentar sistemas já implementados, mas também para projetar e visualizar sistemas antes da implementação.',
+                b: 'Incorreto. A UML não é usada exclusivamente para linguagens orientadas a objetos, embora seja mais comum nesse contexto.',
+                d: 'Incorreto. A UML é uma linguagem visual/gráfica, não textual.'
             }
         },
         q3: {
-            correct: 'Correto: no OMT, o Modelo de Objetos cobre aspectos estáticos, estruturais e de dados.',
+            correct: 'Correto. Os três itens básicos de uma classe em UML são: Nome (identificação da classe), Atributos (características/propriedades) e Métodos (comportamentos/operações).',
             incorrect: {
-                a: 'Incorreto: o modelo funcional trata funções/fluxos, não estrutura estática.',
-                c: 'Incorreto: "relacional" não é um dos modelos do OMT.',
-                d: 'Incorreto: não corresponde ao modelo estrutural do OMT.',
-                e: 'Incorreto: não é um modelo do OMT.'
+                a: 'Incorreto. Entidade e eventos não são os três itens padrão de um diagrama de classes UML.',
+                b: 'Incorreto. Objeto e classificação não são os três itens padrão de um diagrama de classes UML.',
+                c: 'Incorreto. Entidade não é um dos três itens padrão de um diagrama de classes UML.',
+                e: 'Incorreto. Objeto e eventos não são os três itens padrão de um diagrama de classes UML.'
             }
         },
         q4: {
-            correct: 'Correto: Implementação (implantação/deployment) e Estrutura Composta são diagramas estruturais.',
+            correct: 'Correto. O diagrama de estrutura composta da UML 2 é usado para modelar a colaboração entre partes internas de uma classe ou componente, mostrando como essas partes trabalham juntas.',
             incorrect: {
-                a: 'Incorreto: Atividades é comportamental, não estrutural.',
-                b: 'Incorreto: Casos de Uso é comportamental.',
-                c: 'Incorreto: Transições de Estado é comportamental.',
-                e: 'Incorreto: Sequência é comportamental.'
+                b: 'Incorreto. O diagrama de atividades é usado para representar o fluxo de atividades, não o diagrama de estrutura composta.',
+                c: 'Incorreto. O diagrama de estrutura composta não substitui o diagrama de classes, são diagramas complementares com propósitos diferentes.',
+                d: 'Incorreto. O diagrama de estrutura composta não serve exclusivamente para modelagem de requisitos.',
+                e: 'Incorreto. O diagrama de estrutura composta não é responsável pela modelagem de comportamento de atores externos.'
             }
         }
     };
@@ -214,76 +212,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (tryAgainBtn) tryAgainBtn.style.display = 'none';
 
-            // Fluxo especial para a aula de Introdução: ir para "Próxima Aula" no cabeçalho
-            if (lessonTitle === 'Introdução à UML - Unified Modeling Language') {
-                // Desbloqueia a próxima aula visualmente (remove lock da próxima li)
-                const activeLessonLink = document.querySelector('.lesson-list a.active');
-                if (activeLessonLink && activeLessonLink.parentElement) {
-                    const currentLi = activeLessonLink.parentElement;
-                    const nextLi = currentLi.nextElementSibling;
-                    if (nextLi) {
-                        nextLi.classList.remove('lesson-locked');
-                        nextLi.classList.add('lesson-unlocked');
-                        // Remove ícone de cadeado (se houver)
-                        const lockIcon = nextLi.querySelector('svg');
-                        if (lockIcon) lockIcon.remove();
-                        // Garante ícone padrão
-                        const hasIcon = nextLi.querySelector('.lesson-icon');
-                        const nextLink = nextLi.querySelector('a');
-                        if (nextLink && !hasIcon) {
-                            const iconSpan = document.createElement('span');
-                            iconSpan.className = 'lesson-icon todo';
-                            nextLink.insertBefore(iconSpan, nextLink.firstChild);
-                        }
-                    }
+            // Desbloqueia a aba de Atividade Prática quando exercício é 100% correto
+            const practicalTab = document.getElementById('practical-tab');
+            if (practicalTab) {
+                practicalTab.disabled = false;
+                practicalTab.style.opacity = '1';
+                const lockIndicator = practicalTab.querySelector('.lock-indicator');
+                if (lockIndicator) {
+                    lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>';
                 }
-                // Exibe e habilita o botão "Próxima Aula" do cabeçalho
-                const nextLessonBtn = document.getElementById('next-lesson-btn');
-                if (nextLessonBtn) {
-                    nextLessonBtn.classList.remove('hidden');
-                    nextLessonBtn.classList.add('visible');
-                    nextLessonBtn.disabled = false;
-                    const lockIndicator = nextLessonBtn.querySelector('.next-lesson-lock-indicator');
-                    if (lockIndicator) {
-                        lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>';
-                    }
-                    // Scroll até o botão
-                    setTimeout(() => { nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
-                }
-            } else {
-                // Demais aulas: manter fluxo padrão de ir para atividade prática
-                if (tryAgainContainer) {
-                    const goBtn = document.createElement('button');
-                    goBtn.type = 'button';
-                    goBtn.id = 'go-practical-btn';
-                    goBtn.className = 'button button-primary';
-                    goBtn.textContent = 'Ir para Atividade Prática';
-                    goBtn.addEventListener('click', () => {
-                        const practicalTab = document.getElementById('practical-tab');
-                        if (practicalTab) {
-                            practicalTab.disabled = false;
-                            practicalTab.style.opacity = '1';
-                            const lockIndicator = practicalTab.querySelector('.lock-indicator');
-                            if (lockIndicator) {
-                                lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>';
-                            }
-                        }
-                        const videoTab = document.getElementById('video-tab');
-                        const exerciseTab = document.getElementById('exercise-tab');
-                        const practicalTabEl = document.getElementById('practical-tab');
-                        const videoContent = document.getElementById('video-content');
-                        const exerciseContentEl = document.getElementById('exercise-content');
-                        const practicalContent = document.getElementById('practical-content');
-                        if (videoTab) { videoTab.classList.remove('active'); videoTab.setAttribute('aria-selected','false'); }
-                        if (exerciseTab) { exerciseTab.classList.remove('active'); exerciseTab.setAttribute('aria-selected','false'); }
-                        if (practicalTabEl) { practicalTabEl.classList.add('active'); practicalTabEl.setAttribute('aria-selected','true'); }
-                        if (videoContent) videoContent.classList.remove('active');
-                        if (exerciseContentEl) exerciseContentEl.classList.remove('active');
-                        if (practicalContent) practicalContent.classList.add('active');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    });
-                    tryAgainContainer.appendChild(goBtn);
-                }
+            }
+
+            // Fluxo padrão: ir para atividade prática após exercício 100% correto
+            if (tryAgainContainer) {
+                const goBtn = document.createElement('button');
+                goBtn.type = 'button';
+                goBtn.id = 'go-practical-btn';
+                goBtn.className = 'button button-primary';
+                goBtn.textContent = 'Ir para Atividade Prática';
+                goBtn.addEventListener('click', () => {
+                    // Troca para a aba de atividade prática
+                    const videoTab = document.getElementById('video-tab');
+                    const exerciseTab = document.getElementById('exercise-tab');
+                    const practicalTabEl = document.getElementById('practical-tab');
+                    const videoContent = document.getElementById('video-content');
+                    const exerciseContentEl = document.getElementById('exercise-content');
+                    const practicalContent = document.getElementById('practical-content');
+                    if (videoTab) { videoTab.classList.remove('active'); videoTab.setAttribute('aria-selected','false'); }
+                    if (exerciseTab) { exerciseTab.classList.remove('active'); exerciseTab.setAttribute('aria-selected','false'); }
+                    if (practicalTabEl) { practicalTabEl.classList.add('active'); practicalTabEl.setAttribute('aria-selected','true'); }
+                    if (videoContent) videoContent.classList.remove('active');
+                    if (exerciseContentEl) exerciseContentEl.classList.remove('active');
+                    if (practicalContent) practicalContent.classList.add('active');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                tryAgainContainer.appendChild(goBtn);
             }
         } else {
             if (tryAgainBtn) tryAgainBtn.style.display = '';

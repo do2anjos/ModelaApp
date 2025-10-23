@@ -97,6 +97,44 @@
             width: 100% !important;
         }
     </style>
+    <style>
+        /* Correção: manter o enunciado (legend) dentro do bloco do fieldset */
+        fieldset.exercise-question {
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius) !important;
+            padding: 1.25rem !important;
+            margin-bottom: 1.5rem !important;
+            background: var(--card) !important;
+            position: relative !important;
+        }
+
+        fieldset.exercise-question legend {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            font-weight: 600 !important;
+            color: var(--foreground) !important;
+            font-size: 1rem !important;
+            line-height: 1.6 !important;
+            padding: 0 0 .75rem 0 !important;
+            margin: 0 0 1rem 0 !important;
+            background: transparent !important;
+            border-bottom: 1px solid var(--border) !important;
+            text-align: justify !important;
+        }
+
+        /* Suavizar negrito do legend no dark mode */
+        [data-theme="dark"] fieldset.exercise-question legend {
+            font-weight: 500 !important;
+        }
+
+        fieldset.exercise-question .radio-group {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: .75rem !important;
+            margin-top: .25rem !important;
+        }
+    </style>
 </head>
 <body class="lesson-body">
     <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
@@ -157,34 +195,37 @@
                 <details class="topic-accordion">
                     <summary>
     <span>Modelagem com UML</span>
-    <span class="topic-progress">1/9</span>
+    <span class="topic-progress">1/10</span>
                 </summary>
                 <ul class="lesson-list">
-                    <li><a href="#" class="active" data-video-id="C3xYBT3o_5k"><span class="lesson-icon play"></span><span>Conceitos e História da UML</span><span class="lesson-duration">15:56</span></a></li>
-                    <li class="lesson-locked"><a href="#" data-video-id="rDidOn6KN9k">
+                    <li><a href="#" class="active" data-video-id="C3xYBT3o_5k"><span class="lesson-icon play"></span><span>Introdução à UML - Unified Modeling Language</span><span class="lesson-duration">10:53</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="JQSsqMCVi1k">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span>Relacionamentos: Associação e Agregação</span><span class="lesson-duration">11:13</span></a></li>
-                    <li class="lesson-locked"><a href="#" data-video-id="ab6eDdwS3rA">
+                        <span>O que é um Diagrama de Classes</span><span class="lesson-duration">10:49</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="IJtQWLnHvcQ">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span>Diagrama de Casos de Uso</span><span class="lesson-duration">22:07</span></a></li>
-                    <li class="lesson-locked"><a href="#" data-video-id="rDidOn6KN9k">
+                        <span>Diagrama de Classes - Relacionamentos</span><span class="lesson-duration">17:44</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="ePX-S4Leq7Y">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span>Diagrama de Classes</span><span class="lesson-duration">31:11</span></a></li>
-                    <li class="lesson-locked"><a href="#" data-video-id="qaWShGkUiBo">
+                        <span>O que são Casos de Uso</span><span class="lesson-duration">21:42</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="NK-BaRfFx0">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span>Diagrama de Sequência</span><span class="lesson-duration">27:00</span></a></li>
-                    <li class="lesson-locked"><a href="#" data-video-id="-d9bg1rZNhk">
+                        <span>O que são Diagramas de Casos de Uso</span><span class="lesson-duration">13:37</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="ezLX9quOVc">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span>Diagrama de Atividades</span><span class="lesson-duration">16:51</span></a></li>
+                        <span>Diagrama de Casos de Uso - Exemplo Básico</span><span class="lesson-duration">17:26</span></a></li>
                     <li class="lesson-locked"><a href="#" data-video-id="UVkj3ed0ZuM">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span>Diagrama de Estados</span><span class="lesson-duration">12:35</span></a></li>
-                    <li class="lesson-locked"><a href="#" data-video-id="CWj2F9dfIaU">
+                        <span>O que é um Diagrama de Sequência</span><span class="lesson-duration">18:56</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="LeV6RO-6Tn4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span>Diagrama de Componentes</span><span class="lesson-duration">07:53</span></a></li>
-                    <li class="lesson-locked"><a href="#" data-video-id="pCCqiJDLr4Y">
+                        <span>Diagrama de Sequência UML - Exemplo Básico</span><span class="lesson-duration">18:45</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="_1vHj_j3zDY">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span>Estudo de Caso Prático</span><span class="lesson-duration">47:45</span></a></li>
+                        <span>O que é um Diagrama de Atividade UML - Introdução</span><span class="lesson-duration">13:48</span></a></li>
+                    <li class="lesson-locked"><a href="#" data-video-id="N0wc9sHp5yo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        <span>Introdução ao Diagrama de Máquina de Estados UML</span><span class="lesson-duration">18:00</span></a></li>
                 </ul>
                 </details>
 
@@ -239,7 +280,7 @@
                         </ol>
                     </nav>
                     
-                    <h1 id="lesson-title-header">Conceitos e História da UML</h1>
+                    <h1 id="lesson-title-header">Introdução à UML - Unified Modeling Language</h1>
                 </div>
                 
                 <div class="lesson-navigation-tabs" role="tablist" aria-label="Navegação entre vídeo e exercício">
@@ -306,7 +347,7 @@
                         <div class="lesson-step" id="reading-step" style="display: none;">
                             <section class="lesson-reading-content">
                                 <h2>Conteúdo da Aula</h2>
-                                <h3 id="reading-title">Conceitos e História da UML</h3>
+                                <h3 id="reading-title">Introdução à UML - Unified Modeling Language</h3>
                                 <div id="reading-text">
                                     <p>
                                         A Linguagem de Modelagem Unificada (UML - Unified Modeling Language) é uma linguagem de modelagem visual de propósito geral no campo da engenharia de software, que se destina a fornecer uma maneira padrão de visualizar o design de um sistema.
@@ -335,8 +376,9 @@
                             <div class="exercise-slide active" id="exercise-form-slide">
                                 <form id="exercise-form" aria-label="Formulário de exercício">
                                     <fieldset class="exercise-question">
-                                        <legend>1. CESPE / CEBRASPE – 2025 – AEB – Tecnologista Júnior – Especialidade: TI<br>Acerca dos diagramas da UML, assinale a opção correta.</legend>
                                         <div class="radio-group">
+                                        <legend>1. CESPE / CEBRASPE – 2025 – AEB – Tecnologista Júnior – Especialidade: TI<br>Acerca dos diagramas da UML, assinale a opção correta.</legend>
+
                                             <label><input type="radio" name="q1" value="a" required> a) No diagrama de estados, uma transição entre dois estados só pode ocorrer se houver uma ação explícita associada a ela.</label>
                                             <label><input type="radio" name="q1" value="b" required> b) No diagrama de atividades, as swimlanes não podem expressar paralelismo no fluxo de atividades.</label>
                                             <label><input type="radio" name="q1" value="c" required> c) O diagrama de componentes da UML é usado para modelar interações entre usuários e o sistema.</label>
@@ -344,8 +386,9 @@
                                         </div>
                                     </fieldset>
                                     <fieldset class="exercise-question">
-                                        <legend>2. Quadrix – 2023 – COFFITO – Analista de Tecnologia da Informação<br>A UML é uma linguagem gráfica utilizada para modelar e visualizar sistemas de software, facilitando a comunicação entre desenvolvedores, analistas e clientes do projeto.</legend>
                                         <div class="radio-group">
+                                        <legend>2. Quadrix – 2023 – COFFITO – Analista de Tecnologia da Informação<br>A UML é uma linguagem gráfica utilizada para modelar e visualizar sistemas de software, facilitando a comunicação entre desenvolvedores, analistas e clientes do projeto.</legend>
+
                                             <label><input type="radio" name="q2" value="a" required> A) A UML serve apenas para documentar sistemas já implementados.</label>
                                             <label><input type="radio" name="q2" value="b" required> B) A UML é usada exclusivamente para programação em linguagens orientadas a objetos.</label>
                                             <label><input type="radio" name="q2" value="c" required> C) A UML facilita a comunicação entre desenvolvedores, analistas e clientes do projeto</label>
@@ -353,8 +396,9 @@
                                         </div>
                                     </fieldset>
                                     <fieldset class="exercise-question">
-                                        <legend>3. FGV – 2023 – AL-MA – Analista de Sistemas<br>A especificação UML tem uma abordagem padrão para desenhar diagramas de classe com três itens referentes à classe. Assinale a alternativa correta:</legend>
                                         <div class="radio-group">
+                                        <legend>3. FGV – 2023 – AL-MA – Analista de Sistemas<br>A especificação UML tem uma abordagem padrão para desenhar diagramas de classe com três itens referentes à classe. Assinale a alternativa correta:</legend>
+
                                             <label><input type="radio" name="q3" value="a" required> a) Entidade, eventos e métodos.</label>
                                             <label><input type="radio" name="q3" value="b" required> b) Objeto, classificação e nome.</label>
                                             <label><input type="radio" name="q3" value="c" required> c) Atributos, métodos e entidade.</label>
@@ -363,8 +407,9 @@
                                         </div>
                                     </fieldset>
                                     <fieldset class="exercise-question">
-                                        <legend>4. CESPE / CEBRASPE – 2024 – TCE-AC – Analista de TI (Sistemas de Informação)<br>Em um sistema de elementos comunicantes, o diagrama de estrutura composta da UML 2 é uma escolha adequada para modelar a colaboração entre entidades cooperativas na execução de uma função específica. Assinale a alternativa correta:</legend>
                                         <div class="radio-group">
+                                        <legend>4. CESPE / CEBRASPE – 2024 – TCE-AC – Analista de TI (Sistemas de Informação)<br>Em um sistema de elementos comunicantes, o diagrama de estrutura composta da UML 2 é uma escolha adequada para modelar a colaboração entre entidades cooperativas na execução de uma função específica. Assinale a alternativa correta:</legend>
+
                                             <label><input type="radio" name="q4" value="a" required> a) O diagrama de estrutura composta da UML 2 modela a colaboração entre partes internas de uma classe ou componente.</label>
                                             <label><input type="radio" name="q4" value="b" required> b) O diagrama de estrutura composta é utilizado para representar o fluxo de atividades do sistema.</label>
                                             <label><input type="radio" name="q4" value="c" required> c) O diagrama de estrutura composta substitui o diagrama de classes em sistemas orientados a objetos.</label>
@@ -644,37 +689,52 @@
 
         // --- DADOS E ESTADO ---
         const lessonData = {
-            "Conceitos e História da UML": {
+            "Introdução à UML - Unified Modeling Language": {
                 reading: "<p>A Linguagem de Modelagem Unificada (UML) é uma linguagem padrão para visualizar, especificar, construir e documentar os artefatos de um sistema de software. Criada nos anos 90, unificou diversas notações orientadas a objetos.</p>",
                 exerciseUrl: "/exercicios/uml-conceitos.html",
                 correctAnswers: {
                     q1: "a",
-                    q2: "a",
-                    q3: "a"
+                    q2: "c",
+                    q3: "d",
+                    q4: "a"
                 },
                 explanations: {
                     q1: {
-                        correct: "A sigla UML significa Unified Modeling Language (Linguagem de Modelagem Unificada).",
+                        correct: "Correto. No diagrama de estados, uma transição entre dois estados realmente só pode ocorrer se houver uma ação, evento ou condição associada a ela.",
                         incorrect: {
                             a: "",
-                            b: "Universal Modeling Language não é o significado correto da sigla UML.",
-                            c: "Unique Modeling Language não é o significado correto da sigla UML."
+                            b: "Incorreto. As swimlanes (raias) no diagrama de atividades podem expressar paralelismo no fluxo de atividades.",
+                            c: "Incorreto. O diagrama de componentes modela a estrutura e organização de componentes de software, não as interações entre usuários e o sistema (isso seria o diagrama de casos de uso).",
+                            d: "Incorreto. Atores em diagramas de casos de uso podem ser pessoas, sistemas externos, hardwares ou qualquer entidade externa que interaja com o sistema."
                         }
                     },
                     q2: {
-                        correct: "Os três autores principais são Grady Booch, Ivar Jacobson e James Rumbaugh, conhecidos como os 'Três Amigos'.",
+                        correct: "Correto. A UML é uma linguagem gráfica que facilita a comunicação entre desenvolvedores, analistas e clientes do projeto, conforme afirmado no próprio enunciado.",
                         incorrect: {
-                            a: "",
-                            b: "Martin Fowler, Kent Beck e Erich Gamma são importantes na engenharia de software, mas não são os criadores da UML.",
-                            c: "Alan Turing, John von Neumann e Alonzo Church são pioneiros da computação, mas não criaram a UML."
+                            a: "Incorreto. A UML não serve apenas para documentar sistemas já implementados, mas também para projetar e visualizar sistemas antes da implementação.",
+                            b: "Incorreto. A UML não é usada exclusivamente para linguagens orientadas a objetos, embora seja mais comum nesse contexto.",
+                            c: "",
+                            d: "Incorreto. A UML é uma linguagem visual/gráfica, não textual."
                         }
                     },
                     q3: {
-                        correct: "A UML foi padronizada pelo Object Management Group (OMG) em 1997.",
+                        correct: "Correto. Os três itens básicos de uma classe em UML são: Nome (identificação da classe), Atributos (características/propriedades) e Métodos (comportamentos/operações).",
+                        incorrect: {
+                            a: "Incorreto. Entidade e eventos não são os três itens padrão de um diagrama de classes UML.",
+                            b: "Incorreto. Objeto e classificação não são os três itens padrão de um diagrama de classes UML.",
+                            c: "Incorreto. Entidade não é um dos três itens padrão de um diagrama de classes UML.",
+                            d: "",
+                            e: "Incorreto. Objeto e eventos não são os três itens padrão de um diagrama de classes UML."
+                        }
+                    },
+                    q4: {
+                        correct: "Correto. O diagrama de estrutura composta da UML 2 é usado para modelar a colaboração entre partes internas de uma classe ou componente, mostrando como essas partes trabalham juntas.",
                         incorrect: {
                             a: "",
-                            b: "O W3C padroniza tecnologias web, não a UML.",
-                            c: "A ISO padroniza normas internacionais, mas não foi a responsável pela padronização inicial da UML."
+                            b: "Incorreto. O diagrama de atividades é usado para representar o fluxo de atividades, não o diagrama de estrutura composta.",
+                            c: "Incorreto. O diagrama de estrutura composta não substitui o diagrama de classes, são diagramas complementares com propósitos diferentes.",
+                            d: "Incorreto. O diagrama de estrutura composta não serve exclusivamente para modelagem de requisitos.",
+                            e: "Incorreto. O diagrama de estrutura composta não é responsável pela modelagem de comportamento de atores externos."
                         }
                     }
                 }
@@ -1803,6 +1863,9 @@
         function initializeProgress() {
             // Inicializa tabs na posição padrão (vídeo)
             lockExerciseTab();
+            
+            // Inicializa aba "Atividade Prática" bloqueada
+            lockPracticalTab();
             
             // Inicializa botão "Próxima Aula" bloqueado
             lockNextLessonButton();
