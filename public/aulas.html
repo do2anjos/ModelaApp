@@ -505,6 +505,9 @@
                                         <option value="componentes">Diagrama de Componentes</option>
                                     </select>
                                 </label>
+                                <button type="button" id="test-editor-btn" class="button button-secondary" style="margin-left: 1rem;">
+                                    🔄 Testar Conexão
+                                </button>
                                 <span id="editor-status" class="status-indicator">Pronto</span>
                             </div>
                             <div class="uml-editor-container">
@@ -817,37 +820,63 @@
         let videoProgressInterval = null;
         let currentLessonTitle = "";
         let currentDiagramData = { xml: null, image: null };
-        // Estado de conexão com o editor (draw.io)
+        // Estado de conexão com o editor (draw.io) - VERSÃO MELHORADA
         let editorReady = false;
         let editorRetries = 0;
-        const maxEditorRetries = 2;
+        const maxEditorRetries = 3;
         const pendingEditorMessages = [];
         const EDITOR_BASE_URL = 'https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=uml;general&grid=1&nav=1&shadow=0&splash=0';
+        let editorLoadTimeout = null;
 
         function setEditorSrc(url) {
             if (!umlEditorIframe) return;
+            
+            console.log('🔄 Recarregando editor draw.io...');
             editorReady = false;
+            editorRetries = 0;
+            
+            // Limpa timeout anterior se existir
+            if (editorLoadTimeout) {
+                clearTimeout(editorLoadTimeout);
+            }
+            
             // Cache-buster para evitar estado antigo
             const cacheUrl = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
             umlEditorIframe.src = cacheUrl;
+            
             if (editorStatus) editorStatus.textContent = 'Carregando editor...';
+            
+            // Timeout de segurança para recarregar se demorar muito
+            editorLoadTimeout = setTimeout(() => {
+                if (!editorReady && editorRetries < maxEditorRetries) {
+                    console.log('⏰ Timeout no carregamento, tentando novamente...');
+                    editorRetries++;
+                    setEditorSrc(EDITOR_BASE_URL);
+                }
+            }, 5000);
         }
 
         function sendToEditor(msgObj) {
             try {
                 const payload = JSON.stringify(msgObj);
+                console.log('📤 Enviando mensagem para editor:', msgObj.action || 'unknown');
+                
                 if (editorReady && umlEditorIframe && umlEditorIframe.contentWindow) {
                     umlEditorIframe.contentWindow.postMessage(payload, '*');
+                    console.log('✅ Mensagem enviada com sucesso');
                 } else {
+                    console.log('⏳ Editor não pronto, enfileirando mensagem...');
                     pendingEditorMessages.push(payload);
                 }
             } catch(e) {
-                console.error('Falha ao enfileirar/enviar mensagem ao editor:', e);
+                console.error('❌ Falha ao enfileirar/enviar mensagem ao editor:', e);
             }
         }
 
         function drainEditorQueue() {
             if (!umlEditorIframe || !umlEditorIframe.contentWindow) return;
+            
+            console.log(`📦 Processando ${pendingEditorMessages.length} mensagens enfileiradas...`);
             while (pendingEditorMessages.length) {
                 const payload = pendingEditorMessages.shift();
                 umlEditorIframe.contentWindow.postMessage(payload, '*');
@@ -856,18 +885,30 @@
 
         function ensureEditorReadyWithRetry() {
             return new Promise((resolve) => {
-                if (editorReady) return resolve(true);
-                // Timeout de segurança: se não receber init em 2s, tenta recarregar
+                if (editorReady) {
+                    console.log('✅ Editor já está pronto');
+                    return resolve(true);
+                }
+                
+                console.log('⏳ Aguardando editor ficar pronto...');
+                
+                // Timeout de segurança: se não receber init em 3s, tenta recarregar
                 const start = Date.now();
                 const check = () => {
-                    if (editorReady) return resolve(true);
-                    if (Date.now() - start > 2000) {
+                    if (editorReady) {
+                        console.log('✅ Editor pronto após', Date.now() - start, 'ms');
+                        return resolve(true);
+                    }
+                    
+                    if (Date.now() - start > 3000) {
                         if (editorRetries < maxEditorRetries) {
+                            console.log(`🔄 Tentativa ${editorRetries + 1}/${maxEditorRetries} - recarregando editor...`);
                             editorRetries++;
                             setEditorSrc(EDITOR_BASE_URL);
                             // aguarda novo ciclo
-                            setTimeout(check, 1200);
+                            setTimeout(check, 1500);
                         } else {
+                            console.error('❌ Falha ao carregar editor após', maxEditorRetries, 'tentativas');
                             resolve(false);
                         }
                     } else {
@@ -1547,29 +1588,54 @@
             });
         }
 
-        // Integração com Draw.io (postMessage)
+        // Integração com Draw.io (postMessage) - VERSÃO MELHORADA
         window.addEventListener('message', function(evt) {
             try {
                 if (!evt || !evt.data) return;
                 const msg = JSON.parse(evt.data);
+                
+                console.log('📨 Mensagem recebida do draw.io:', msg.event || 'unknown');
+                
                 if (msg.event === 'init') {
                     // Sinaliza pronto e processa fila
+                    console.log('🎉 Editor draw.io inicializado com sucesso!');
                     editorReady = true;
                     editorRetries = 0;
+                    
+                    // Limpa timeout de carregamento
+                    if (editorLoadTimeout) {
+                        clearTimeout(editorLoadTimeout);
+                        editorLoadTimeout = null;
+                    }
+                    
                     if (editorStatus) editorStatus.textContent = 'Editor pronto';
                     drainEditorQueue();
-                }
-                if (msg.event === 'export') {
+                } else if (msg.event === 'export') {
+                    console.log('📤 Diagrama exportado pelo usuário');
                     currentDiagramData.image = 'data:image/png;base64,' + msg.data;
                     if (typeof msg.xml === 'string') currentDiagramData.xml = msg.xml;
                     if (diagramThumbnail) diagramThumbnail.src = currentDiagramData.image;
                     if (savedWorkPreview) savedWorkPreview.classList.remove('hidden');
                     if (submitPracticalBtn) submitPracticalBtn.disabled = false;
                     if (editorStatus) editorStatus.textContent = 'Diagrama salvo';
+                } else if (msg.event === 'load') {
+                    // Confirma carregamento de template
+                    console.log('📄 Template carregado com sucesso');
+                    if (editorStatus) editorStatus.textContent = 'Template carregado!';
+                } else if (msg.event === 'save') {
+                    // Captura dados do diagrama salvo
+                    console.log('💾 Diagrama salvo pelo usuário');
+                    currentDiagramData.xml = msg.xml;
+                    currentDiagramData.image = msg.data;
+                    updateUserProgress(currentLessonTitle, { diagramSaved: true });
+                } else if (msg.event === 'error') {
+                    // Trata erros do editor
+                    console.error('❌ Erro no editor draw.io:', msg.message || 'Erro desconhecido');
+                    if (editorStatus) editorStatus.textContent = 'Erro no editor';
                 }
                 // Sem carregamento automático de template neste modo
             } catch (e) {
-                // Ignora mensagens externas não-JSON
+                // Ignora mensagens externas não-JSON (normal para outras origens)
             }
         });
 
@@ -1592,22 +1658,99 @@
 <mxfile host=\"app.diagrams.net\"><diagram id=\"COMP\" name=\"Componentes\"><mxGraphModel dx=\"1062\" dy=\"609\" grid=\"1\" gridSize=\"10\" guides=\"1\" tooltips=\"1\" connect=\"1\" arrows=\"1\" fold=\"1\" page=\"1\" pageScale=\"1\" pageWidth=\"1169\" pageHeight=\"827\" math=\"0\" shadow=\"0\"><root><mxCell id=\"0\"/><mxCell id=\"1\" parent=\"0\"/><mxCell id=\"2\" value=\"Componente A\" style=\"shape=component;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"180\" y=\"160\" width=\"140\" height=\"80\" as=\"geometry\"/></mxCell><mxCell id=\"3\" value=\"Componente B\" style=\"shape=component;\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"380\" y=\"160\" width=\"140\" height=\"80\" as=\"geometry\"/></mxCell><mxCell id=\"4\" edge=\"1\" parent=\"1\" source=\"2\" target=\"3\" style=\"endArrow=block;endFill=1;\"><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></root></mxGraphModel></diagram></mxfile>`
         };
 
-        // Recarrega editor com libs apropriadas e template mínimo
+        // Recarrega editor com libs apropriadas e template mínimo - VERSÃO MELHORADA
         if (umlDiagramTypeSelect && umlEditorIframe) {
             umlDiagramTypeSelect.addEventListener('change', async function() {
                 const value = umlDiagramTypeSelect.value;
+                
+                if (!value) {
+                    console.log('⚠️ Nenhum tipo selecionado');
+                    return;
+                }
+                
+                console.log('🎯 Tipo selecionado:', value);
                 const libs = 'uml;general';
+                
                 try {
-                    setEditorSrc(`https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=${encodeURIComponent(libs)}&grid=1&nav=1&shadow=0&splash=0`);
+                    // Atualiza status
+                    if (editorStatus) editorStatus.textContent = 'Preparando editor...';
+                    
+                    // Recarrega editor com cache-buster
+                    const editorUrl = `https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=${encodeURIComponent(libs)}&grid=1&nav=1&shadow=0&splash=0`;
+                    setEditorSrc(editorUrl);
+                    
+                    // Aguarda editor ficar pronto
                     const ok = await ensureEditorReadyWithRetry();
-                    if (editorStatus) editorStatus.textContent = ok ? 'Editor recarregado' : 'Falha ao recarregar editor';
-
-                    const xml = UML_TEMPLATES[value];
-                    if (xml && ok) {
-                        sendToEditor({ action: 'load', xml, autosave: 1, spin: 'Carregando template...' });
+                    
+                    if (ok) {
+                        console.log('✅ Editor pronto, carregando template...');
+                        if (editorStatus) editorStatus.textContent = 'Carregando template...';
+                        
+                        const xml = UML_TEMPLATES[value];
+                        if (xml) {
+                            // Aguarda um pouco antes de enviar o template
+                            setTimeout(() => {
+                                sendToEditor({ 
+                                    action: 'load', 
+                                    xml: xml, 
+                                    autosave: 1, 
+                                    spin: 'Carregando template...' 
+                                });
+                                
+                                if (editorStatus) editorStatus.textContent = 'Template carregado!';
+                                console.log('🎨 Template', value, 'carregado com sucesso!');
+                            }, 500);
+                        } else {
+                            console.error('❌ Template não encontrado para:', value);
+                            if (editorStatus) editorStatus.textContent = 'Template não encontrado';
+                        }
+                    } else {
+                        console.error('❌ Falha ao carregar editor');
+                        if (editorStatus) editorStatus.textContent = 'Falha ao carregar editor';
                     }
                 } catch (e) {
-                    console.error('Erro ao recarregar editor:', e);
+                    console.error('❌ Erro ao recarregar editor:', e);
+                    if (editorStatus) editorStatus.textContent = 'Erro no carregamento';
+                }
+            });
+        }
+
+        // Botão de teste de conexão
+        const testEditorBtn = document.getElementById('test-editor-btn');
+        if (testEditorBtn) {
+            testEditorBtn.addEventListener('click', async function() {
+                console.log('🧪 Testando conexão com draw.io...');
+                
+                if (editorStatus) editorStatus.textContent = 'Testando conexão...';
+                
+                try {
+                    // Testa se o editor está pronto
+                    if (editorReady && umlEditorIframe && umlEditorIframe.contentWindow) {
+                        // Envia mensagem de teste
+                        sendToEditor({ 
+                            action: 'test', 
+                            message: 'Teste de conexão' 
+                        });
+                        
+                        if (editorStatus) editorStatus.textContent = 'Conexão OK!';
+                        console.log('✅ Conexão com draw.io funcionando!');
+                    } else {
+                        // Tenta recarregar o editor
+                        console.log('🔄 Editor não pronto, recarregando...');
+                        setEditorSrc(EDITOR_BASE_URL);
+                        
+                        const ok = await ensureEditorReadyWithRetry();
+                        if (ok) {
+                            if (editorStatus) editorStatus.textContent = 'Conexão restaurada!';
+                            console.log('✅ Editor recarregado com sucesso!');
+                        } else {
+                            if (editorStatus) editorStatus.textContent = 'Falha na conexão';
+                            console.error('❌ Falha ao conectar com draw.io');
+                        }
+                    }
+                } catch (e) {
+                    console.error('❌ Erro no teste de conexão:', e);
+                    if (editorStatus) editorStatus.textContent = 'Erro no teste';
                 }
             });
         }
