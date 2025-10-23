@@ -51,27 +51,33 @@ class DarkModeManager {
 
     setupMenuToggle() {
         // Menu dropdown do usuário (funciona em todas as páginas)
-        const userMenuButton = document.getElementById('user-menu-button') || 
-                              document.getElementById('user-menu-button-detail');
-        const userDropdown = document.getElementById('user-dropdown') || 
-                            document.getElementById('user-dropdown-detail');
+        // Suporta múltiplos menus na mesma página
+        const menus = [
+            { button: 'user-menu-button', dropdown: 'user-dropdown' },
+            { button: 'user-menu-button-detail', dropdown: 'user-dropdown-detail' }
+        ];
 
-        if (userMenuButton && userDropdown) {
-            userMenuButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userDropdown.classList.toggle('hidden');
-            });
+        menus.forEach(menu => {
+            const userMenuButton = document.getElementById(menu.button);
+            const userDropdown = document.getElementById(menu.dropdown);
 
-            // Fechar dropdown quando clicar fora
-            document.addEventListener('click', function() {
-                userDropdown.classList.add('hidden');
-            });
+            if (userMenuButton && userDropdown) {
+                userMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('hidden');
+                });
 
-            // Prevenir fechamento quando clicar dentro do dropdown
-            userDropdown.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
+                // Fechar dropdown quando clicar fora
+                document.addEventListener('click', function() {
+                    userDropdown.classList.add('hidden');
+                });
+
+                // Prevenir fechamento quando clicar dentro do dropdown
+                userDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+        });
     }
 
     toggleDarkMode(enable) {

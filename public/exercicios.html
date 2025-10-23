@@ -117,7 +117,8 @@
         [data-theme="dark"] h3,
         [data-theme="dark"] h4,
         [data-theme="dark"] h5,
-        [data-theme="dark"] h6 {
+        [data-theme="dark"] h6,
+        [data-theme="dark"] .criterion-name {
             font-weight: 500 !important;
         }
     </style>
@@ -347,12 +348,60 @@ document.addEventListener('DOMContentLoaded', function () {
             instructions: `
                 <div class="dashboard-card activity-instructions-card">
                     <h2>Instruções da Atividade</h2>
-                    <p><strong>Atividade:</strong> Crie o diagrama de classes para um sistema de biblioteca.</p>
-                    <h3>Objetivos</h3>
-                    <ul>
-                        <li>Identificar as classes principais.</li>
-                        <li>Definir atributos e métodos.</li>
+                    <p style="font-size: 1.05em; line-height: 1.7; margin-bottom: 1.25rem;"><strong>Desafio:</strong> Crie um diagrama de classes UML completo para modelar um sistema de gerenciamento de biblioteca.</p>
+                    
+                    <h3 style="margin-top: 1.5rem; margin-bottom: .75rem; color: var(--primary);">📖 Contexto</h3>
+                    <p style="line-height: 1.7; margin-bottom: 1.25rem;">O sistema deve gerenciar livros, usuários, empréstimos e devoluções. A biblioteca possui um acervo variado e precisa controlar quem pegou cada livro, quando e se já devolveu.</p>
+                    
+                    <h3 style="margin-top: 1.5rem; margin-bottom: .75rem; color: var(--primary);">🎯 Objetivos de Aprendizagem</h3>
+                    <ul style="line-height: 1.7; margin-bottom: 1.25rem; padding-left: 1.5rem;">
+                        <li><strong>Identificar classes principais</strong> do domínio do problema</li>
+                        <li><strong>Definir atributos</strong> relevantes para cada classe</li>
+                        <li><strong>Especificar métodos</strong> que representam o comportamento das classes</li>
+                        <li><strong>Estabelecer relacionamentos</strong> entre as classes (associação, agregação, composição, herança)</li>
+                        <li><strong>Aplicar multiplicidade</strong> corretamente nos relacionamentos</li>
                     </ul>
+                    
+                    <h3 style="margin-top: 1.5rem; margin-bottom: .75rem; color: var(--primary);">📋 Requisitos Funcionais</h3>
+                    <ol style="line-height: 1.7; margin-bottom: 1.25rem; padding-left: 1.5rem;">
+                        <li>O sistema deve gerenciar informações de <strong>livros</strong> (título, autor, ISBN, editora, ano, categoria)</li>
+                        <li>Deve cadastrar <strong>usuários</strong> (nome, CPF, email, telefone, endereço)</li>
+                        <li>Deve registrar <strong>empréstimos</strong> (data empréstimo, data prevista devolução, data real devolução)</li>
+                        <li>Cada livro pode ter múltiplos <strong>exemplares físicos</strong></li>
+                        <li>Usuários podem fazer <strong>reservas</strong> de livros</li>
+                        <li>O sistema deve calcular <strong>multas</strong> por atraso</li>
+                        <li>Funcionários podem gerenciar todo o acervo</li>
+                    </ol>
+                    
+                    <div style="margin: 1.5rem 0; text-align: center;">
+                        <img src="/images/modelo 1.png" alt="Modelo de Diagrama de Classes" style="max-width: 100%; height: auto; border-radius: var(--radius); box-shadow: var(--shadow-soft); border: 1px solid var(--border);" />
+                        <p style="margin-top: 1rem; font-size: 0.95em;">
+                            <a href="https://docs.google.com/document/d/1dAn3jqXbqtZUG5ESqDuLgxDuYXlvBMzfJ4j59WXUKL4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                                📚 Acesse para ver mais modelos
+                            </a>
+                        </p>
+                    </div>
+                    
+                    <h3 style="margin-top: 1.5rem; margin-bottom: .75rem; color: var(--primary);">💡 Dicas</h3>
+                    <div style="background: var(--muted); border-left: 4px solid var(--primary); padding: 1rem 1.25rem; border-radius: 0.5rem; margin-bottom: 1.25rem;">
+                        <ul style="line-height: 1.7; margin: 0; padding-left: 1.5rem;">
+                            <li>Pense em classes como <strong>Livro</strong>, <strong>Exemplar</strong>, <strong>Usuario</strong>, <strong>Emprestimo</strong>, <strong>Reserva</strong>, <strong>Funcionario</strong></li>
+                            <li>Use <strong>herança</strong> quando houver generalização (ex: Usuario como classe pai de Cliente e Funcionario)</li>
+                            <li>Identifique <strong>associações</strong>: um empréstimo associa um exemplar a um usuário</li>
+                            <li>Defina <strong>multiplicidades</strong>: um usuário pode ter vários empréstimos, mas cada empréstimo pertence a um único usuário</li>
+                            <li>Adicione métodos como <strong>emprestar()</strong>, <strong>devolver()</strong>, <strong>calcularMulta()</strong>, <strong>renovar()</strong></li>
+                        </ul>
+                    </div>
+                    
+                    <h3 style="margin-top: 1.5rem; margin-bottom: .75rem; color: var(--primary);">🚀 Como Começar</h3>
+                    <ol style="line-height: 1.7; margin-bottom: 1.25rem; padding-left: 1.5rem;">
+                        <li>Clique em <strong>"Abrir Editor"</strong> abaixo</li>
+                        <li>Selecione <strong>"Diagrama de Classes"</strong> no dropdown</li>
+                        <li>Comece modelando as classes principais</li>
+                        <li>Adicione atributos e métodos a cada classe</li>
+                        <li>Estabeleça os relacionamentos entre as classes</li>
+                        <li>Exporte o diagrama em PNG e faça o upload</li>
+                    </ol>
                 </div>
                 <div class="dashboard-card activity-scoring-card">
                     <h2>Sistema de Pontuação por Critério</h2>
@@ -948,25 +997,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
     
-    // --- LÓGICA DO MENU DROPDOWN DO USUÁRIO (Original) ---
-    function setupUserMenu(menuButtonId, dropdownId) {
-        const userMenuButton = document.getElementById(menuButtonId);
-        const userDropdown = document.getElementById(dropdownId);
-
-        if (userMenuButton && userDropdown) {
-            userMenuButton.addEventListener('click', function(event) {
-                event.stopPropagation();
-                userDropdown.classList.toggle('hidden');
-            });
-            document.addEventListener('click', function() {
-                userDropdown.classList.add('hidden');
-            });
-            userDropdown.addEventListener('click', function(event) {
-                event.stopPropagation();
-            });
-        }
-    }
-
     // Menu do usuário é gerenciado pelo dark-mode.js
 });
 </script>
