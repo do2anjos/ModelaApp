@@ -78,6 +78,48 @@
             pointer-events: auto !important;
             user-select: none !important;
         }
+
+        /* Margem do ícone de cadeado nas atividades bloqueadas */
+        .exercise-card .locked-icon {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-width: 140px !important; /* Mesmo tamanho do botão */
+            grid-column: 3 !important; /* Força posição na 3ª coluna */
+        }
+        
+        .exercise-card .locked-icon svg {
+            flex-shrink: 0 !important;
+        }
+
+        /* Padronização dos status - sem cor de fundo, texto branco */
+        .exercise-status.completed,
+        .exercise-status.in-progress,
+        .exercise-status.todo {
+            background-color: transparent !important;
+            color: white !important;
+        }
+        
+        /* Correção para dark mode - texto branco */
+        [data-theme="dark"] .exercise-status.completed,
+        [data-theme="dark"] .exercise-status.in-progress,
+        [data-theme="dark"] .exercise-status.todo {
+            background-color: transparent !important;
+            color: white !important;
+        }
+
+        /* Suavizar negrito no dark mode */
+        [data-theme="dark"] strong,
+        [data-theme="dark"] .font-semibold,
+        [data-theme="dark"] .font-bold,
+        [data-theme="dark"] h1,
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4,
+        [data-theme="dark"] h5,
+        [data-theme="dark"] h6 {
+            font-weight: 500 !important;
+        }
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.33.0/src-min-noconflict/ace.js"></script>
@@ -193,28 +235,32 @@
                     <div class="tabs-content">
                         <div class="tab-pane active" id="uml">
                             <div class="exercise-card">
-                                <span class="exercise-status completed">Concluído</span>
-                                <div class="exercise-info">
-                                    <h3>Exercício 1: Diagrama de Classes</h3>
-                                    <p>Crie o diagrama de classes para um sistema de biblioteca.</p>
-                                </div>
-                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex1">Ver Correção</button>
-                            </div>
-                            <div class="exercise-card">
                                 <span class="exercise-status in-progress">Em Andamento</span>
                                 <div class="exercise-info">
-                                    <h3>Exercício 2: Diagrama de Sequência</h3>
-                                    <p>Modele o fluxo de login de um usuário.</p>
+                                    <h3>Atividade 1: Diagrama de Classes</h3>
+                                    <p>Crie o diagrama de classes para um sistema de biblioteca.</p>
                                 </div>
-                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex2">Continuar</button>
+                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex1">Continuar</button>
                             </div>
                             <div class="exercise-card">
-                                <span class="exercise-status todo">Não Iniciado</span>
+                                <span class="exercise-status in-progress">Bloqueado</span>
                                 <div class="exercise-info">
-                                    <h3>Exercício 3: Diagrama de Casos de Uso</h3>
+                                    <h3>Atividade 2: Diagrama de Sequência</h3>
+                                    <p>Modele o fluxo de login de um usuário.</p>
+                                </div>
+                                <div class="locked-icon" aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                </div>
+                            </div>
+                            <div class="exercise-card">
+                                <span class="exercise-status todo">Bloqueado</span>
+                                <div class="exercise-info">
+                                    <h3>Atividade 3: Diagrama de Casos de Uso</h3>
                                     <p>Elabore um diagrama de casos de uso para um sistema de caixa eletrônico (ATM).</p>
                                 </div>
-                                <button class="button button-primary view-activity-btn" data-activity-id="uml-ex3">Iniciar</button>
+                                <div class="locked-icon" aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                </div>
                             </div>
                         </div>
                          <div class="tab-pane" id="requisitos">
@@ -244,17 +290,27 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- TEMPLATES HTML PARA A ÁREA DE SUBMISSÃO ---
     const submissionCompletedHTML = `
         <div class="dashboard-card">
-            <div class="submission-status completed">
-                <div class="status-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
+            <div class="submission-header">
+                <h3>Enviar Resposta</h3>
+                <div class="submission-toggles">
+                    <button class="submission-toggle-btn active" data-submission="editor">Editor</button>
+                    <button class="submission-toggle-btn" data-submission="upload">Upload de Arquivo</button>
                 </div>
-                <div class="status-content">
-                    <h3>Atividade Enviada</h3>
-                    <p>Sua resposta foi submetida com sucesso em 15/03/2024 às 14:30. Pontuação: 7/10</p>
+            </div>
+            <div id="editor-method" class="submission-method">
+                <div style="display: flex; justify-content: center; align-items: center; min-height: 200px;">
+                    <button class="button button-primary" id="open-editor-btn">Abrir Editor</button>
                 </div>
+            </div>
+            <div id="upload-method" class="submission-method hidden">
+                <div class="file-upload-area">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
+                    <p>Arraste e solte o arquivo aqui ou <strong>clique para selecionar</strong>.</p>
+                    <input type="file" class="file-input" hidden>
+                </div>
+            </div>
+            <div class="submission-footer" style="display: none;">
+                <button type="submit" class="button button-primary full-width">Enviar Atividade</button>
             </div>
         </div>
     `;
@@ -264,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="submission-header">
                 <h3>Enviar Resposta</h3>
                 <div class="submission-toggles">
-                    <button class="submission-toggle-btn active" data-submission="editor">Editor de Código</button>
+                    <button class="submission-toggle-btn active" data-submission="editor">Editor</button>
                     <button class="submission-toggle-btn" data-submission="upload">Upload de Arquivo</button>
                 </div>
             </div>
@@ -278,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <input type="file" class="file-input" hidden>
                 </div>
             </div>
-            <div class="submission-footer">
+            <div class="submission-footer" style="display: none;">
                 <button type="submit" class="button button-primary full-width">Enviar Atividade</button>
             </div>
         </div>
@@ -287,11 +343,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- BANCO DE DADOS DE EXEMPLO DAS ATIVIDADES ---
     const activityDatabase = {
         "uml-ex1": {
-            title: "Exercício 1: Diagrama de Classes",
+            title: "Atividade 1: Diagrama de Classes",
             instructions: `
                 <div class="dashboard-card activity-instructions-card">
                     <h2>Instruções da Atividade</h2>
-                    <p><strong>Exercício:</strong> Crie o diagrama de classes para um sistema de biblioteca.</p>
+                    <p><strong>Atividade:</strong> Crie o diagrama de classes para um sistema de biblioteca.</p>
                     <h3>Objetivos</h3>
                     <ul>
                         <li>Identificar as classes principais.</li>
@@ -307,49 +363,24 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <span class="criterion-name">Identificação de Classes</span>
                                     <span class="criterion-score">2.5/2.5 pontos</span>
                                 </div>
-                                <div class="criterion-description">
-                                    <p><strong>Pontos fortes:</strong> Você identificou corretamente as classes Livro e Usuário.</p>
-                                    <p><strong>Oportunidades:</strong> Faltaram classes importantes como Empréstimo, Reserva e Funcionário.</p>
-                                </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
                                     <span class="criterion-name">Atributos e Métodos</span>
-                                    <span class="criterion-score">1.5/2.5 pontos</span>
-                                </div>
-                                <div class="criterion-description">
-                                    <p><strong>Pontos fortes:</strong> Os atributos básicos como título, autor e nome estão presentes.</p>
-                                    <p><strong>Oportunidades:</strong> Métodos importantes como emprestar(), devolver() e renovar() não foram definidos.</p>
+                                    <span class="criterion-score">2.5/2.5 pontos</span>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
                                     <span class="criterion-name">Relacionamentos</span>
-                                    <span class="criterion-score">1/2.5 pontos</span>
-                                </div>
-                                <div class="criterion-description">
-                                    <p><strong>Pontos fortes:</strong> Você estabeleceu a relação básica entre Livro e Usuário.</p>
-                                    <p><strong>Oportunidades:</strong> Faltaram relacionamentos como agregação entre Empréstimo e Livro, e associação com Funcionário.</p>
+                                    <span class="criterion-score">2.5/2.5 pontos</span>
                                 </div>
                             </div>
                             <div class="criterion">
                                 <div class="criterion-header">
                                     <span class="criterion-name">Notação UML</span>
-                                    <span class="criterion-score">2/2.5 pontos</span>
+                                    <span class="criterion-score">2.5/2.5 pontos</span>
                                 </div>
-                                <div class="criterion-description">
-                                    <p><strong>Pontos fortes:</strong> A notação básica de classes foi utilizada corretamente.</p>
-                                    <p><strong>Oportunidades:</strong> Cardinalidades e estereótipos não foram especificados adequadamente.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="scoring-summary">
-                            <div class="total-score">
-                                <span>Pontuação Total: </span>
-                                <span class="score-value">7/10 pontos</span>
-                            </div>
-                            <div class="score-feedback">
-                                <p><strong>Feedback:</strong> Bom começo! Você demonstrou compreensão dos conceitos básicos, mas precisa aprofundar na modelagem completa do sistema. Revise as classes faltantes e os relacionamentos mais complexos.</p>
                             </div>
                         </div>
                     </div>
@@ -358,11 +389,11 @@ document.addEventListener('DOMContentLoaded', function () {
             submissionContent: submissionCompletedHTML
         },
         "uml-ex2": {
-            title: "Exercício 2: Diagrama de Sequência",
+            title: "Atividade 2: Diagrama de Sequência",
             instructions: `
                 <div class="dashboard-card activity-instructions-card">
                     <h2>Instruções da Atividade</h2>
-                    <p><strong>Exercício:</strong> Modele o fluxo de login de um usuário.</p>
+                    <p><strong>Atividade:</strong> Modele o fluxo de login de um usuário.</p>
                     <h3>Objetivos</h3>
                     <ul>
                         <li>Identificar atores e objetos.</li>
@@ -425,11 +456,11 @@ document.addEventListener('DOMContentLoaded', function () {
             submissionContent: submissionPendingHTML
         },
         "uml-ex3": {
-            title: "Exercício 3: Diagrama de Casos de Uso",
+            title: "Atividade 3: Diagrama de Casos de Uso",
             instructions: `
                 <div class="dashboard-card activity-instructions-card">
                     <h2>Instruções da Atividade</h2>
-                    <p><strong>Exercício:</strong> Elabore um diagrama de casos de uso para um caixa eletrônico (ATM).</p>
+                    <p><strong>Atividade:</strong> Elabore um diagrama de casos de uso para um caixa eletrônico (ATM).</p>
                     <h3>Objetivos</h3>
                     <ul>
                         <li>Identificar atores (Cliente, Banco).</li>
@@ -509,6 +540,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const submissionToggles = submissionWrapper.querySelectorAll('.submission-toggle-btn');
         const editorMethod = submissionWrapper.querySelector('#editor-method');
         const uploadMethod = submissionWrapper.querySelector('#upload-method');
+        const openEditorBtn = submissionWrapper.querySelector('#open-editor-btn');
         
         if (submissionToggles.length > 0) {
             submissionToggles.forEach(toggle => {
@@ -516,17 +548,334 @@ document.addEventListener('DOMContentLoaded', function () {
                     submissionToggles.forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     const method = this.getAttribute('data-submission');
+                    const submitFooter = submissionWrapper.querySelector('.submission-footer');
                     if (method === 'editor') {
                         editorMethod.classList.remove('hidden');
                         uploadMethod.classList.add('hidden');
+                        if (submitFooter) submitFooter.style.display = 'none';
                     } else {
                         uploadMethod.classList.remove('hidden');
                         editorMethod.classList.add('hidden');
+                        if (submitFooter) submitFooter.style.display = 'block';
                     }
                 });
             });
         }
         
+        // Event listener para o botão "Abrir Editor" (abre overlay de editor UML)
+        if (openEditorBtn) {
+            openEditorBtn.addEventListener('click', function() {
+                // Mostrar o botão "Enviar Atividade" no painel principal
+                const submitFooter = submissionWrapper.querySelector('.submission-footer');
+                if (submitFooter) submitFooter.style.display = 'block';
+
+                // Criar overlay de tela inteira
+                const overlay = document.createElement('section');
+                overlay.id = 'uml-editor-overlay';
+                overlay.setAttribute('role', 'region');
+                overlay.setAttribute('aria-label', 'Editor UML');
+                overlay.setAttribute('style', 'position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--background); z-index: 9999; overflow: auto; padding: 2rem;');
+
+                overlay.innerHTML = `
+                    <div style=\"max-width: 1200px; margin: 0 auto;\">
+                        <div style=\"display: flex; justify-content: space-between; align-items: center; margin-bottom: .75rem;\">
+                            <h3 style=\"margin: 0;\">Crie seu Diagrama</h3>
+                            <button id=\"close-uml-editor-overlay\" class=\"button\" style=\"background: var(--primary); color: var(--primary-foreground);\">Fechar</button>
+                        </div>
+                        <div style=\"display:flex; align-items:center; gap:.5rem; justify-content:flex-end; margin-top: .25rem; margin-bottom: 1rem;\">
+                            <button id=\"step-prev\" class=\"button\" aria-label=\"Anterior\" disabled><</button>
+                            <span id=\"step-indicator\">1/2</span>
+                            <button id=\"step-next\" class=\"button\" aria-label=\"Próximo\">></button>
+                        </div>
+
+                        <!-- Passo 1: Ajuda e seleção -->
+                        <div id=\"uml-step-1\">
+                            <div class="editor-help" style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem 2.2rem 1.7rem 2.2rem; box-shadow: var(--shadow-soft); margin-bottom: 1.35rem;">
+                                <details open>
+                                    <summary style="font-size:1.04em">Tutorial Prático</summary>
+                                    <div style="padding-top: .7em;">
+                                        <h4 style="margin: .75rem 0 .5rem 0; font-size:1.08em;">Passo a Passo</h4>
+                                        <ol style="line-height:1.75; margin: 0 0 1.25rem 1.3rem; padding: 0;">
+                                            <li style="margin-bottom:.33em;">Escolha o <strong>tipo de diagrama</strong> no dropdown abaixo (Classes, Casos de Uso...)</li>
+                                            <li style="margin-bottom:.33em;">O editor abrirá no <strong>Passo 2</strong> com um modelo inicial</li>
+                                            <li style="margin-bottom:.33em;">Clique duas vezes em um elemento para <strong>editar o texto</strong></li>
+                                            <li style="margin-bottom:.33em;">Arraste formas da lateral para adicionar elementos</li>
+                                            <li style="margin-bottom:.33em;">Use <kbd>Del</kbd> para apagar itens</li>
+                                            <li style="margin-bottom:.33em;">Conecte usando as setas azuis das bordas dos blocos</li>
+                                        </ol>
+                                        <h4 style="margin: .75rem 0 .5rem 0; font-size:1.08em;">Atalhos Essenciais</h4>
+                                        <ul style="line-height:1.7; margin: 0 0 1.1rem 1.3rem; padding: 0;">
+                                            <li style="margin-bottom:.33em;"><kbd>Ctrl</kbd> + <kbd>Z</kbd> / <kbd>Y</kbd>: Desfazer / Refazer</li>
+                                            <li style="margin-bottom:.33em;"><kbd>Ctrl</kbd> + <kbd>C</kbd> / <kbd>V</kbd> / <kbd>D</kbd>: Copiar / Colar / Duplicar</li>
+                                            <li style="margin-bottom:.33em;"><kbd>Shift</kbd> + Arrastar: Seleção múltipla</li>
+                                            <li style="margin-bottom:.33em;"><kbd>Ctrl</kbd> + Roda do mouse: Zoom</li>
+                                        </ul>
+                                        <h4 style="margin: .75rem 0 .5rem 0; font-size:1.08em;">Exportar seu Diagrama</h4>
+                                        <ol style="line-height:1.7; margin: 0 0 0.5rem 1.3rem; padding: 0;">
+                                            <li style="margin-bottom:.33em;">Menu <strong>File → Export as</strong></li>
+                                            <li style="margin-bottom:.33em;">Selecione PNG para enviar (ou SVG para altíssima qualidade)</li>
+                                            <li style="margin-bottom:.33em;">Ajuste <em>scale</em> para 2x ou 3x para imagem nítida</li>
+                                            <li style="margin-bottom:.33em;">Clique em <strong>Export</strong> e salve o arquivo</li>
+                                        </ol>
+                                        <div style="margin-top:.9rem;padding:.5em 1em; background:var(--muted,#eef2fd);border-radius:.45em;font-size:.93em;color:var(--muted-foreground,#42528b);max-width:95%;">
+                                            💡 <b>Dica:</b> Após exportar, retorne ao Passo 1 e use a aba <b>Upload de Arquivo</b> para enviar seu diagrama!
+                                        </div>
+                                    </div>
+                                </details>
+                            </div>
+                            
+                        </div>
+
+                        <!-- Passo 2: Editor -->
+                        <div id=\"uml-step-2\" class=\"hidden\">
+                            <div class=\"editor-controls\" style=\"display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;\">
+                                <label class=\"select-group\" for=\"uml-diagram-type\" style=\"display:flex;align-items:center;gap:.5rem;\">
+                                    <span>Tipo:</span>
+                                    <select id=\"uml-diagram-type\" aria-label=\"Tipo de diagrama UML\">
+                                        <option value=\"\">Selecione um tipo...</option>
+                                        <option value=\"classes\">Diagrama de Classes</option>
+                                        <option value=\"casos-uso\">Diagrama de Casos de Uso</option>
+                                        <option value=\"sequencia\">Diagrama de Sequência</option>
+                                        <option value=\"atividades\">Diagrama de Atividades</option>
+                                        <option value=\"estados\">Diagrama de Estados</option>
+                                        <option value=\"componentes\">Diagrama de Componentes</option>
+                                    </select>
+                                </label>
+                                <span id=\"editor-status\" class=\"status-indicator\">Editor pronto</span>
+                            </div>
+                            <div class=\"uml-editor-container\" style=\"background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 0; box-shadow: var(--shadow-soft);\">
+                                <iframe id=\"uml-editor-iframe\" src=\"https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=uml;general&grid=1&nav=1&shadow=0&splash=0\" width=\"100%\" height=\"600\" style=\"display:block; border: 0; border-radius: var(--radius);\"></iframe>
+                            </div>
+                            <div id=\"saved-work-preview\" class=\"saved-work-preview hidden\" style=\"margin-top: 1rem;\">
+                                <h4>Seu trabalho salvo:</h4>
+                                <img id=\"diagram-thumbnail\" alt=\"Pré-visualização do diagrama\" />
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(overlay);
+
+                // Navegação por passos
+                const step1 = overlay.querySelector('#uml-step-1');
+                const step2 = overlay.querySelector('#uml-step-2');
+                const stepPrev = overlay.querySelector('#step-prev');
+                const stepNext = overlay.querySelector('#step-next');
+                const stepIndicator = overlay.querySelector('#step-indicator');
+                let currentStep = 1;
+
+                function updateSteps() {
+                    if (currentStep === 1) {
+                        step1.classList.remove('hidden');
+                        step2.classList.add('hidden');
+                        stepPrev.setAttribute('disabled', '');
+                        stepIndicator.textContent = '1/2';
+                    } else {
+                        step1.classList.add('hidden');
+                        step2.classList.remove('hidden');
+                        stepPrev.removeAttribute('disabled');
+                        stepIndicator.textContent = '2/2';
+                    }
+                }
+
+                if (stepPrev) {
+                    stepPrev.addEventListener('click', function() {
+                        if (currentStep > 1) {
+                            currentStep = 1;
+                            updateSteps();
+                        }
+                    });
+                }
+
+                if (stepNext) {
+                    stepNext.addEventListener('click', function() {
+                        if (currentStep < 2) {
+                            currentStep = 2;
+                            updateSteps();
+                        }
+                    });
+                }
+
+                updateSteps();
+
+                // Integração com diagrams.net (carregar template via dropdown)
+                const editorFrame = overlay.querySelector('#uml-editor-iframe');
+                const diagramTypeSelect = overlay.querySelector('#uml-diagram-type');
+                const statusEl = overlay.querySelector('#editor-status');
+                let editorReady = false;
+                let pendingXml = null;
+
+                function buildXmlFor(type) {
+                    // Gera um XML .drawio mínimo com 1-2 formas dependendo do tipo
+                    const head = '<mxfile><diagram id="diagram-1" name="Page-1"><mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/>';
+                    const tail = '</root></mxGraphModel></diagram></mxfile>';
+                    let body = '';
+                    switch (type) {
+                        case 'classes':
+                            body = '<mxCell id="2" value="Classe" style="shape=rectangle;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="100" y="100" width="140" height="60" as="geometry"/></mxCell>';
+                            break;
+                        case 'casos-uso':
+                            body = '<mxCell id="2" value="Caso de Uso" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="120" y="120" width="160" height="80" as="geometry"/></mxCell>';
+                            break;
+                        case 'sequencia':
+                            body = ''+
+                              '<mxCell id="2" value="Ator" style="shape=rectangle;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="80" y="80" width="80" height="40" as="geometry"/></mxCell>'+
+                              '<mxCell id="3" value="Objeto" style="shape=rectangle;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="240" y="80" width="100" height="40" as="geometry"/></mxCell>';
+                            break;
+                        case 'atividades':
+                            body = '<mxCell id="2" value="Atividade" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="120" y="120" width="140" height="60" as="geometry"/></mxCell>';
+                            break;
+                        case 'estados':
+                            body = '<mxCell id="2" value="Estado" style="shape=rectangle;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="140" y="120" width="120" height="50" as="geometry"/></mxCell>';
+                            break;
+                        case 'componentes':
+                            body = '<mxCell id="2" value="Componente" style="shape=rectangle;whiteSpace=wrap;html=1;" vertex="1" parent="1"><mxGeometry x="140" y="120" width="140" height="60" as="geometry"/></mxCell>';
+                            break;
+                        default:
+                            body = '';
+                    }
+                    return head + body + tail;
+                }
+
+                function sendXmlToEditor(xml) {
+                    if (editorFrame && editorFrame.contentWindow) {
+                        const msg = { action: 'load', autosave: 1, xml };
+                        editorFrame.contentWindow.postMessage(JSON.stringify(msg), '*');
+                    }
+                }
+
+                function onEditorMessage(evt) {
+                    try {
+                        const data = typeof evt.data === 'string' ? JSON.parse(evt.data) : evt.data;
+                        if (data === 'ready' || (data && (data.event === 'init' || data.event === 'configure'))) {
+                            editorReady = true;
+                            if (pendingXml) {
+                                sendXmlToEditor(pendingXml);
+                                pendingXml = null;
+                            }
+                        }
+                    } catch (_) { /* ignore */ }
+                }
+                window.addEventListener('message', onEditorMessage);
+
+                if (diagramTypeSelect) {
+                    diagramTypeSelect.addEventListener('change', function() {
+                        const val = this.value;
+                        if (!val) return;
+                        const xml = buildXmlFor(val);
+                        if (statusEl) statusEl.textContent = 'Carregando modelo...';
+                        if (editorReady) {
+                            sendXmlToEditor(xml);
+                        } else {
+                            pendingXml = xml;
+                        }
+                        setTimeout(() => { if (statusEl) statusEl.textContent = 'Modelo aplicado'; }, 600);
+                        // Ir automaticamente para o passo 2 ao escolher um tipo
+                        if (currentStep === 1) {
+                            currentStep = 2;
+                            updateSteps();
+                        }
+                    });
+                }
+
+                // Fechar overlay
+                const closeBtn = document.getElementById('close-uml-editor-overlay');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        overlay.remove();
+                        window.removeEventListener('message', onEditorMessage);
+                    });
+                }
+            });
+        }
+        
+        // Event listener para upload de arquivo
+        const fileInput = submissionWrapper.querySelector('.file-input');
+        const fileUploadArea = submissionWrapper.querySelector('.file-upload-area');
+        
+        if (fileInput && fileUploadArea) {
+            // Click no área de upload
+            fileUploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Drag and drop
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = 'var(--muted)';
+            });
+            
+            fileUploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+            });
+            
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileSelection(files[0]);
+                }
+            });
+            
+            // Seleção de arquivo
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileSelection(e.target.files[0]);
+                }
+            });
+            
+            function handleFileSelection(file) {
+                // Mostrar nome do arquivo selecionado
+                const fileName = file.name;
+                fileUploadArea.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    <p><strong>Arquivo selecionado:</strong> ${fileName}</p>
+                    <p style="font-size: 0.875rem; color: var(--muted-foreground);">Clique novamente para trocar o arquivo</p>
+                `;
+                
+                // Mostrar o botão "Enviar Atividade" quando arquivo for selecionado
+                const submitFooter = submissionWrapper.querySelector('.submission-footer');
+                if (submitFooter) {
+                    submitFooter.style.display = 'block';
+                }
+                
+                // Adicionar event listener novamente para trocar arquivo
+                fileUploadArea.addEventListener('click', function() {
+                    fileInput.click();
+                });
+            }
+        }
+        
+        // Envio da atividade (Upload)
+        const submitButton = submissionWrapper.querySelector('.submission-footer button');
+        if (submitButton) {
+            submitButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const isUploadVisible = uploadMethod && !uploadMethod.classList.contains('hidden');
+                const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+                if (isUploadVisible && hasFile) {
+                    submissionWrapper.innerHTML = `
+                        <div class="dashboard-card">
+                            <div class="submission-status completed">
+                                <div class="status-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="status-content">
+                                    <h3>Atividade Enviada</h3>
+                                    <p>Sua atividade foi submetida com sucesso</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
         const codeEditorEl = document.getElementById('code-editor');
         if (codeEditorEl) {
             var editor = ace.edit(codeEditorEl);
@@ -552,10 +901,8 @@ document.addEventListener('DOMContentLoaded', function () {
         activityDetailView.classList.remove('hidden');
         detailHeader.classList.remove('hidden');
 
-        // Se a atividade não for a primeira, inicializa o painel de submissão
-        if (activityId !== 'uml-ex1') {
-            initializeSubmissionPanel();
-        }
+        // Inicializa o painel de submissão para qualquer atividade
+        initializeSubmissionPanel();
     }
 
     function showExerciseList() {
@@ -569,6 +916,9 @@ document.addEventListener('DOMContentLoaded', function () {
     viewActivityBtns.forEach(btn => {
         btn.addEventListener('click', function(event) {
             event.preventDefault();
+            if (this.classList.contains('locked') || this.hasAttribute('disabled') || this.getAttribute('aria-disabled') === 'true') {
+                return;
+            }
             const activityId = this.getAttribute('data-activity-id');
             showActivityDetail(activityId);
         });
