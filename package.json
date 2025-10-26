@@ -1,7 +1,7 @@
 {
   "name": "modela-app",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.4.0",
+  "description": "Plataforma educacional de Modelagem e Projeto de Sistemas da UEA",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
