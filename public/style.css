@@ -28,9 +28,44 @@
   --shadow-medium: 0 10px 15px -3px hsl(210 24% 16% / 0.1);
   --shadow-lg: 0 20px 25px -5px hsla(207, 24%, 16%, 0.1);
 
-  /* Typography */
+  /* Typography System */
   --font-heading: 'Montserrat', sans-serif;
   --font-body: 'Roboto', sans-serif;
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* Font Sizes - Scale System */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.25rem;     /* 20px */
+  --text-2xl: 1.5rem;     /* 24px */
+  --text-3xl: 1.875rem;   /* 30px */
+  --text-4xl: 2.25rem;    /* 36px */
+  --text-5xl: 3rem;       /* 48px */
+  --text-6xl: 3.75rem;    /* 60px */
+  
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+  
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
 }
 
 /* Dark Mode Variables */
@@ -67,23 +102,133 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
-  line-height: 1.6;
-  font-size: 1rem; /* 14px */
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
 }
-.container { width: 90%; max-width: 1200px; margin: 0 auto; }
-section { padding: 5rem 0; }
-a { text-decoration: none; color: inherit; }
-ul { list-style: none; }
-h1, h2, h3 { font-family: var(--font-heading); font-weight: 700; }
-h1 { font-size: 2.5rem; line-height: 1.1; } /* Reduzido de 3.5rem para 2.5rem */
-h2 { font-size: 1.875rem; } /* Reduzido de 2.5rem para 1.875rem */
-h3 { font-size: 1.25rem; }
 
-/* Ajustes responsivos de font-size para evitar zoom em telas menores */
+/* Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--foreground);
+}
+
+h1 {
+  font-size: var(--text-5xl);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tighter);
+}
+
+h2 {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-tight);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+h4 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+h5 {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-normal);
+}
+
+h6 {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-normal);
+}
+
+/* Body Text Styles */
+p {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  margin-bottom: 1rem;
+}
+
+.text-large {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+}
+
+.text-small {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.text-xs {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+}
+
+/* Utility Classes */
+.font-light { font-weight: var(--font-weight-light); }
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+.font-extrabold { font-weight: var(--font-weight-extrabold); }
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.leading-tight { line-height: var(--leading-tight); }
+.leading-normal { line-height: var(--leading-normal); }
+.leading-relaxed { line-height: var(--leading-relaxed); }
+
+.tracking-tight { letter-spacing: var(--tracking-tight); }
+.tracking-normal { letter-spacing: var(--tracking-normal); }
+.tracking-wide { letter-spacing: var(--tracking-wide); }
+
+/* Layout */
+.container { 
+  width: 90%; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+  padding: 0 1rem;
+}
+
+section { 
+  padding: 5rem 0; 
+}
+
+a { 
+  text-decoration: none; 
+  color: inherit; 
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary);
+}
+
+ul { 
+  list-style: none; 
+}
+
+/* Responsive Typography */
 @media (max-width: 1024px) {
   html { font-size: 13px; }
-  h1 { font-size: 2.25rem; }
-  h2 { font-size: 1.75rem; }
+  
+  h1 { font-size: var(--text-4xl); }
+  h2 { font-size: var(--text-3xl); }
+  h3 { font-size: var(--text-xl); }
   
   .video-player-wrapper {
     max-width: 750px; /* Tamanho intermediário para tablets */
@@ -96,28 +241,63 @@ h3 { font-size: 1.25rem; }
 
 @media (max-width: 768px) {
   html { font-size: 12px; }
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.5rem; }
+  
+  h1 { font-size: var(--text-3xl); }
+  h2 { font-size: var(--text-2xl); }
+  h3 { font-size: var(--text-lg); }
+  
+  .text-large { font-size: var(--text-base); }
+  .text-small { font-size: var(--text-xs); }
 }
 
 @media (max-width: 480px) {
   html { font-size: 12px; }
-  h1 { font-size: 1.75rem; }
-  h2 { font-size: 1.35rem; }
+  
+  h1 { font-size: var(--text-2xl); }
+  h2 { font-size: var(--text-xl); }
+  h3 { font-size: var(--text-base); }
+  
+  .text-large { font-size: var(--text-sm); }
+  .text-small { font-size: var(--text-xs); }
 }
 
 /* ==========================================================================
    3. Reusable Components (Buttons, etc.)
    ========================================================================== */
 .button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius);
-  font-weight: 500;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-normal);
   border: 1px solid transparent;
   transition: all 0.2s ease;
-  font-size: 0.9rem;
   text-align: center;   
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.button-sm {
+  padding: 0.5rem 1rem;
+  font-size: var(--text-xs);
+}
+
+.button-lg {
+  padding: 1rem 2rem;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+}
+
+.button-xl {
+  padding: 1.25rem 2.5rem;
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
 }
 .button-primary { background-color: var(--primary); color: var(--primary-foreground); }
 .button-primary:hover { opacity: 0.9; }
@@ -2688,9 +2868,10 @@ html[data-daltonismo] .logo img,
    ========================================================================== */
 
 .header-subtitle {
-    font-size: 1rem;
+    font-size: var(--text-base);
     color: var(--muted-foreground);
-    font-weight: 400;
+    font-weight: var(--font-weight-normal);
+    line-height: var(--leading-relaxed);
     margin-top: 0.5rem;
 }
 
@@ -2706,10 +2887,25 @@ html[data-daltonismo] .logo img,
     margin-bottom: 2rem;
 }
 .your-rank-info { text-align: center; }
-.your-rank-label { font-size: 0.9rem; opacity: 0.8; }
-.your-rank-number { font-size: 2.5rem; font-weight: 700; font-family: var(--font-heading); line-height: 1; }
+.your-rank-label { 
+    font-size: var(--text-sm); 
+    font-weight: var(--font-weight-medium);
+    opacity: 0.8; 
+}
+.your-rank-number { 
+    font-size: var(--text-4xl); 
+    font-weight: var(--font-weight-extrabold); 
+    font-family: var(--font-heading); 
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+}
 .your-rank-details { flex-grow: 1; }
-.your-rank-details p { margin: 0 0 0.5rem; font-size: 1.1rem; }
+.your-rank-details p { 
+    margin: 0 0 0.5rem; 
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--leading-relaxed);
+}
 .your-rank-details .progress-bar { background-color: hsla(0, 0%, 100%, 0.2); }
 .your-rank-details .progress-fill { background-color: var(--background); }
 .your-rank-next { font-weight: 500; text-align: right; }
@@ -2731,10 +2927,33 @@ html[data-daltonismo] .logo img,
     max-width: 200px;
     border-bottom: 4px solid;
 }
-.podium-rank { font-size: 2.5rem; display: block; }
-.podium-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0.5rem auto; border: 4px solid var(--card); }
-.podium-name { font-size: 1.1rem; margin: 0.5rem 0; }
-.podium-score { font-size: 1rem; font-weight: 600; color: var(--muted-foreground); }
+.podium-rank { 
+    font-size: var(--text-4xl); 
+    font-weight: var(--font-weight-extrabold);
+    font-family: var(--font-heading);
+    display: block; 
+    line-height: var(--leading-tight);
+}
+.podium-avatar { 
+    width: 80px; 
+    height: 80px; 
+    border-radius: 50%; 
+    margin: 0.5rem auto; 
+    border: 4px solid var(--card); 
+}
+.podium-name { 
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-heading);
+    margin: 0.5rem 0; 
+    line-height: var(--leading-snug);
+}
+.podium-score { 
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-semibold); 
+    color: var(--muted-foreground);
+    line-height: var(--leading-normal);
+}
 
 .podium-card.rank-1 { background-color: hsl(40, 50%, 95%); border-color: #ffd700; order: 2; padding-top: 2.5rem; }
 .podium-card.rank-2 { background-color: hsl(210, 20%, 95%); border-color: #c0c0c0; order: 1; }
@@ -2752,11 +2971,39 @@ html[data-daltonismo] .logo img,
 .ranking-list .ranking-item:last-child { border-bottom: none; }
 .ranking-list.forum-ranking .ranking-item { grid-template-columns: 40px 60px 1fr 1fr auto; }
 
-.rank-position { font-size: 1.1rem; font-weight: 700; color: var(--muted-foreground); text-align: center; }
-.rank-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
-.rank-name { font-weight: 500; }
-.rank-extra { font-size: 0.9rem; color: var(--muted-foreground); }
-.rank-score { font-weight: 600; color: var(--primary); text-align: right; }
+.rank-position { 
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-heading);
+    color: var(--muted-foreground);
+    text-align: center;
+    line-height: var(--leading-tight);
+}
+.rank-avatar { 
+    width: 48px; 
+    height: 48px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+.rank-name { 
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-heading);
+    line-height: var(--leading-snug);
+}
+.rank-extra { 
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-normal);
+    color: var(--muted-foreground);
+    line-height: var(--leading-normal);
+}
+.rank-score { 
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--primary);
+    text-align: right;
+    line-height: var(--leading-tight);
+}
 
 /* ==========================================================================
    17. Configurações Page (configuracoes.html) Styles
