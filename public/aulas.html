@@ -956,6 +956,16 @@
             
             // Sincroniza com o backend
             syncProgressToBackend(lessonTitle);
+            
+            // Verificar conclusão de módulo se todas as atividades foram completadas
+            const userData = localStorage.getItem('modela_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                const mapping = LESSON_MAPPING[lessonTitle];
+                if (mapping) {
+                    checkModuleCompletion(user.id, mapping.moduleId);
+                }
+            }
         }
         
         // Sincroniza progresso com o backend
@@ -996,6 +1006,57 @@
                 });
             } catch (e) {
                 console.error('❌ Erro na função syncProgressToBackend:', e);
+            }
+        }
+
+        // Função para mostrar notificação de pontos
+        function showPointsNotification(points) {
+            const notification = document.createElement('div');
+            notification.className = 'points-notification';
+            notification.innerHTML = `+${points} pontos! 🎉`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Função para verificar conclusão de módulo e pontuar
+        async function checkModuleCompletion(userId, moduleId) {
+            try {
+                // Buscar progresso do módulo
+                const response = await fetch(`http://localhost:3001/api/user/${userId}/module/${moduleId}/progress`);
+                const data = await response.json();
+                
+                if (!data.success) {
+                    console.error('Erro ao buscar progresso do módulo:', data.message);
+                    return;
+                }
+                
+                // Verificar se todas as 10 aulas foram completadas
+                const allCompleted = data.lessons.every(lesson => 
+                    lesson.video_completed && 
+                    lesson.exercise_completed && 
+                    lesson.practical_completed
+                );
+                
+                if (allCompleted) {
+                    // Adicionar pontos do módulo
+                    const scoreResponse = await fetch(`http://localhost:3001/api/user/${userId}/score`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            scoreType: 'module',
+                            sourceId: moduleId.toString(),
+                            points: 50
+                        })
+                    });
+                    
+                    if (scoreResponse.ok) {
+                        showPointsNotification(50);
+                        console.log('✅ Módulo completo! +50 pontos adicionados');
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao verificar conclusão do módulo:', error);
             }
         }
 
@@ -2296,6 +2357,26 @@
             .next-lesson-lock-indicator {
                 font-size: 0.85rem;
                 margin-left: 0.25rem;
+            }
+
+            /* Notificação de pontos */
+            .points-notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                font-weight: 600;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideIn 0.3s ease-out;
+                z-index: 10000;
+            }
+
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
             
             .fade-in {

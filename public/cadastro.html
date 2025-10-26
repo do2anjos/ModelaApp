@@ -89,6 +89,14 @@
         /* Neutralizar transform global durante o popup */
         .popup * { transform: none !important; }
         .popup__text { font-size: 1rem; margin-bottom: 1rem; }
+        
+        /* Remover hover do botão de cadastrar */
+        #cadastroButton:hover {
+            background-color: var(--primary) !important;
+            color: var(--primary-foreground) !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
     </style>
 </head>
 <body class="login-body">
