@@ -387,6 +387,29 @@ validateField(field, validator, inputGroup) {
 
 ## 🚀 **12. Melhorias Implementadas Recentemente**
 
+### ✅ **Conexão Robusta com Draw.io (Nova Implementação)**
+**📅 Implementado em: 23 de Janeiro de 2025**
+
+- **Sistema de Retry Automático**: Conexão com draw.io com até 3 tentativas e timeout de 5 segundos
+- **Logs Detalhados**: Sistema completo de debug com emojis para rastreamento de problemas
+- **Botão de Teste de Conexão**: Botão "🔄 Testar Conexão" para debug manual da conexão
+- **Fila de Mensagens**: Sistema que enfileira mensagens quando editor não está pronto
+- **Cache-buster**: Evita problemas de cache ao recarregar o editor
+- **Templates Automáticos**: Carregamento automático de templates UML por tipo selecionado
+- **Feedback Visual Melhorado**: Status em tempo real ("Carregando editor...", "Template carregado!", etc.)
+- **Fluxo Sequencial Rigoroso**: Vídeo 90% → Exercício 100% → Atividade Prática → Próxima Aula
+
+### ✅ **Sistema de Conexão Robusta**
+**📅 Implementado em: 23 de Janeiro de 2025**
+
+- **Conexão Estável**: Sistema completamente reescrito para maior estabilidade
+- **Tratamento de Erros**: Captura e tratamento robustae de erros de conexão
+- **Performance**: Otimização do tempo de carregamento com delay de 500ms
+- **Debugging**: Ferramentas de debug integradas para troubleshooting
+- **Sincronização**: Alinhamento entre aulas.html e exercise.js para gabarito correto
+
+## 🚀 **13. Melhorias Implementadas Anteriormente**
+
 ### ✅ **Sistema de Tabs Interativo (Nova Implementação)**
 **📅 Implementado em: 19 de Outubro de 2025**
 

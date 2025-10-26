@@ -25,11 +25,13 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 
 ## 🎓 **Sistema de Aprendizado**
 - **Plataforma de Cursos**: Sistema completo de aulas com vídeos do YouTube
-- **Exercícios Interativos**: Questões de concursos (CESPE, Quadrix, FGV) com feedback detalhado *(21/10/2025)*
-- **Atividade Prática com Diagramas UML**: Editor Draw.io embarcado para criação de modelos *(19/10/2025)*
+- **Exercícios Interativos**: Questões de concursos (CESPE, Quadrix, FGV) com feedback detalhado
+- **Atividade Prática com Diagramas UML**: Editor Draw.io embarcado com conexão robusta e templates automáticos
 - **Progresso do Usuário**: Acompanhamento de aulas concluídas e exercícios realizados
-- **Sistema de Certificação**: Modal interativo com visualização em tela cheia e download *(21/10/2025)*
+- **Sistema de Certificação**: Modal interativo com visualização em tela cheia e download
 - **Ranking de Alunos**: Sistema de gamificação com pontuação e ranking
+- **Fluxo Sequencial**: Vídeo 90% → Exercício 100% → Atividade Prática → Próxima Aula
+- **Liberação Progressiva**: Sistema de desbloqueio automático baseado no progresso
 
 ## 🎨 **Interface e Experiência**
 - **Design Responsivo**: Interface adaptada para desktop, tablet e mobile
@@ -50,16 +52,18 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 - **Frontend Modular**: JavaScript organizado em classes (DarkModeManager, DaltonismManager, UsabilityManager)
 - **CSS Variables**: Sistema de design consistente com variáveis CSS (4000+ linhas)
 - **Performance**: Lazy loading, animações otimizadas e código modular
-- **Draw.io API Integration**: Editor de diagramas embarcado via `iframe` *(19/10/2025)*
-- **Sistema de Tabs**: Navegação moderna sem rolagem entre seções *(15/10/2025)*
-- **YouTube API**: Integração completa com player de vídeos *(15/10/2025)*
-- **Sistema de Fórum**: Plataforma completa de discussão e interação *(15/10/2025)*
-- **Configurações Avançadas**: Interface otimizada com contraste melhorado *(15/10/2025)*
-- **Gamificação Rigorosa**: Sistema que exige 100% de acertos para avançar *(15/10/2025)*
-- **Conclusão Automática**: Aulas concluídas automaticamente após exercícios *(15/10/2025)*
-- **Interface Simplificada**: Remoção de botões desnecessários para UX mais limpa *(15/10/2025)*
-- **Sistema de Bloqueio Visual**: Botão "Próxima Aula" com indicadores de estado *(15/10/2025)*
-- **Estados Visuais Claros**: Feedback imediato sobre disponibilidade de avanço *(15/10/2025)*
+- **Draw.io API Integration**: Editor de diagramas embarcado com conexão robusta, retry automático e templates
+- **Sistema de Tabs**: Navegação moderna sem rolagem entre seções
+- **YouTube API**: Integração completa com player de vídeos
+- **Sistema de Fórum**: Plataforma completa de discussão e interação
+- **Configurações Avançadas**: Interface otimizada com contraste melhorado
+- **Gamificação Rigorosa**: Sistema que exige 100% de acertos para avançar
+- **Conclusão Automática**: Aulas concluídas automaticamente após exercícios
+- **Interface Simplificada**: Remoção de botões desnecessários para UX mais limpa
+- **Sistema de Bloqueio Visual**: Botão "Próxima Aula" com indicadores de estado
+- **Estados Visuais Claros**: Feedback imediato sobre disponibilidade de avanço
+- **Sistema de Retry**: Conexão automática com draw.io com 3 tentativas e timeout de 5s
+- **Logs Detalhados**: Sistema de debug completo para pedição de problemas
 
 🛠️ Tecnologias Utilizadas
 
@@ -73,7 +77,7 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 - **CSS3** - Variáveis CSS, Grid, Flexbox, Animações
 - **JavaScript (ES6+)** - Classes, Modules, Async/Await, LocalStorage
 - **YouTube API** - Integração com player de vídeos
-- **Draw.io API** - Editor de diagramas UML embarcado *(19/10/2025)*
+- **Draw.io API** - Editor de diagramas UML embarcado com conexão robusta e templates automáticos
 
 ## **Design e UX**
 - **Google Fonts** - Tipografia (Montserrat + Roboto)
@@ -178,6 +182,10 @@ ModelaApp/
 - **Estados visuais dinâmicos** - Ícones que mudam conforme progresso (todo, play, video-watched, completed)
 - **Atalhos de teclado** - Ctrl+1 (vídeo), Ctrl+2 (exercício), Ctrl+3 (atividade)
 - **Feedback detalhado** - Explicações para cada questão com correções
+- **Conexão robusta com Draw.io** - Sistema de retry automático, timeout de 5s, 3 tentativas
+- **Templates automáticos** - Carregamento automático de templates UML por tipo
+- **Sistema de debug** - Logs detalhados e botão de teste de conexão
+- **Fluxo sequencial rigoroso** - Vídeo 90% → Exercício 100% → Atividade Prática → Próxima Aula
 
 #### **🎯 Sistema de Exercícios (`exercicios.html`)**
 - Questões de múltipla escolha

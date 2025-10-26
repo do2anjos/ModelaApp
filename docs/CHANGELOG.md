@@ -2,6 +2,39 @@
 
 Este arquivo documenta todas as mudanças significativas implementadas no projeto Modela App.
 
+## [v1.3.0] - Conexão Robusta com Draw.io e Fluxo Sequencial Aprimorado
+**Data**: 23 de Janeiro de 2025
+
+### Adicionado
+- **Sistema de Retry Automático**: Conexão com draw.io com até 3 tentativas e timeout de 5 segundos
+- **Logs Detalhados**: Sistema completo de debug com emojis para rastreamento de problemas
+- **Botão de Teste de Conexão**: Botão "🔄 Testar Conexão" para debug manual da conexão
+- **Fila de Mensagens**: Sistema que enfileira mensagens quando editor não está pronto
+- **Cache-buster**: Evita problemas de cache ao recarregar o editor
+- **Fluxo Sequencial Rigoroso**: Vídeo 90% → Exercício 100% → Atividade Prática → Próxima Aula
+- **Templates Automáticos**: Carregamento automático de templates UML por tipo selecionado
+
+### Modificado
+- **Conexão Draw.io**: Sistema de conexão completamente reescrito para maior estabilidade
+- **Feedback Visual**: Status em tempo real ("Carregando editor...", "Template carregado!", etc.)
+- **Sistema de Timeout**: Timeout aumentado para 5 segundos com retry inteligente
+- **Event Listeners**: Melhor tratamento de eventos de erro, load, save e export
+- **Liberação Progressiva**: Sistema de desbloqueio automático baseado no progresso rigoroso
+
+### Corrigido
+- **Problema de Carregamento**: Templates não carregavam ao selecionar tipo de diagrama
+- **Conexão Instável**: Editor draw.io não respondia consistentemente
+- **Fluxo de Navegação**: Removido fluxo especial que pulava atividade prática
+- **Sincronização**: Alinhamento entre aulas.html e exercise.js para gabarito correto
+
+### Melhorias Técnicas
+- **Sistema de Logs**: Console logs detalhados com emojis para fácil identificação
+- **Tratamento de Erros**: Captura e tratamento robusto de erros de conexão
+- **Performance**: Otimização do tempo de carregamento com delay de 500ms
+- **Debugging**: Ferramentas de debug integradas para troubleshooting
+
+---
+
 ## [v1.2.0] - Sistema de Certificados e Melhorias nos Exercícios
 **Data**: 21 de Outubro de 2025
 
