@@ -149,6 +149,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Função para registrar tentativa de exercício no backend
+    async function registerExerciseAttempt(lessonTitle, score, total) {
+        const userData = localStorage.getItem('modela_user');
+        if (!userData) return;
+        
+        const user = JSON.parse(userData);
+        const percentage = Math.round((score / total) * 100);
+        
+        // Buscar lesson_id do LESSON_MAPPING (definido em aulas.html)
+        const mapping = window.LESSON_MAPPING ? window.LESSON_MAPPING[lessonTitle] : null;
+        if (!mapping) {
+            console.warn('LESSON_MAPPING não encontrado para:', lessonTitle);
+            return;
+        }
+        
+        try {
+            const response = await fetch(`http://localhost:3001/api/user/${user.id}/exercise-attempt`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    lessonId: mapping.lessonId,
+                    lessonTitle: lessonTitle,
+                    score: score,
+                    totalQuestions: total,
+                    percentage: percentage
+                })
+            });
+            
+            const result = await response.json();
+            
+            // Mostrar feedback de pontos
+            if (result.isFirstAttempt && result.pointsAwarded > 0) {
+                showPointsNotification(result.pointsAwarded);
+            }
+            
+            return result;
+        } catch (error) {
+            console.error('Erro ao registrar tentativa:', error);
+        }
+    }
+
+    // Função para mostrar notificação de pontos
+    function showPointsNotification(points) {
+        const notification = document.createElement('div');
+        notification.className = 'points-notification';
+        notification.innerHTML = `+${points} pontos! 🎉`;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => notification.remove(), 3000);
+    }
+
     function showFeedback() {
         const answers = getAnswersForCurrentLesson();
         const explanations = getExplanationsForCurrentLesson();
@@ -191,6 +242,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             const headerClass = score > 0 ? 'partial' : 'error';
             summaryHTML = `<div class="feedback-header ${headerClass}">Você acertou ${score} de ${totalQuestions} questões.${score > 0 ? ' Continue estudando para acertar todas!' : ''}</div>`;
+        }
+
+        // Registrar tentativa no backend
+        const lessonTitle = getCurrentLessonTitle();
+        if (lessonTitle) {
+            registerExerciseAttempt(lessonTitle, score, totalQuestions);
         }
 
         const finalHTML = `<div class="exercise-feedback">${questionsHTML}${summaryHTML}</div>`;
