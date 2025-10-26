@@ -757,4 +757,5 @@ app.get('/api/forum/topic/:topicId', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
     console.log(`Conectado ao SQLite em: ${dbPath}`);
+    console.log('Sistema de ranking e pontuação ativo!');
 });
