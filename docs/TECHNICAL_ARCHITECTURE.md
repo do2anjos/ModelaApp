@@ -19,18 +19,62 @@ O ModelaApp é uma aplicação web educacional desenvolvida como protótipo para
 │  │ • Tema claro    │  │ • Deuteranopia  │  │ • Skip links │ │
 │  │ • Persistência  │  │ • Tritanopia    │  │ • Validação  │ │
 │  └─────────────────┘  └─────────────────┘  └──────────────┘ │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │              AuthManager (auth.js)                    │  │
+│  │  • Proteção de rotas                                 │  │
+│  │  • Gestão de sessão (localStorage)                    │  │
+│  │  • População de dados do usuário                      │  │
+│  └──────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
-                              │
+                              │ HTTP/HTTPS
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    SERVIDOR (Backend)                       │
 ├─────────────────────────────────────────────────────────────┤
 │  Node.js + Express.js                                       │
 │                                                             │
-│  • Servir arquivos estáticos (public/)                     │
-│  • API REST (futuro)                                       │
-│  • Middleware de segurança                                  │
-│  • Deploy automático (Render)                              │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │              API REST Endpoints                       │  │
+│  │  • POST /api/cadastro                                 │  │
+│  │  • POST /api/login                                    │  │
+│  │  • POST /api/redefinir                                │  │
+│  │  • GET  /api/user/:id/dashboard                       │  │
+│  │  • POST /api/user/:id/progress                        │  │
+│  │  • GET  /api/user/:id/module/:id/progress             │  │
+│  │  • PUT  /api/user/:id                                 │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │              Middleware                                │  │
+│  │  • CORS                                               │  │
+│  │  • body-parser                                        │  │
+│  │  • Express.static                                     │  │
+│  └──────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                BANCO DE DADOS (SQLite)                      │
+├─────────────────────────────────────────────────────────────┤
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │              Tabela: users                            │  │
+│  │  • id (PRIMARY KEY)                                   │  │
+│  │  • nome, email, matricula, telefone                   │  │
+│  │  • senha_hash (bcrypt)                                │  │
+│  │  • username (gerado automaticamente)                  │  │
+│  │  • created_at                                         │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │              Tabela: user_progress                     │  │
+│  │  • id (PRIMARY KEY)                                   │  │
+│  │  • user_id (FOREIGN KEY -> users)                     │  │
+│  │  • module_id, lesson_id, lesson_title                 │  │
+│  │  • video_completed, exercise_completed                │  │
+│  │  • practical_completed                                │  │
+│  │  • updated_at                                         │  │
+│  └──────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -437,6 +481,141 @@ function createYouTubePlayer(videoId, lessonTitle) {
 - **Persistência**: Estados salvos em memória (reset no refresh)
 - **Estados Visuais**: Ícones dinâmicos (todo, play, watched, completed)
 
+## 🔐 Sistema de Autenticação e Backend
+
+### **Arquitetura de Autenticação**
+
+O sistema implementa uma arquitetura de autenticação robusta com separação clara entre frontend e backend:
+
+```javascript
+// Frontend: auth.js
+class AuthManager {
+    constructor() {
+        this.checkAuth();           // Verifica autenticação
+        this.populateUserData();    // Preenche dados do usuário
+        this.setupLogout();         // Configura logout
+    }
+    
+    // Proteção de rotas no frontend
+    checkAuth() {
+        const userData = localStorage.getItem('modela_user');
+        if (!userData) {
+            window.location.href = '/login.html';
+        }
+    }
+}
+```
+
+```javascript
+// Backend: index.js - Endpoint de Login
+app.post('/api/login', async (req, res) => {
+    const { email, senha } = req.body;
+    
+    // Buscar usuário no banco
+    db.get('SELECT * FROM users WHERE email = ?', [email], (err, user) => {
+        if (!user) {
+            return res.status(401).json({ message: 'Credenciais inválidas' });
+        }
+        
+        // Verificar senha com bcrypt
+        bcrypt.compare(senha, user.senha_hash, (err, isValid) => {
+            if (!isValid) {
+                return res.status(401).json({ message: 'Credenciais inválidas' });
+            }
+            
+            res.json({ 
+                success: true,
+                user: { id, nome, email, username, matricula }
+            });
+        });
+    });
+});
+```
+
+### **Sistema de Progresso Persistente**
+
+O progresso do usuário é armazenado no banco de dados SQLite com rastreamento detalhado:
+
+```sql
+-- Estrutura da tabela user_progress
+CREATE TABLE user_progress (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    module_id INTEGER NOT NULL,
+    lesson_id INTEGER NOT NULL,
+    lesson_title TEXT NOT NULL,
+    video_completed BOOLEAN DEFAULT 0,
+    exercise_completed BOOLEAN DEFAULT 0,
+    practical_completed BOOLEAN DEFAULT 0,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+-- Índices para otimização
+CREATE INDEX idx_user_progress_user_id ON user_progress(user_id);
+CREATE INDEX idx_user_progress_module_lesson ON user_progress(user_id, module_id, lesson_id);
+```
+
+### **API REST Endpoints**
+
+#### **1. Autenticação**
+- `POST /api/cadastro` - Cadastra novo usuário
+- `POST /api/login` - Autentica usuário existente
+- `POST /api/redefinir` - Redefine senha do usuário
+
+#### **2. Gerenciamento de Usuários**
+- `PUT /api/user/:userId` - Atualiza dados do usuário
+
+#### **3. Progresso do Usuário**
+- `GET /api/user/:userId/dashboard` - Busca estatísticas do dashboard
+- `POST /api/user/:userId/progress` - Salva progresso de uma aula
+- `GET /api/user/:userId/module/:moduleId/progress` - Busca progresso de um módulo
+
+### **Segurança**
+
+#### **Proteção de Senhas**
+```javascript
+// Hash de senha com bcrypt (10 rounds)
+bcrypt.hash(senha, 10, (err, senhaHash) => {
+    // Salvar senhaHash no banco
+});
+
+// Verificação de senha
+bcrypt.compare(senha, senhaHash, (err, isValid) => {
+    // Retornar sucesso se isValid === true
+});
+```
+
+#### **Validações de Entrada**
+- Validação de campos obrigatórios
+- Verificação de unicidade (email, matrícula)
+- Sanitização de inputs
+
+#### **CORS e Middleware**
+```javascript
+app.use(cors());                    // Habilita CORS
+app.use(bodyParser.json());         // Parser JSON
+app.use(express.static('public'));  // Servir arquivos estáticos
+```
+
+### **Scripts de Administração**
+
+O projeto inclui scripts Node.js para administração do banco de dados:
+
+```javascript
+// backend/scripts/check_progress.js
+// Verifica progresso dos usuários
+node backend/scripts/check_progress.js
+
+// backend/scripts/list_users.js
+// Lista todos os usuários
+node backend/scripts/list_users.js
+
+// backend/scripts/clear_users.js
+// Limpa todos os usuários (cuidado!)
+node backend/scripts/clear_users.js
+```
+
 ## ♿ Sistema de Acessibilidade
 
 ### **WCAG 2.1 AA Compliance**
@@ -507,6 +686,7 @@ html[data-daltonismo="tritanopia"] {
 - **Start Command**: `npm start`
 - **Environment**: Node.js 18+
 - **Auto Deploy**: Push para main branch
+- **Database**: SQLite (arquivo local no servidor)
 
 ### **Scripts Disponíveis**
 ```json
@@ -520,19 +700,23 @@ html[data-daltonismo="tritanopia"] {
 
 ## 🔮 Roadmap Técnico
 
-### **Fase 1 - Protótipo (Atual)**
+### **Fase 1 - Protótipo (Atual)** ✅
 - ✅ Sistema de temas completo
 - ✅ Modo daltonismo implementado
 - ✅ Acessibilidade WCAG 2.1 AA
 - ✅ Sistema de aulas com YouTube API
 - ✅ Exercícios interativos
+- ✅ **Backend completo com Node.js + Express** ✅
+- ✅ **Banco de dados SQLite** ✅
+- ✅ **Autenticação segura com bcrypt** ✅
+- ✅ **Sistema de progresso persistente** ✅
 
-### **Fase 2 - Backend (Futuro)**
-- [ ] API REST com Express.js
-- [ ] Banco de dados (MongoDB/PostgreSQL)
-- [ ] Autenticação JWT
-- [ ] Sistema de usuários real
-- [ ] Progresso persistente
+### **Fase 2 - Backend Avançado (Em Andamento)**
+- [ ] **API REST completa** com validações robustas
+- [ ] **JWT Authentication** para sessões seguras
+- [ ] **Sistema de upload de arquivos** para atividades práticas
+- [ ] **WebSockets** para notificações em tempo real
+- [ ] **Cache layer** (Redis) para performance
 
 ### **Fase 3 - Avançado (Futuro)**
 - [ ] Real-time com WebSockets
@@ -540,14 +724,16 @@ html[data-daltonismo="tritanopia"] {
 - [ ] Chat em tempo real
 - [ ] Analytics de comportamento
 - [ ] Integração com LMS externos
+- [ ] **Testes automatizados** (Jest, Supertest)
 
 ## 📊 Métricas de Qualidade
 
 ### **Código**
-- **Modularidade**: 3 classes JavaScript especializadas
+- **Modularidade**: 4 classes JavaScript especializadas (DarkMode, Daltonism, Usability, Auth)
 - **Reutilização**: 90%+ de componentes reutilizáveis
-- **Manutenibilidade**: CSS organizado com variáveis
+- **Manutenibilidade**: CSS organizado com variáveis, JavaScript com classes
 - **Testabilidade**: Funções puras e separação de responsabilidades
+- **Backend**: API REST bem estruturada com error handling
 
 ### **UX/UI**
 - **Heurísticas de Nielsen**: 10/10 implementadas
@@ -560,11 +746,19 @@ html[data-daltonismo="tritanopia"] {
 - **Princípio DRY**: ✅
 - **Modularidade**: ✅
 - **Escalabilidade**: ✅
+- **Segurança**: ✅ (bcrypt, validações, CORS)
+- **Persistência de Dados**: ✅ (SQLite)
 
 ---
 
 ## 🏆 Conclusão
 
-A arquitetura do ModelaApp foi projetada com foco em **usabilidade**, **acessibilidade** e **manutenibilidade**. O sistema modular permite fácil extensão e manutenção, enquanto as funcionalidades de tema e daltonismo garantem uma experiência inclusiva para todos os usuários.
+A arquitetura do ModelaApp foi projetada com foco em **usabilidade**, **acessibilidade**, **segurança** e **manutenibilidade**. O sistema full-stack com Node.js + Express + SQLite fornece uma base sólida para uma plataforma educacional robusta.
 
-A implementação segue **melhores práticas** de desenvolvimento web moderno, com código limpo, documentação completa e arquitetura escalável para futuras expansões.
+A implementação segue **melhores práticas** de desenvolvimento web moderno, com código limpo, documentação completa, arquitetura escalável e sistema de segurança robusto para futuras expansões.
+
+---
+
+**📅 Última atualização**: 25 de Outubro de 2025  
+**👨‍💻 Desenvolvedor**: _Do2anjos  
+**📋 Versão**: 1.4.0

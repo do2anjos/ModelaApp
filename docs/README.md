@@ -27,7 +27,7 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 - **Plataforma de Cursos**: Sistema completo de aulas com vídeos do YouTube
 - **Exercícios Interativos**: Questões de concursos (CESPE, Quadrix, FGV) com feedback detalhado
 - **Atividade Prática com Diagramas UML**: Editor Draw.io embarcado com conexão robusta e templates automáticos
-- **Progresso do Usuário**: Acompanhamento de aulas concluídas e exercícios realizados
+- **Progresso do Usuário**: Acompanhamento de aulas concluídas e exercícios realizados (salvo no banco de dados)
 - **Sistema de Certificação**: Modal interativo com visualização em tela cheia e download
 - **Ranking de Alunos**: Sistema de gamificação com pontuação e ranking
 - **Fluxo Sequencial**: Vídeo 90% → Exercício 100% → Atividade Prática → Próxima Aula
@@ -49,6 +49,9 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 
 ## 🔧 **Arquitetura Técnica**
 - **Servidor Web**: Express.js para servir conteúdo estático
+- **API REST**: Backend completo com Node.js para gerenciamento de usuários e progresso
+- **Banco de Dados**: SQLite para persistência de dados locais
+- **Autenticação Segura**: Sistema de login com bcrypt para hash de senhas
 - **Frontend Modular**: JavaScript organizado em classes (DarkModeManager, DaltonismManager, UsabilityManager)
 - **CSS Variables**: Sistema de design consistente com variáveis CSS (4000+ linhas)
 - **Performance**: Lazy loading, animações otimizadas e código modular
@@ -64,12 +67,17 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 - **Estados Visuais Claros**: Feedback imediato sobre disponibilidade de avanço
 - **Sistema de Retry**: Conexão automática com draw.io com 3 tentativas e timeout de 5s
 - **Logs Detalhados**: Sistema de debug completo para pedição de problemas
+- **Sistema de Progresso Persistente**: Dados salvos no banco de dados SQLite
 
 🛠️ Tecnologias Utilizadas
 
 ## **Backend**
 - **Node.js** - Ambiente de execução para JavaScript no lado do servidor
 - **Express.js** - Framework minimalista para aplicações web em Node.js
+- **SQLite3** - Banco de dados relacional embutido para persistência de dados
+- **bcrypt** - Biblioteca para hash seguro de senhas
+- **body-parser** - Middleware para parsing de requisições JSON
+- **cors** - Middleware para habilitar CORS (Cross-Origin Resource Sharing)
 - **Nodemon** - Ferramenta para reiniciar o servidor automaticamente durante o desenvolvimento
 
 ## **Frontend**
@@ -150,7 +158,17 @@ ModelaApp/
 │   └── 🎨 style.css
 │
 ├── 📄 index.js                   # Servidor Express
-└── 📄 package.json               # Dependências
+├── 📄 package.json               # Dependências
+└── 📁 backend/                   # Backend e banco de dados
+    ├── 📁 db/                    # Banco de dados SQLite
+    │   └── 📄 modela_users.db    # Banco de dados local
+    └── 📁 scripts/               # Scripts de administração
+        ├── 📄 check_progress.js  # Verificar progresso dos usuários
+        ├── 📄 clear_old_progress.js # Limpar progresso antigo
+        ├── 📄 clear_users.js     # Limpar usuários do banco
+        ├── 📄 list_progress.js   # Listar progresso
+        ├── 📄 list_users.js      # Listar usuários
+        └── 📄 update_usernames.js # Atualizar usernames
 ```
 
 ### **Páginas Principais**
@@ -208,6 +226,19 @@ ModelaApp/
 - Filtros CSS cientificamente otimizados
 - Transições suaves entre temas
 
+#### **🔐 Sistema de Autenticação**
+- **Login seguro** com validação de credenciais
+- **Cadastro de usuários** com geração automática de username
+- **Redefinição de senha** com hash bcrypt
+- **Proteção de rotas** no frontend
+- **Sessão persistente** com localStorage
+
+#### **📊 Sistema de Progresso**
+- **Rastreamento automático** de aulas, exercícios e atividades práticas
+- **Estatísticas em tempo real** no dashboard
+- **Persistência no banco de dados** SQLite
+- **API REST completa** para gerenciar progresso
+
 Scripts Disponíveis
 npm start: Inicia o servidor em modo de produção. É este o comando que a Render utiliza.
 
@@ -218,3 +249,5 @@ Este projeto é publicado automaticamente na plataforma Render. Qualquer push pa
 
 👤 Autor
 Feito por do2anjos.
+
+📅 Última atualização: 25 de Outubro de 2025

@@ -1217,5 +1217,131 @@ O projeto ModelaApp agora possui um **sistema completo de usabilidade** que gara
 - **Acessibilidade**: 100% ✅
 - **Performance**: Otimizada ✅
 
+## 🔐 **17. Sistema de Autenticação e Backend**
+**📅 Implementado em: Outubro de 2025**
+
+### **📋 Visão Geral**
+O sistema implementa uma arquitetura full-stack completa com backend Node.js + Express e banco de dados SQLite para gerenciar autenticação de usuários e persistência de progresso.
+
+### **🎯 Funcionalidades Implementadas**
+
+#### **🔒 Autenticação Segura**
+- **Login com bcrypt**: Hash seguro de senhas com bcrypt (10 rounds)
+- **Proteção de rotas**: Verificação de autenticação no frontend
+- **Sessão persistente**: Dados do usuário armazenados no localStorage
+- **Cadastro de usuários**: Sistema completo com validações
+- **Redefinição de senha**: Funcionalidade de recuperação implementada
+
+#### **📊 Sistema de Progresso Persistente**
+- **Rastreamento completo**: Aulas, exercícios e atividades práticas
+- **Estatísticas em tempo real**: Dashboard com métricas atualizadas
+- **Persistência no banco**: Progresso salvo no SQLite
+- **API REST**: Endpoints para gerenciar progresso do usuário
+
+#### **🗄️ Banco de Dados**
+- **Tabela users**: Gestão de usuários com dados completos
+- **Tabela user_progress**: Rastreamento detalhado de progresso
+- **Índices otimizados**: Queries de alta performance
+- **FOREign keys**: Integridade referencial garantida
+
+### **🔧 Implementação Técnica**
+
+#### **Estrutura do Backend**
+```javascript
+// index.js - Servidor Express
+const express = require('express');
+const bcrypt = require('bcrypt');
+const sqlite3 = require('sqlite3');
+
+// Endpoints de autenticação
+app.post('/api/cadastro', async (req, res) => {
+    // Hash de senha com bcrypt
+    bcrypt.hash(senha, 10, (err, senhaHash) => {
+        // Salvar usuário no banco
+    });
+});
+
+app.post('/api/login', async (req, res) => {
+    // Verificar senha
+    bcrypt.compare(senha, senhaHash, (err, isValid) => {
+        // Retornar dados do usuário
+    });
+});
+```
+
+#### **Estrutura do Banco de Dados**
+```sql
+-- Tabela de usuários
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    matricula TEXT UNIQUE NOT NULL,
+    senha_hash TEXT NOT NULL,
+    username TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de progresso
+CREATE TABLE user_progress (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    module_id INTEGER NOT NULL,
+    lesson_id INTEGER NOT NULL,
+    lesson_title TEXT NOT NULL,
+    video_completed BOOLEAN DEFAULT 0,
+    exercise_completed BOOLEAN DEFAULT 0,
+    practical_completed BOOLEAN DEFAULT 0,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+```
+
+#### **API REST Endpoints**
+- `POST /api/cadastro` - Cadastrar novo usuário
+- `POST /api/login` - Autenticar usuário existente
+- `POST /api/redefinir` - Redefinir senha
+- `GET /api/user/:id/dashboard` - Buscar estatísticas do dashboard
+- `POST /api/user/:id/progress` - Salvar progresso da aula
+- `GET /api/user/:id/module/:moduleId/progress` - Buscar progresso do módulo
+- `PUT /api/user/:id` - Atualizar dados do usuário
+
+### **🎨 Benefícios para a Usabilidade**
+
+#### **Para o Usuário**
+- **Persistência de dados**: Progresso não é perdido ao fechar o navegador
+- **Sessão contínua**: Não precisa fazer login repetidamente
+- **Estatísticas precisas**: Dados exatos de progresso no dashboard
+- **Segurança**: Senhas protegidas com hash bcrypt
+
+#### **Para o Sistema**
+- **Escalabilidade**: Arquitetura preparada para crescimento
+- **Manutenibilidade**: Código organizado em camadas
+- **Performance**: Queries otimizadas com índices
+- **Segurança**: Validações e proteções implementadas
+
+### **🔒 Segurança**
+
+#### **Proteção de Senhas**
+- **Bcrypt**: Hash de senhas com 10 rounds
+- **Nunca exposta**: Senhas nunca retornadas pela API
+- **Validações**: Campos obrigatórios verificados
+
+#### **Proteção de Rotas**
+- **Verificação frontend**: Redirecionamento automático para login
+- **Dados do usuário**: Armazenados no localStorage
+- **Logout seguro**: Limpeza de dados ao sair
+
+#### **Validações**
+- **Email único**: Não permite duplicatas
+- **Matrícula única**: Verificação de unicidade
+- **Campos obrigatórios**: Validação completa de entrada
+
 Todas as melhorias foram implementadas seguindo **as 10 Heurísticas de Nielsen** e **padrões de acessibilidade WCAG 2.1**, garantindo que a plataforma seja **utilizável por todos os tipos de usuários** e atenda aos **mais altos padrões de usabilidade**.
+
+---
+
+**📅 Última atualização**: 25 de Outubro de 2025  
+**👨‍💻 Desenvolvedor**: _Do2anjos  
+**�� Versão**: 1.4.0
 
