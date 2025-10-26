@@ -79,6 +79,26 @@
             pointer-events: auto !important;
             user-select: none !important;
         }
+
+        /* Notificação de pontos */
+        .points-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease-out;
+            z-index: 10000;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 <body class="dashboard-body forum-page">
@@ -151,7 +171,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                                 Meu Perfil
                             </a></li>
-                            <li><a href="configuracoes.html">
+                            <li><a href="/configuracoes.html">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg>
                                 Configurações
                             </a></li>
@@ -263,6 +283,9 @@
             hideCreateTopicView();
             pageTitle.textContent = 'Fórum de Discussão';
             currentView = 'list';
+            
+            // Carregar tópicos do backend
+            loadTopics();
         }
 
         // Função para mostrar detalhes do tópico
@@ -383,8 +406,198 @@
             if (titleInput) titleInput.focus();
         }
 
+        // Função para mostrar notificação de pontos
+        function showPointsNotification(points) {
+            const notification = document.createElement('div');
+            notification.className = 'points-notification';
+            notification.innerHTML = `+${points} pontos! 🎉`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Função para carregar tópicos do backend
+        async function loadTopics() {
+            try {
+                const response = await fetch('http://localhost:3001/api/forum/topics');
+                const topics = await response.json();
+                
+                // Renderizar tópicos na interface
+                renderTopicsList(topics);
+            } catch (error) {
+                console.error('Erro ao carregar tópicos:', error);
+            }
+        }
+
+        // Função para renderizar lista de tópicos
+        function renderTopicsList(topics) {
+            const topicList = document.querySelector('.forum-topic-list');
+            if (!topicList) return;
+            
+            topicList.innerHTML = '';
+            
+            topics.forEach(topic => {
+                const topicElement = document.createElement('div');
+                topicElement.className = 'forum-topic-item';
+                topicElement.innerHTML = `
+                    <div class="topic-header">
+                        <h3 class="topic-title">${topic.title}</h3>
+                        <span class="topic-category">${topic.category}</span>
+                    </div>
+                    <div class="topic-content">
+                        <p>${topic.content}</p>
+                    </div>
+                    <div class="topic-meta">
+                        <div class="topic-author">
+                            <img src="https://picsum.photos/seed/${topic.userId}/48" alt="Avatar" class="author-avatar">
+                            <span class="author-name">${topic.userName}</span>
+                        </div>
+                        <div class="topic-stats">
+                            <span class="reply-count">${topic.repliesCount} respostas</span>
+                            <span class="topic-time">${formatTime(topic.created_at)}</span>
+                        </div>
+                    </div>
+                `;
+                
+                topicElement.addEventListener('click', () => {
+                    loadTopicDetail(topic.id);
+                });
+                
+                topicList.appendChild(topicElement);
+            });
+        }
+
+        // Função para formatar tempo
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'agora';
+            if (minutes < 60) return `há ${minutes} min`;
+            if (hours < 24) return `há ${hours}h`;
+            return `há ${days} dias`;
+        }
+
+        // Função para carregar detalhes do tópico
+        async function loadTopicDetail(topicId) {
+            try {
+                const response = await fetch(`http://localhost:3001/api/forum/topic/${topicId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    showTopicDetail(data.topic, data.replies);
+                } else {
+                    alert('Erro ao carregar tópico: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar tópico:', error);
+                alert('Erro ao carregar tópico. Tente novamente.');
+            }
+        }
+
+        // Função para mostrar detalhes do tópico
+        function showTopicDetail(topic, replies) {
+            const detailContainer = document.querySelector('.forum-topic-detail');
+            if (!detailContainer) return;
+            
+            detailContainer.innerHTML = `
+                <div class="topic-detail-header">
+                    <h2>${topic.title}</h2>
+                    <span class="topic-category">${topic.category}</span>
+                </div>
+                <div class="topic-detail-content">
+                    <p>${topic.content}</p>
+                </div>
+                <div class="topic-detail-meta">
+                    <div class="topic-author">
+                        <img src="https://picsum.photos/seed/${topic.user_id}/48" alt="Avatar" class="author-avatar">
+                        <span class="author-name">${topic.userName}</span>
+                    </div>
+                    <span class="topic-time">${formatTime(topic.created_at)}</span>
+                </div>
+                <div class="replies-section">
+                    <h3>Respostas (${replies.length})</h3>
+                    <div class="replies-list">
+                        ${replies.map(reply => `
+                            <div class="reply-item">
+                                <div class="reply-author">
+                                    <img src="https://picsum.photos/seed/${reply.user_id}/32" alt="Avatar" class="author-avatar">
+                                    <span class="author-name">${reply.userName}</span>
+                                </div>
+                                <div class="reply-content">
+                                    <p>${reply.content}</p>
+                                </div>
+                                <div class="reply-time">${formatTime(reply.created_at)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="reply-form">
+                    <h4>Responder</h4>
+                    <textarea id="reply-content" placeholder="Digite sua resposta..."></textarea>
+                    <button onclick="createReply(${topic.id})" class="button button-primary">Enviar Resposta</button>
+                </div>
+            `;
+            
+            // Mostrar seção de detalhes
+            document.querySelector('.forum-topic-list').style.display = 'none';
+            detailContainer.style.display = 'block';
+        }
+
+        // Função para criar resposta
+        async function createReply(topicId) {
+            const content = document.getElementById('reply-content').value.trim();
+            
+            if (!content) {
+                alert('Por favor, digite uma resposta.');
+                return;
+            }
+
+            const userData = localStorage.getItem('modela_user');
+            if (!userData) {
+                alert('Usuário não logado. Faça login novamente.');
+                return;
+            }
+
+            const user = JSON.parse(userData);
+
+            try {
+                const response = await fetch('http://localhost:3001/api/forum/reply', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        topicId,
+                        content
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Mostrar notificação de pontos
+                    showPointsNotification(result.pointsAwarded);
+                    
+                    // Recarregar tópico
+                    loadTopicDetail(topicId);
+                    
+                    // Limpar formulário
+                    document.getElementById('reply-content').value = '';
+                } else {
+                    alert('Erro ao criar resposta: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Erro ao criar resposta:', error);
+                alert('Erro ao criar resposta. Tente novamente.');
+            }
+        }
+
         // Função para criar novo tópico
-        function createNewTopic() {
+        async function createNewTopic() {
             const title = document.getElementById('topic-title').value.trim();
             const category = document.getElementById('topic-category').value;
             const content = document.getElementById('topic-content').value.trim();
@@ -408,29 +621,49 @@
                 return;
             }
 
-            // Simular criação do tópico
-            const newTopic = {
-                id: Date.now(),
-                title: title,
-                category: category,
-                content: content,
-                author: 'Matheus dos Anjos',
-                authorAvatar: 'https://picsum.photos/seed/' + Date.now() + '/48',
-                timestamp: 'há alguns instantes',
-                replies: 0,
-                views: 1,
-                lastReply: {
-                    author: 'Matheus dos Anjos',
-                    timestamp: 'há alguns instantes'
-                }
-            };
+            const userData = localStorage.getItem('modela_user');
+            if (!userData) {
+                alert('Usuário não logado. Faça login novamente.');
+                return;
+            }
 
-            // Adicionar à lista
-            addTopicToList(newTopic);
-            
-            // Feedback e retorno
-            showSuccessMessage('Tópico criado com sucesso!');
-            showTopicList();
+            const user = JSON.parse(userData);
+
+            try {
+                const response = await fetch('http://localhost:3001/api/forum/topic', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        title,
+                        content,
+                        category
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Mostrar notificação de pontos
+                    showPointsNotification(result.pointsAwarded);
+                    
+                    // Recarregar lista de tópicos
+                    loadTopics();
+                    showTopicList();
+                    
+                    // Limpar formulário
+                    document.getElementById('topic-title').value = '';
+                    document.getElementById('topic-content').value = '';
+                    document.getElementById('topic-category').value = '';
+                    
+                    showSuccessMessage('Tópico criado com sucesso!');
+                } else {
+                    alert('Erro ao criar tópico: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Erro ao criar tópico:', error);
+                alert('Erro ao criar tópico. Tente novamente.');
+            }
         }
 
         // Adicionar tópico à lista
