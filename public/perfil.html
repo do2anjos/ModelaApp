@@ -137,6 +137,7 @@
                             <div class="input-group">
                                 <label for="usuario">Nome de Usuário</label>
                                 <input type="text" id="usuario" value="matheus.anjos">
+                                <small class="input-hint">Gerado automaticamente</small>
                             </div>
                         </div>
                         <div class="form-actions">
@@ -193,11 +194,166 @@
             </main>
         </div>
     </div>
+    <script src="/js/auth.js"></script>
     <script src="/js/dark-mode.js"></script>
     <script src="/js/daltonism-mode.js"></script>
     <script src="/js/usability.js"></script>
+    
     <script>
-        // Inclua aqui qualquer script relevante transferido de configuracoes.html para funcionamento dos formulários
+    // Script de integração do perfil com dados do usuário
+    document.addEventListener('DOMContentLoaded', function() {
+        const userData = localStorage.getItem('modela_user');
+        if (!userData) return;
+        
+        const user = JSON.parse(userData);
+        
+        // 1. Preencher campos com dados do usuário
+        const nomeInput = document.getElementById('nome');
+        const usernameInput = document.getElementById('usuario');
+        const emailAtualInput = document.getElementById('email-atual');
+        
+        if (nomeInput) nomeInput.value = user.nome || '';
+        if (usernameInput) usernameInput.value = user.username || '';
+        if (emailAtualInput) emailAtualInput.value = user.email || '';
+        
+        console.log('✅ Dados do perfil carregados:', user.nome, user.username);
+        
+        // 2. Atualização automática do username ao editar nome
+        if (nomeInput && usernameInput) {
+            nomeInput.addEventListener('input', function() {
+                const nome = nomeInput.value.trim();
+                const words = nome.toLowerCase().split(' ').filter(w => w.length > 0);
+                const suggestedUsername = words.length > 1 
+                    ? `${words[0]}.${words[words.length - 1]}`
+                    : words[0] || 'usuario';
+                
+                // Atualiza sugestão (usuário pode editar manualmente depois)
+                if (usernameInput.value === '' || usernameInput.value === user.username) {
+                    usernameInput.value = suggestedUsername;
+                }
+            });
+        }
+        
+        // 3. Funcionalidade de salvar alterações (nome e username)
+        const salvarBtn = document.querySelector('.dashboard-card:nth-of-type(1) .button-primary');
+        if (salvarBtn) {
+            salvarBtn.addEventListener('click', async function() {
+                const novoNome = nomeInput.value.trim();
+                const novoUsername = usernameInput.value.trim();
+                
+                if (!novoNome) {
+                    alert('Digite um nome válido.');
+                    return;
+                }
+                
+                if (!novoUsername) {
+                    alert('Digite um nome de usuário válido.');
+                    return;
+                }
+                
+                try {
+                    // Atualiza no backend
+                    const resp = await fetch(`http://localhost:3001/api/user/${user.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nome: novoNome, username: novoUsername })
+                    });
+                    
+                    const data = await resp.json();
+                    
+                    if (resp.ok) {
+                        // Atualiza localStorage com dados completos retornados
+                        localStorage.setItem('modela_user', JSON.stringify(data.user));
+                        
+                        // Atualiza elementos na página
+                        document.querySelectorAll('.user-name').forEach(el => {
+                            el.textContent = novoNome;
+                        });
+                        
+                        // Atualiza avatar
+                        const initials = novoNome
+                            .split(' ')
+                            .filter(n => n.length > 0)
+                            .map(n => n[0].toUpperCase())
+                            .slice(0, 2)
+                            .join('');
+                            
+                        document.querySelectorAll('.user-avatar-button').forEach(btn => {
+                            btn.textContent = initials;
+                        });
+                        
+                        alert('Dados atualizados com sucesso!');
+                        console.log('✅ Dados atualizados:', data.user);
+                    } else {
+                        alert(data.error || 'Erro ao atualizar dados.');
+                    }
+                } catch (err) {
+                    alert('Erro ao conectar com o servidor.');
+                    console.error('❌ Erro:', err);
+                }
+            });
+        }
+        
+        // 4. Funcionalidade de alterar senha
+        const alterarSenhaBtn = document.querySelector('.dashboard-card:nth-of-type(3) .button-primary');
+        if (alterarSenhaBtn) {
+            alterarSenhaBtn.addEventListener('click', async function() {
+                const senhaAtual = document.getElementById('senha-atual').value;
+                const novaSenha = document.getElementById('nova-senha').value;
+                const confirmarSenha = document.getElementById('confirmar-senha').value;
+                
+                if (!senhaAtual || !novaSenha || !confirmarSenha) {
+                    alert('Preencha todos os campos de senha.');
+                    return;
+                }
+                
+                if (novaSenha.length < 6) {
+                    alert('A nova senha deve ter pelo menos 6 caracteres.');
+                    return;
+                }
+                
+                if (novaSenha !== confirmarSenha) {
+                    alert('As senhas não coincidem.');
+                    return;
+                }
+                
+                try {
+                    // Primeiro valida a senha atual via login
+                    const loginResp = await fetch('http://localhost:3001/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: user.email, senha: senhaAtual })
+                    });
+                    
+                    if (!loginResp.ok) {
+                        alert('Senha atual incorreta.');
+                        return;
+                    }
+                    
+                    // Se senha atual correta, atualiza para nova senha
+                    const resp = await fetch('http://localhost:3001/api/redefinir', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: user.email, novaSenha: novaSenha })
+                    });
+                    
+                    const data = await resp.json();
+                    
+                    if (resp.ok) {
+                        alert('Senha alterada com sucesso!');
+                        document.getElementById('senha-atual').value = '';
+                        document.getElementById('nova-senha').value = '';
+                        document.getElementById('confirmar-senha').value = '';
+                    } else {
+                        alert(data.error || 'Erro ao alterar senha.');
+                    }
+                } catch (err) {
+                    alert('Erro ao conectar com o servidor.');
+                    console.error('❌ Erro:', err);
+                }
+            });
+        }
+    });
     </script>
 </body>
 </html>

@@ -41,7 +41,7 @@
                     <p>Digite seu e-mail e crie uma nova senha.</p>
                 </div>
 
-                <form class="login-form">
+                <form class="login-form" id="resetForm" novalidate>
                     <div class="input-group">
                         <label for="email">Email Institucional</label>
                         <input type="email" id="email" name="email" placeholder="seu.nome@uea.edu.br" required>
@@ -54,8 +54,10 @@
                         <label for="confirm-password">Confirmar Nova Senha</label>
                         <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••" required>
                     </div>
-                    <a href="/login.html" class="button button-primary full-width">Redefinir</a>
+                    <button type="submit" class="button button-primary full-width">Redefinir</button>
                 </form>
+
+                <div id="resetMessages"></div>
 
                 <div class="login-footer">
                     <a href="/login.html">Lembrou a senha? Voltar para o login</a>
@@ -68,9 +70,87 @@
         </div>
     </div>
 
+    <!-- Popup de sucesso baseado em :target -->
+    <div id="resetSucesso" class="popup" role="dialog" aria-labelledby="resetPopupTitle" aria-modal="true" style="display:none;"></div>
+
     <!-- Scripts para gerenciar dark mode, daltonism mode (páginas de autenticação ficam sempre claras) -->
     <script src="/js/dark-mode.js"></script>
     <script src="/js/daltonism-mode.js"></script>
     <script src="/js/usability.js"></script>
+
+    <script>
+    // Popup CSS (reaproveita estilo do login/cadastro)
+    (function(){
+      const style = document.createElement('style');
+      style.textContent = `
+        .popup{height:100vh;width:100%;position:fixed;top:0;left:0;background-color:rgba(0,0,0,.5);backdrop-filter:blur(10px);z-index:9999;opacity:0;visibility:hidden;transition:all .3s;display:flex!important;align-items:center;justify-content:center}
+        .popup:target{opacity:1;visibility:visible}
+        .popup__content{position:relative;transform:none;width:90%;max-width:420px;padding:20px;background:#fff;box-shadow:0 2rem 4rem rgba(0,0,0,.2);border-radius:12px;text-align:center;overflow:hidden}
+        .popup__text{font-size:1rem;margin-bottom:1rem}
+        .popup *{transform:none!important}
+      `;
+      document.head.appendChild(style);
+    })();
+
+    // Integração com backend /api/redefinir
+    document.addEventListener('DOMContentLoaded', function(){
+      const form = document.getElementById('resetForm');
+      const messages = document.getElementById('resetMessages');
+      if (!form) return;
+
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        messages.textContent = '';
+        messages.style.color = '';
+        const email = (document.getElementById('email')||{}).value?.trim()||'';
+        const novaSenha = (document.getElementById('new-password')||{}).value||'';
+        const confirmar = (document.getElementById('confirm-password')||{}).value||'';
+
+        if (!email || !novaSenha || !confirmar) {
+          messages.textContent = 'Preencha todos os campos.';
+          messages.style.color = 'red';
+          return;
+        }
+        if (!email.endsWith('@uea.edu.br')) {
+          messages.textContent = 'O email deve ser institucional (@uea.edu.br).';
+          messages.style.color = 'red';
+          return;
+        }
+        if (novaSenha.length < 6) {
+          messages.textContent = 'A senha deve ter pelo menos 6 caracteres.';
+          messages.style.color = 'red';
+          return;
+        }
+        if (novaSenha !== confirmar) {
+          messages.textContent = 'As senhas não coincidem.';
+          messages.style.color = 'red';
+          return;
+        }
+
+        try {
+          const resp = await fetch('http://localhost:3001/api/redefinir',{
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email, novaSenha })
+          });
+          const data = await resp.json();
+          if (resp.ok) {
+            messages.textContent = data.message || 'Senha redefinida com sucesso!';
+            messages.style.color = 'green';
+            // Criar popup dinâmico e abrir via hash
+            const container = document.getElementById('resetSucesso');
+            container.innerHTML = '<div class="popup__content"><h2 id="resetPopupTitle">Senha redefinida com sucesso!</h2><div class="popup__text">Clique em OK para voltar ao login.</div><a href="/login.html" class="button button-primary">OK</a></div>';
+            container.style.display = 'block';
+            window.location.hash = 'resetSucesso';
+          } else {
+            messages.textContent = data.error || 'Erro ao redefinir senha.';
+            messages.style.color = 'red';
+          }
+        } catch(err){
+          messages.textContent = 'Erro ao conectar com o servidor.';
+          messages.style.color = 'red';
+        }
+      });
+    });
+    </script>
 </body>
 </html>

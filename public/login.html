@@ -52,6 +52,39 @@
                 padding: 1.5rem;
             }
         }
+
+        /* Popup estilo :target */
+        .popup {
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .popup:target { opacity: 1; visibility: visible; }
+        .popup__content {
+            position: relative;
+            transform: none;
+            width: 90%;
+            max-width: 420px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2rem 4rem rgba(0,0,0, .2);
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+        }
+        .popup * { transform: none !important; }
+        .popup__text { font-size: 1rem; margin-bottom: 1rem; }
     </style>
 </head>
 <body class="login-body login-page">
@@ -95,6 +128,15 @@
         </div>
     </div>
 
+    <!-- Popup de sucesso baseado em :target -->
+    <div id="loginsucesso" class="popup" role="dialog" aria-labelledby="loginPopupTitle" aria-modal="true">
+        <div class="popup__content">
+            <h2 id="loginPopupTitle">Login realizado com sucesso!</h2>
+            <div class="popup__text">Clique em OK para continuar.</div>
+            <a href="/home.html" class="button button-primary">OK</a>
+        </div>
+    </div>
+
     <!-- Scripts para gerenciar dark mode, daltonism mode (páginas de autenticação ficam sempre claras) -->
     <script src="/js/dark-mode.js"></script>
     <script src="/js/daltonism-mode.js"></script>
@@ -104,19 +146,14 @@
     <script>
         // Prevenir zoom automático
         document.addEventListener('DOMContentLoaded', function() {
-            // Resetar qualquer zoom aplicado
             document.body.style.zoom = '1';
             document.body.style.transform = 'scale(1)';
-            
-            // Prevenir zoom em mudanças de orientação
             window.addEventListener('orientationchange', function() {
                 setTimeout(function() {
                     document.body.style.zoom = '1';
                     document.body.style.transform = 'scale(1)';
                 }, 100);
             });
-            
-            // Prevenir zoom em resize
             window.addEventListener('resize', function() {
                 document.body.style.zoom = '1';
                 document.body.style.transform = 'scale(1)';
@@ -124,17 +161,53 @@
         });
     </script>
     
-    <!-- SCRIPT DE REDIRECIONAMENTO DIRETO -->
+    <!-- Integração com backend /api/login -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    e.preventDefault(); // Impede o envio do formulário
-                    window.location.href = '/home.html'; // Redireciona
-                });
-            }
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('loginForm');
+      const messages = document.getElementById('loginMessages');
+      if (!form) return;
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        messages.textContent = '';
+        messages.style.color = '';
+
+        const email = (document.getElementById('email') || {}).value?.trim() || '';
+        const senha = (document.getElementById('password') || {}).value || '';
+
+        if (!email || !senha) {
+          messages.textContent = 'Informe email e senha.';
+          messages.style.color = 'red';
+          return;
+        }
+        if (!email.endsWith('@uea.edu.br')) {
+          messages.textContent = 'O email deve ser institucional (@uea.edu.br).';
+          messages.style.color = 'red';
+          return;
+        }
+
+        try {
+          const resp = await fetch('http://localhost:3001/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, senha })
+          });
+          const data = await resp.json();
+          if (resp.ok) {
+            try { localStorage.setItem('modela_user', JSON.stringify(data.user)); } catch(_) {}
+            // Abrir popup por âncora :target
+            window.location.hash = 'loginsucesso';
+          } else {
+            messages.textContent = data.error || 'Falha no login.';
+            messages.style.color = 'red';
+          }
+        } catch (err) {
+          messages.textContent = 'Erro ao conectar com o servidor.';
+          messages.style.color = 'red';
+        }
+      });
+    });
     </script>
 </body>
 </html>

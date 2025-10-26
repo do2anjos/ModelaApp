@@ -567,6 +567,7 @@
     </div>
 
 <!-- Scripts para gerenciar dark mode, daltonism mode e usabilidade -->
+<script src="/js/auth.js"></script>
 <script src="/js/dark-mode.js"></script>
 <script src="/js/daltonism-mode.js"></script>
 <script src="/js/usability.js"></script>
@@ -691,6 +692,21 @@
         });
 
         // --- DADOS E ESTADO ---
+        
+        // Mapeamento de aulas para módulo e ID
+        const LESSON_MAPPING = {
+            "Introdução à UML - Unified Modeling Language": { moduleId: 1, lessonId: 1 },
+            "O que é um Diagrama de Classes": { moduleId: 1, lessonId: 2 },
+            "Diagrama de Classes - Relacionamentos": { moduleId: 1, lessonId: 3 },
+            "O que são Casos de Uso": { moduleId: 1, lessonId: 4 },
+            "O que são Diagramas de Casos de Uso": { moduleId: 1, lessonId: 5 },
+            "Diagrama de Casos de Uso - Exemplo Básico": { moduleId: 1, lessonId: 6 },
+            "O que é um Diagrama de Sequência": { moduleId: 1, lessonId: 7 },
+            "Diagrama de Sequência UML - Exemplo Básico": { moduleId: 1, lessonId: 8 },
+            "O que é um Diagrama de Atividade UML - Introdução": { moduleId: 1, lessonId: 9 },
+            "Introdução ao Diagrama de Máquina de Estados UML": { moduleId: 1, lessonId: 10 }
+        };
+        
         const lessonData = {
             "Introdução à UML - Unified Modeling Language": {
                 reading: "<p>A Linguagem de Modelagem Unificada (UML) é uma linguagem padrão para visualizar, especificar, construir e documentar os artefatos de um sistema de software. Criada nos anos 90, unificou diversas notações orientadas a objetos.</p>",
@@ -937,6 +953,50 @@
             if (!userProgress[lessonTitle]) userProgress[lessonTitle] = {};
             Object.assign(userProgress[lessonTitle], updates);
             saveProgressToStorage();
+            
+            // Sincroniza com o backend
+            syncProgressToBackend(lessonTitle);
+        }
+        
+        // Sincroniza progresso com o backend
+        function syncProgressToBackend(lessonTitle) {
+            try {
+                const userData = localStorage.getItem('modela_user');
+                if (!userData) return;
+                
+                const user = JSON.parse(userData);
+                const progress = userProgress[lessonTitle] || {};
+                const mapping = LESSON_MAPPING[lessonTitle];
+                
+                if (!mapping) {
+                    console.warn('⚠️ Aula não mapeada:', lessonTitle);
+                    return;
+                }
+                
+                const payload = {
+                    moduleId: mapping.moduleId,
+                    lessonId: mapping.lessonId,
+                    lessonTitle: lessonTitle,
+                    videoCompleted: progress.videoCompleted || false,
+                    exerciseCompleted: progress.exerciseCompleted || false,
+                    practicalCompleted: progress.practicalSubmitted || false
+                };
+                
+                fetch(`http://localhost:3001/api/user/${user.id}/progress`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+                .then(r => r.json())
+                .then(data => {
+                    console.log('✅ Progresso sincronizado com backend:', lessonTitle, data);
+                })
+                .catch(err => {
+                    console.error('❌ Erro ao sincronizar progresso:', err);
+                });
+            } catch (e) {
+                console.error('❌ Erro na função syncProgressToBackend:', e);
+            }
         }
 
         // --- FUNÇÕES ---

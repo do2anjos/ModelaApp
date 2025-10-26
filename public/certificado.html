@@ -162,13 +162,15 @@
 
             <main class="dashboard-content">
                 <div class="certificates-grid">
-                    <div class="certificate-card is-completed">
+                    <div class="certificate-card is-locked">
                         <div class="cert-icon">🎓</div>
                         <div class="cert-info">
                             <h3>1. Modelagem com UML</h3>
                             <p>Carga Horária: 25 horas</p>
                         </div>
-                        <a href="#" class="button button-primary" id="open-certificate-btn" data-cert-src="/images/aaa.jpg">Ver Certificado</a>
+                        <div class="progress-badge" style="padding: 0.5rem 1rem; background: hsl(45 93% 47% / 0.1); border: 1px solid hsl(45 93% 47% / 0.2); border-radius: var(--radius); color: hsl(45 93% 47%); font-weight: 500; text-align: center;">
+                            Em Progresso
+                        </div>
                     </div>
 
                     <div class="certificate-card is-locked">
@@ -204,7 +206,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- Seção de visualização completa do certificado -->
+                
+                <!-- COMENTADO: Seção de visualização completa do certificado (habilitada quando módulo concluído) -->
+                <!--
                 <section id="certificate-full-section" class="hidden" role="region" aria-label="Exibição de Certificado" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--background); z-index: 9999; overflow: auto; padding: 2rem;">
                     <div style="max-width: 1200px; margin: 0 auto;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
@@ -216,6 +220,7 @@
                         </div>
                     </div>
                 </section>
+                -->
             </main>
         </div>
     </div>
@@ -249,10 +254,12 @@ document.addEventListener('DOMContentLoaded', function () {
   // Menu do usuário é gerenciado pelo dark-mode.js
 });
 </script>
+<script src="/js/auth.js"></script>
 <script src="/js/dark-mode.js"></script>
 <script src="/js/daltonism-mode.js"></script>
 <script src="/js/usability.js"></script>
-    <!-- Modal de Certificado -->
+    <!-- COMENTADO: Modal de Certificado (habilitar quando módulo concluído) -->
+    <!--
     <div id="certificate-modal" class="modal-backdrop hidden" aria-hidden="true" role="dialog" aria-labelledby="certificate-modal-title">
         <div class="modal-card" role="document" style="max-width: 480px; width: 90%; background: var(--card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-lg);">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
@@ -287,7 +294,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!modal) return;
             modal.classList.add('hidden');
             modal.setAttribute('aria-hidden', 'true');
-            // Esconde a pré-visualização quando fechar
             if (previewWrapper) previewWrapper.classList.add('hidden');
         }
 
@@ -310,14 +316,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (fullImg && src) fullImg.src = src;
                 if (fullSection) fullSection.classList.remove('hidden');
                 closeModal();
-                // Rola para o topo da seção (simula nova página)
                 setTimeout(function() {
                     window.scrollTo({ top: 0, behavior: 'auto' });
                 }, 50);
             });
         }
 
-        // Botão Voltar da visualização completa
         var closeViewBtn = document.getElementById('close-certificate-view');
         if (closeViewBtn) {
             closeViewBtn.addEventListener('click', function() {
@@ -339,7 +343,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Fecha modal ao clicar fora do cartão
         if (modal) {
             modal.addEventListener('click', function(evt) {
                 var card = modal.querySelector('.modal-card');
@@ -350,6 +353,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
     </script>
+    -->
 
 </body>
 </html>

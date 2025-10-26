@@ -223,7 +223,7 @@
                         
                         <div class="learning-progress">
                             <div class="progress-header">
-                                <span class="progress-label">Progresso da Aula</span><span class="progress-percentage">45%</span>
+                                <span class="progress-label">Progresso do Módulo</span><span class="progress-percentage">45%</span>
                                 
                             </div>
                             <div class="progress-bar">
@@ -236,15 +236,15 @@
 
                 <div class="dashboard-card stat-card">
                     <h4>Exercícios Feitos</h4>
-                    <p>10 de 40</p>
+                    <p>0 de 40</p>
                 </div>
                 <div class="dashboard-card stat-card">
                     <h4>Módulos Concluídos</h4>
-                    <p>1</p>
+                    <p>0</p>
                 </div>
                 <div class="dashboard-card stat-card">
                     <h4>Certificado</h4>
-                    <p>1</p>
+                    <p>0</p>
                 </div>
 
                 <div class="dashboard-card course-list-card">
@@ -266,8 +266,75 @@
         </div>
     </div>
 <!-- Scripts para gerenciar dark mode, daltonism mode e menu do usuário -->
+<script src="/js/auth.js"></script>
 <script src="/js/dark-mode.js"></script>
 <script src="/js/daltonism-mode.js"></script>
 <script src="/js/usability.js"></script>
+
+<!-- Script de Dashboard - Carrega dados do usuário -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const userData = localStorage.getItem('modela_user');
+  if (!userData) return;
+  
+  const user = JSON.parse(userData);
+  
+  // Busca dados do dashboard
+  fetch(`http://localhost:3001/api/user/${user.id}/dashboard`)
+    .then(r => r.json())
+    .then(data => {
+      console.log('📊 Dashboard data:', data);
+      
+      // 1. Atualiza Exercícios Feitos
+      const exercisesCard = document.querySelector('.dashboard-card.stat-card:nth-of-type(1) p');
+      if (exercisesCard) {
+        exercisesCard.textContent = `${data.exercises.completed} de ${data.exercises.total}`;
+      }
+      
+      // 2. Atualiza Módulos Concluídos
+      const modulesCard = document.querySelector('.dashboard-card.stat-card:nth-of-type(2) p');
+      if (modulesCard) {
+        modulesCard.textContent = data.modules.completed;
+      }
+      
+      // 3. Atualiza Certificados
+      const certificatesCard = document.querySelector('.dashboard-card.stat-card:nth-of-type(3) p');
+      if (certificatesCard) {
+        certificatesCard.textContent = data.certificates;
+      }
+      
+      // 4. Atualiza Card "Continuar Aprendendo"
+      const continueCard = document.querySelector('.dashboard-card.continue-learning');
+      if (continueCard) {
+        const titleEl = continueCard.querySelector('.learning-info h3');
+        const subtitleEl = continueCard.querySelector('.learning-info p');
+        const progressEl = continueCard.querySelector('.progress-percentage');
+        const progressBarEl = continueCard.querySelector('.progress-fill');
+        
+        if (data.lastLesson) {
+          // Mostra card com última aula
+          if (titleEl) titleEl.textContent = data.currentModule.name;
+          if (subtitleEl) subtitleEl.textContent = `Aula ${data.lastLesson.lesson_id}: ${data.lastLesson.lesson_title}`;
+          if (progressEl) progressEl.textContent = `${data.currentModule.progress}%`;
+          if (progressBarEl) progressBarEl.style.width = `${data.currentModule.progress}%`;
+        } else {
+          // Novo usuário: mostra mensagem inicial
+          if (titleEl) titleEl.textContent = 'Modelagem com UML';
+          if (subtitleEl) subtitleEl.textContent = 'Comece sua jornada de aprendizado';
+          if (progressEl) progressEl.textContent = '0%';
+          if (progressBarEl) progressBarEl.style.width = '0%';
+        }
+      }
+    })
+    .catch(err => {
+      console.error('❌ Erro ao carregar dashboard:', err);
+      // Exibe valores padrão em caso de erro
+      const statCards = document.querySelectorAll('.dashboard-card.stat-card p');
+      if (statCards[0]) statCards[0].textContent = '0 de 40';
+      if (statCards[1]) statCards[1].textContent = '0';
+      if (statCards[2]) statCards[2].textContent = '0';
+    });
+});
+</script>
 </body>
 </html>

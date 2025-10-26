@@ -52,6 +52,43 @@
                 padding: 1.5rem;
             }
         }
+
+        /* Popup estilo :target */
+        .popup {
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .popup:target {
+            opacity: 1;
+            visibility: visible;
+        }
+        .popup__content {
+            position: relative;
+            transform: none;
+            width: 90%;
+            max-width: 420px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2rem 4rem rgba(0,0,0, .2);
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+        }
+        /* Neutralizar transform global durante o popup */
+        .popup * { transform: none !important; }
+        .popup__text { font-size: 1rem; margin-bottom: 1rem; }
     </style>
 </head>
 <body class="login-body">
@@ -86,6 +123,14 @@
                     <label for="telefone">Telefone (Opcional)</label>
                     <input type="tel" id="telefone" name="telefone" placeholder="(92) 99999-9999">
                 </div>
+                <div class="input-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" placeholder="Crie uma senha" required>
+                </div>
+                <div class="input-group">
+                    <label for="confirmarSenha">Confirmar senha</label>
+                    <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" required>
+                </div>
                 <button type="submit" class="button button-primary full-width" id="cadastroButton">
                     <span class="button-text">Cadastrar</span>
                 </button>
@@ -100,6 +145,15 @@
 
         <div class="login-image-container">
             <img src="/images/flow-create.png">
+        </div>
+    </div>
+
+    <!-- Popup de sucesso baseado em :target -->
+    <div id="sucesso" class="popup" role="dialog" aria-labelledby="popupTitle" aria-modal="true">
+        <div class="popup__content">
+            <h2 id="popupTitle">Usuário cadastrado com sucesso!</h2>
+            <div class="popup__text">Clique em OK para ir ao login.</div>
+            <a href="/login.html" class="button button-primary">OK</a>
         </div>
     </div>
 
@@ -132,17 +186,69 @@
         });
     </script>
     
-    <!-- SCRIPT DE REDIRECIONAMENTO DIRETO -->
+    <!-- Integração com backend /api/cadastro -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const cadastroForm = document.getElementById('cadastroForm');
-            if (cadastroForm) {
-                cadastroForm.addEventListener('submit', function(e) {
-                    e.preventDefault(); // Impede o envio do formulário
-                    window.location.href = '/home.html'; // Redireciona
-                });
-            }
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('cadastroForm');
+      const messages = document.getElementById('cadastroMessages');
+      if (!form) return;
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        messages.textContent = '';
+        messages.style.color = '';
+
+        const nome = form.nome.value.trim();
+        const email = form.email.value.trim();
+        const matricula = form.matricula.value.trim();
+        const telefone = form.telefone.value.trim();
+        const senha = (document.getElementById('senha') || {}).value || '';
+        const confirmar = (document.getElementById('confirmarSenha') || {}).value || '';
+
+        if (!nome || !email || !matricula || !senha) {
+          messages.textContent = 'Preencha todos os campos obrigatórios.';
+          messages.style.color = 'red';
+          return;
+        }
+        if (!email.endsWith('@uea.edu.br')) {
+          messages.textContent = 'O email deve ser institucional (@uea.edu.br).';
+          messages.style.color = 'red';
+          return;
+        }
+        if (senha.length < 6) {
+          messages.textContent = 'A senha deve ter pelo menos 6 caracteres.';
+          messages.style.color = 'red';
+          return;
+        }
+        if (senha !== confirmar) {
+          messages.textContent = 'As senhas não coincidem.';
+          messages.style.color = 'red';
+          return;
+        }
+
+        try {
+          const resp = await fetch('http://localhost:3001/api/cadastro', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, email, matricula, telefone, senha })
+          });
+          const data = await resp.json();
+          if (resp.ok) {
+            messages.textContent = data.message || 'Cadastro realizado com sucesso!';
+            messages.style.color = 'green';
+            form.reset();
+            // Abrir popup baseado em âncora :target
+            window.location.hash = 'sucesso';
+          } else {
+            messages.textContent = data.error || 'Erro ao cadastrar usuário.';
+            messages.style.color = 'red';
+          }
+        } catch (err) {
+          messages.textContent = 'Erro ao conectar com o servidor.';
+          messages.style.color = 'red';
+        }
+      });
+    });
     </script>
 </body>
 </html>
