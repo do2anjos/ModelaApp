@@ -23,14 +23,13 @@
         }
 
         /* PROTEÇÃO GLOBAL DA LOGO */
-        /* Garante que a logo não seja afetada por filtros de acessibilidade (daltonismo) ou tema */
         .logo img,
         html[data-daltonismo] .logo img,
         [data-theme="dark"] .logo img,
         .lesson-header .logo img,
         #main-logo {
             filter: none !important;
-            -webkit-filter: none !important; /* Compatibilidade com Safari */
+            -webkit-filter: none !important;
             transform: none !important;
             opacity: 1 !important;
             visibility: visible !important;
@@ -39,7 +38,6 @@
             box-shadow: none !important;
         }
 
-        /* Prevenir qualquer manipulação visual da logo */
         .logo img::before,
         .logo img::after,
         .lesson-header .logo img::before,
@@ -48,10 +46,310 @@
             content: none !important;
         }
 
-        /* Garantir que a logo seja sempre visível e correta */
         .logo img {
             pointer-events: auto !important;
             user-select: none !important;
+        }
+
+        /* Mensagens de "sem dados" */
+        .no-data-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--muted-foreground);
+            font-size: var(--text-lg);
+            font-weight: var(--font-weight-medium);
+            background: var(--muted);
+            border-radius: var(--radius);
+            border: 2px dashed var(--border);
+        }
+
+        /* Pódio em formato de escadinha */
+        .podium-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        /* Base da escadinha */
+        .podium-container::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                var(--muted) 20%, 
+                var(--muted) 80%, 
+                transparent 100%
+            );
+            border-radius: 10px;
+            z-index: 1;
+        }
+
+        .podium-card {
+            position: relative;
+            padding: 1.5rem 1rem;
+            border-radius: var(--radius) var(--radius) 0 0;
+            width: 100%;
+            max-width: 180px;
+            min-height: 200px;
+            background: var(--card);
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 2;
+        }
+
+        .podium-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* 1º lugar - mais alto (centro) */
+        .podium-card.rank-1 {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            min-height: 250px;
+            order: 2; /* Centro */
+            border: 3px solid #ffd700;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .podium-card.rank-1::before {
+            content: '🥇';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            background: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* 2º lugar - médio (esquerda) */
+        .podium-card.rank-2 {
+            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+            min-height: 220px;
+            order: 1; /* Esquerda */
+            border: 3px solid #c0c0c0;
+            box-shadow: 0 6px 20px rgba(192, 192, 192, 0.3);
+        }
+
+        .podium-card.rank-2::before {
+            content: '🥈';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            background: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* 3º lugar - mais baixo (direita) */
+        .podium-card.rank-3 {
+            background: linear-gradient(135deg, #cd7f32 0%, #daa520 100%);
+            min-height: 190px;
+            order: 3; /* Direita */
+            border: 3px solid #cd7f32;
+            box-shadow: 0 4px 15px rgba(205, 127, 50, 0.3);
+        }
+
+        .podium-card.rank-3::before {
+            content: '🥉';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            background: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Conectores entre os degraus */
+        .podium-card::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 10px;
+            background: inherit;
+            border-radius: 0 0 5px 5px;
+        }
+
+        /* Degraus da escadinha */
+        .podium-card.rank-1::after {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            height: 15px;
+        }
+
+        .podium-card.rank-2::after {
+            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+            height: 12px;
+        }
+
+        .podium-card.rank-3::after {
+            background: linear-gradient(135deg, #cd7f32 0%, #daa520 100%);
+            height: 8px;
+        }
+
+        /* Efeitos de sombra e profundidade */
+        .podium-card.rank-1 {
+            box-shadow: 
+                0 8px 25px rgba(255, 215, 0, 0.3),
+                0 4px 12px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .podium-card.rank-2 {
+            box-shadow: 
+                0 6px 20px rgba(192, 192, 192, 0.3),
+                0 3px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .podium-card.rank-3 {
+            box-shadow: 
+                0 4px 15px rgba(205, 127, 50, 0.3),
+                0 2px 6px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        /* Animação de entrada */
+        .podium-card {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .podium-card.rank-1 {
+            animation-delay: 0.1s;
+        }
+
+        .podium-card.rank-2 {
+            animation-delay: 0.2s;
+        }
+
+        .podium-card.rank-3 {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Efeito de brilho nas medalhas */
+        .podium-card::before {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.05);
+            }
+        }
+
+        /* Responsividade do pódio */
+        @media (max-width: 768px) {
+            .podium-container {
+                flex-direction: row;
+                align-items: flex-end;
+                gap: 0.3rem;
+                padding: 1rem 0;
+            }
+            
+            .podium-card {
+                max-width: 120px;
+                min-height: 150px;
+                padding: 1rem 0.5rem;
+            }
+            
+            .podium-card.rank-1 {
+                min-height: 180px;
+            }
+            
+            .podium-card.rank-2 {
+                min-height: 160px;
+            }
+            
+            .podium-card.rank-3 {
+                min-height: 140px;
+            }
+            
+            .podium-card::before {
+                width: 30px;
+                height: 30px;
+                font-size: 1.5rem;
+                top: -12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .podium-container {
+                gap: 0.2rem;
+            }
+            
+            .podium-card {
+                max-width: 100px;
+                min-height: 120px;
+                padding: 0.8rem 0.3rem;
+            }
+            
+            .podium-card.rank-1 {
+                min-height: 150px;
+            }
+            
+            .podium-card.rank-2 {
+                min-height: 130px;
+            }
+            
+            .podium-card.rank-3 {
+                min-height: 110px;
+            }
+            
+            .podium-card::before {
+                width: 25px;
+                height: 25px;
+                font-size: 1.2rem;
+                top: -10px;
+            }
         }
     </style>
     <script>
@@ -123,7 +421,7 @@
                             </div>
                             <ul>
                             <li><a href="/perfil.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Meu Perfil</a></li>
-                            <li><a href="configuracoes.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg> Configurações</a></li>
+                            <li><a href="/configuracoes.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/><path d="M18 2h-2.17a2 2 0 0 0-1.41.59L12 5l-2.41-2.41A2 2 0 0 0 8.17 2H6"/><path d="M9.5 2a2.83 2.83 0 0 1 5 0"/></svg> Configurações</a></li>
                             <li><a href="/login.html"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg> Sair</a></li>
                         </ul>
                         </div>
@@ -132,19 +430,19 @@
             </header>
             
             <main class="dashboard-content">
-                <div class="your-position-banner">
+                <div class="your-position-banner" id="user-position-banner" style="display: none;">
                     <div class="your-rank-info">
                         <span class="your-rank-label">Sua Posição</span>
-                        <span class="your-rank-number">12º</span>
+                        <span class="your-rank-number" id="user-rank-number">-</span>
                     </div>
                     <div class="your-rank-details">
-                        <p><strong>Matheus dos Anjos</strong> | 850 Pontos</p>
+                        <p id="user-rank-details">Carregando...</p>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%;"></div>
+                            <div class="progress-fill" id="user-progress-fill" style="width: 0%;"></div>
                         </div>
                     </div>
                     <div class="your-rank-next">
-                        <span>Próximo nível: <strong>50 pts</strong></span>
+                        <span id="user-rank-next">Carregando...</span>
                     </div>
                 </div>
 
@@ -155,61 +453,20 @@
 
                 <div class="tabs-content">
                     <div class="tab-pane active" id="geral">
-                        <div class="podium-container">
-                            <div class="podium-card rank-2">
-                                <span class="podium-rank">🥈</span>
-                                <img src="https://picsum.photos/seed/user2/80" alt="Avatar" class="podium-avatar">
-                                <h4 class="podium-name">Carlos Eduardo</h4>
-                                <span class="podium-score">1.180 pts</span>
-                            </div>
-                            <div class="podium-card rank-1">
-                                <span class="podium-rank">🥇</span>
-                                <img src="https://picsum.photos/seed/user1/96" alt="Avatar" class="podium-avatar">
-                                <h4 class="podium-name">Ana Beatriz</h4>
-                                <span class="podium-score">1.250 pts</span>
-                            </div>
-                            <div class="podium-card rank-3">
-                                <span class="podium-rank">🥉</span>
-                                <img src="https://picsum.photos/seed/user3/80" alt="Avatar" class="podium-avatar">
-                                <h4 class="podium-name">Daniela Souza</h4>
-                                <span class="podium-score">1.150 pts</span>
-                            </div>
+                        <div class="podium-container" id="podium-container">
+                            <!-- Pódio será carregado dinamicamente -->
                         </div>
 
                         <div class="dashboard-card">
-                            <div class="ranking-list">
-                                <div class="ranking-item">
-                                    <span class="rank-position">4</span>
-                                    <img src="https://picsum.photos/seed/user4/48" alt="Avatar" class="rank-avatar">
-                                    <span class="rank-name">Fernanda Lima</span>
-                                    <span class="rank-score">1.100 pts</span>
-                                </div>
-                                <div class="ranking-item">
-                                    <span class="rank-position">5</span>
-                                    <img src="https://picsum.photos/seed/user5/48" alt="Avatar" class="rank-avatar">
-                                    <span class="rank-name">Gabriel Alves</span>
-                                    <span class="rank-score">1.050 pts</span>
-                                </div>
+                            <div class="ranking-list" id="general-ranking-list">
+                                <!-- Lista será carregada dinamicamente -->
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane" id="forum">
                         <div class="dashboard-card">
-                           <div class="ranking-list forum-ranking">
-                                <div class="ranking-item">
-                                    <span class="rank-position">1</span>
-                                    <img src="https://picsum.photos/seed/user2/48" alt="Avatar" class="rank-avatar">
-                                    <span class="rank-name">Carlos Eduardo</span>
-                                    <span class="rank-extra">25 Tópicos</span>
-                                    <span class="rank-score">150 Respostas</span>
-                                </div>
-                                <div class="ranking-item">
-                                    <span class="rank-position">2</span>
-                                    <img src="https://picsum.photos/seed/user4/48" alt="Avatar" class="rank-avatar">
-                                    <span class="rank-name">Fernanda Lima</span>
-                                    <span class="rank-extra">18 Tópicos</span>
-                                    <span class="rank-score">120 Respostas</span>
-                                </div>
+                           <div class="ranking-list forum-ranking" id="forum-ranking-list">
+                                <!-- Lista do fórum será carregada dinamicamente -->
                            </div>
                         </div>
                     </div>
@@ -219,6 +476,10 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Carregar rankings ao inicializar
+            loadGeneralRanking();
+            loadForumRanking();
+
             // Funcionalidade das abas
             const tabLinks = document.querySelectorAll('.tabs-nav .tab-link');
             const tabPanes = document.querySelectorAll('.tabs-content .tab-pane');
@@ -237,11 +498,232 @@
                             pane.classList.remove('active');
                         }
                     });
+
+                    // Recarregar dados quando trocar de aba
+                    if (targetId === 'geral') {
+                        loadGeneralRanking();
+                    } else if (targetId === 'forum') {
+                        loadForumRanking();
+                    }
                 });
             });
 
             // Menu do usuário é gerenciado pelo dark-mode.js
         });
+
+        // Função para carregar ranking geral
+        async function loadGeneralRanking() {
+            try {
+                const response = await fetch('http://localhost:3001/api/ranking?limit=10');
+                const ranking = await response.json();
+                
+                // Ordenar por pontos (maior para menor), depois por ID (ordem de cadastro)
+                const sortedRanking = ranking.sort((a, b) => {
+                    const pointsA = a.totalPoints || 0;
+                    const pointsB = b.totalPoints || 0;
+                    
+                    // Se as pontuações são iguais, ordenar por ID (ordem de cadastro)
+                    if (pointsA === pointsB) {
+                        return a.userId - b.userId;
+                    }
+                    
+                    // Caso contrário, ordenar por pontos
+                    return pointsB - pointsA;
+                });
+                
+                // Atualizar pódio (top 3 por pontuação)
+                updatePodium(sortedRanking.slice(0, 3));
+                
+                // Atualizar lista (4+ por pontuação)
+                updateRankingList(sortedRanking.slice(3));
+                
+                // Atualizar posição do usuário atual
+                updateUserPosition(ranking);
+                
+                // Destacar usuário atual
+                highlightCurrentUser(ranking);
+            } catch (error) {
+                console.error('Erro ao carregar ranking:', error);
+                // Mostrar mensagem quando não há dados
+                showNoDataMessage();
+            }
+        }
+
+        // Função para atualizar pódio
+        function updatePodium(top3) {
+            const container = document.getElementById('podium-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (top3.length === 0) {
+                container.innerHTML = '<div class="no-data-message">Nenhum usuário encontrado</div>';
+                return;
+            }
+            
+            // Criar cards do pódio na ordem visual correta: 2º, 1º, 3º
+            // Para que o CSS order funcione corretamente
+            const positions = [
+                { rank: 2, user: top3[1] || null }, // 2º lugar (esquerda) - order: 1
+                { rank: 1, user: top3[0] || null }, // 1º lugar (centro) - order: 2  
+                { rank: 3, user: top3[2] || null }  // 3º lugar (direita) - order: 3
+            ];
+            
+            positions.forEach(({ rank, user }) => {
+                const card = document.createElement('div');
+                card.className = `podium-card rank-${rank}`;
+                
+                if (user) {
+                    const initials = getInitials(user.nome);
+                    const points = user.totalPoints || 0;
+                    
+                    card.innerHTML = `
+                        <div class="podium-avatar" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; margin: 0.5rem auto;">${initials}</div>
+                        <h4 class="podium-name">${user.nome}</h4>
+                        <span class="podium-score">${points} pts</span>
+                    `;
+                } else {
+                    // Card vazio se não houver usuário para essa posição
+                    card.innerHTML = `
+                        <div class="podium-avatar" style="width: 80px; height: 80px; border-radius: 50%; background: var(--muted); display: flex; align-items: center; justify-content: center; color: var(--muted-foreground); font-weight: 600; font-size: 1.2rem; margin: 0.5rem auto;">-</div>
+                        <h4 class="podium-name">Vago</h4>
+                        <span class="podium-score">0 pts</span>
+                    `;
+                }
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Função para atualizar lista de ranking
+        function updateRankingList(users) {
+            const listContainer = document.getElementById('general-ranking-list');
+            if (!listContainer) return;
+            
+            listContainer.innerHTML = '';
+            
+            if (users.length === 0) {
+                listContainer.innerHTML = '<div class="no-data-message">Nenhum usuário encontrado</div>';
+                return;
+            }
+            
+            users.forEach((user, index) => {
+                const item = document.createElement('div');
+                item.className = 'ranking-item';
+                const points = user.totalPoints || 0;
+                
+                item.innerHTML = `
+                    <span class="rank-position">${index + 4}</span>
+                    <div class="rank-avatar" style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem;">${getInitials(user.nome)}</div>
+                    <span class="rank-name">${user.nome}</span>
+                    <span class="rank-score">${points} pts</span>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        // Função para destacar usuário atual
+        function highlightCurrentUser(ranking) {
+            const userData = localStorage.getItem('modela_user');
+            if (!userData) return;
+            
+            const user = JSON.parse(userData);
+            const currentUser = ranking.find(u => u.userId === user.id);
+            
+            if (currentUser) {
+                // Destacar item do usuário atual na lista
+                const userItems = document.querySelectorAll('.ranking-item');
+                userItems.forEach(item => {
+                    if (item.querySelector('.rank-name').textContent === user.nome) {
+                        item.style.backgroundColor = 'var(--primary)';
+                        item.style.color = 'white';
+                        item.style.borderRadius = '8px';
+                        item.style.padding = '0.5rem';
+                    }
+                });
+            }
+        }
+
+        // Função para atualizar posição do usuário atual
+        function updateUserPosition(ranking) {
+            const userData = localStorage.getItem('modela_user');
+            if (!userData) return;
+            
+            const user = JSON.parse(userData);
+            const userPosition = ranking.findIndex(u => u.userId === user.id) + 1;
+            const userPoints = ranking.find(u => u.userId === user.id)?.totalPoints || 0;
+            
+            const banner = document.getElementById('user-position-banner');
+            const rankNumber = document.getElementById('user-rank-number');
+            const rankDetails = document.getElementById('user-rank-details');
+            const progressFill = document.getElementById('user-progress-fill');
+            const rankNext = document.getElementById('user-rank-next');
+            
+            if (banner && rankNumber && rankDetails && progressFill && rankNext) {
+                rankNumber.textContent = userPosition ? `${userPosition}º` : '-';
+                rankDetails.innerHTML = `<strong>${user.nome}</strong> | ${userPoints} Pontos`;
+                progressFill.style.width = `${Math.min((userPoints / 100) * 100, 100)}%`;
+                rankNext.innerHTML = `Próximo nível: <strong>${Math.max(0, 100 - userPoints)} pts</strong>`;
+                
+                banner.style.display = 'flex';
+            }
+        }
+
+        // Função para mostrar mensagem quando não há dados
+        function showNoDataMessage() {
+            const container = document.getElementById('podium-container');
+            const listContainer = document.getElementById('general-ranking-list');
+            
+            if (container) {
+                container.innerHTML = '<div class="no-data-message">Nenhum usuário encontrado no ranking</div>';
+            }
+            
+            if (listContainer) {
+                listContainer.innerHTML = '<div class="no-data-message">Nenhum usuário encontrado</div>';
+            }
+        }
+
+        // Função para carregar ranking do fórum
+        async function loadForumRanking() {
+            try {
+                const response = await fetch('http://localhost:3001/api/ranking/forum');
+                const ranking = await response.json();
+                
+                const listContainer = document.getElementById('forum-ranking-list');
+                if (!listContainer) return;
+                
+                listContainer.innerHTML = '';
+                
+                if (ranking.length === 0) {
+                    listContainer.innerHTML = '<div class="no-data-message">Nenhum usuário encontrado no fórum</div>';
+                    return;
+                }
+                
+                ranking.forEach((user, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'ranking-item';
+                    item.innerHTML = `
+                        <span class="rank-position">${index + 1}</span>
+                        <div class="rank-avatar" style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem;">${getInitials(user.nome)}</div>
+                        <span class="rank-name">${user.nome}</span>
+                        <span class="rank-extra">${user.topicsCount || 0} Tópicos</span>
+                        <span class="rank-score">${user.repliesCount || 0} Respostas</span>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar ranking do fórum:', error);
+                const listContainer = document.getElementById('forum-ranking-list');
+                if (listContainer) {
+                    listContainer.innerHTML = '<div class="no-data-message">Erro ao carregar dados do fórum</div>';
+                }
+            }
+        }
+
+        // Função para gerar iniciais do nome
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
     </script>
     <script src="/js/auth.js"></script>
     <script src="/js/dark-mode.js"></script>
