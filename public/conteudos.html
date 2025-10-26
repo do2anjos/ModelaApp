@@ -54,17 +54,535 @@
             user-select: none !important;
         }
 
-        /* Estilo para módulos bloqueados - cursor not-allowed apenas no SVG do cadeado */
-        .path-module-accordion.is-locked .button svg {
-            cursor: not-allowed;
+        /* ========== TRILHA TECNOLÓGICA - MAPA DE SISTEMA ========== */
+        
+        /* Container principal com grid técnico de fundo */
+        .system-map-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+            position: relative;
+            background: 
+                linear-gradient(90deg, var(--border) 1px, transparent 1px),
+                linear-gradient(0deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            min-height: 100vh;
         }
-
-        .path-module-accordion.is-locked .button {
-            opacity: 0.5;
+        
+        /* Conectores verticais entre módulos */
+        .system-connector {
+            width: 4px;
+            height: 60px;
+            margin: 0 auto;
+            background: var(--primary);
+            position: relative;
         }
-
-        .path-module-accordion.is-locked .button:hover {
-            opacity: 0.5;
+        
+        .system-connector.dashed {
+            background: repeating-linear-gradient(
+                to bottom,
+                var(--border) 0px,
+                var(--border) 8px,
+                transparent 8px,
+                transparent 16px
+            );
+        }
+        
+        .system-connector.active {
+            background: linear-gradient(180deg, 
+                var(--primary) 0%, 
+                var(--primary) 60%,
+                var(--border) 100%
+            );
+            animation: flowDown 2s ease-in-out infinite;
+        }
+        
+        .system-connector::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid var(--primary);
+        }
+        
+        .system-connector.dashed::after {
+            border-top-color: var(--border);
+        }
+        
+        .system-connector.active::after {
+            animation: pulseArrow 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes flowDown {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes pulseArrow {
+            0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+            50% { transform: translateX(-50%) translateY(3px) scale(1.2); }
+        }
+        
+        /* Cards de módulo - estilo componente UML */
+        .module-layer {
+            position: relative;
+            margin: 2rem auto;
+        }
+        
+        .layer-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1.5rem;
+            align-items: start;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        
+        /* Módulo ativo */
+        .module-layer.active .layer-card {
+            border-color: var(--primary);
+            border-width: 3px;
+            background: var(--card);
+            box-shadow: 
+                0 8px 24px rgba(59, 130, 246, 0.15),
+                0 0 0 4px rgba(59, 130, 246, 0.08);
+            transform: scale(1.02);
+        }
+        
+        .module-layer.active .layer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--primary) 50%,
+                transparent 100%
+            );
+            animation: building 2s linear infinite;
+        }
+        
+        @keyframes building {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Módulo bloqueado */
+        .module-layer.locked .layer-card {
+            opacity: 0.6;
+        }
+        
+        /* Número do módulo */
+        .layer-number {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--muted-foreground);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+        
+        .module-layer.active .layer-number {
+            background: var(--primary);
+        }
+        
+        /* Conteúdo do módulo */
+        .layer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .uml-stereotype {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: var(--muted-foreground);
+            font-weight: 600;
+        }
+        
+        .layer-content h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--foreground);
+        }
+        
+        .layer-type {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted-foreground);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .layer-description {
+            font-size: 0.9rem;
+            color: var(--muted-foreground);
+            line-height: 1.5;
+            margin: 0.5rem 0 0 0;
+        }
+        
+        /* Ícone do módulo */
+        .layer-icon {
+            font-size: 3rem;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
+        }
+        
+        .module-layer.locked .layer-icon {
+            filter: grayscale(100%) opacity(0.4);
+        }
+        
+        /* Barra de progresso */
+        .layer-progress {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--border);
+        }
+        
+        .progress-bar-system {
+            height: 10px;
+            background: var(--muted);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 0.75rem;
+        }
+        
+        .progress-bar-system .fill {
+            height: 100%;
+            background: linear-gradient(90deg, 
+                var(--primary) 0%, 
+                hsl(220 70% 60%) 100%
+            );
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .progress-bar-system .fill::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255,255,255,0.4),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--muted-foreground);
+        }
+        
+        .progress-percent {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* Botão expandir/colapsar aulas */
+        .toggle-lessons-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: 1px dashed var(--border);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+            color: var(--muted-foreground);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .toggle-lessons-btn:hover {
+            background: var(--muted);
+            color: var(--foreground);
+            border-color: var(--primary);
+        }
+        
+        .toggle-lessons-btn svg {
+            transition: transform 0.3s;
+        }
+        
+        .toggle-lessons-btn.expanded svg {
+            transform: rotate(180deg);
+        }
+        
+        /* Lista de aulas */
+        .lessons-list {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--muted);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        
+        .lessons-list:not(.hidden) {
+            max-height: 600px;
+            opacity: 1;
+        }
+        
+        .module-lessons {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .module-lessons li {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--card);
+            border-radius: 6px;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .module-lessons li:hover {
+            background: var(--background);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .lesson-number {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--muted);
+            color: var(--muted-foreground);
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        
+        .module-lessons li.completed .lesson-number {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .lesson-title {
+            font-size: 0.9rem;
+            color: var(--foreground);
+        }
+        
+        .lesson-status {
+            font-size: 1.25rem;
+        }
+        
+        /* Botão CTA */
+        .layer-cta {
+            margin-top: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* Overlay de bloqueio */
+        .lock-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(3px);
+            border-radius: 12px;
+            gap: 0.75rem;
+            font-weight: 600;
+            color: var(--muted-foreground);
+        }
+        
+        [data-theme="dark"] .lock-overlay {
+            background: rgba(0,0,0,0.7);
+        }
+        
+        /* Marcador de posição */
+        .position-marker {
+            position: absolute;
+            right: -140px;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+        }
+        
+        .pulse {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            position: relative;
+        }
+        
+        .pulse::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: pulseRing 1.5s ease-out infinite;
+        }
+        
+        @keyframes pulseRing {
+            0% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% { 
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        .position-marker span {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+        }
+        
+        /* Início da jornada */
+        .journey-start {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card);
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+        
+        .start-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .journey-start h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.25rem;
+            color: var(--foreground);
+        }
+        
+        .journey-start p {
+            margin: 0;
+            color: var(--muted-foreground);
+            font-size: 0.9rem;
+        }
+        
+        /* Certificado no topo */
+        .certificate-goal {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card);
+            border: 3px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .certificate-goal.locked {
+            opacity: 0.6;
+        }
+        
+        .trophy-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+        }
+        
+        .certificate-goal.locked .trophy-icon {
+            filter: grayscale(100%) opacity(0.4);
+        }
+        
+        .certificate-goal h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+        }
+        
+        .certificate-goal p {
+            margin: 0;
+            color: var(--muted-foreground);
+        }
+        
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .system-map-container {
+                background-size: 20px 20px;
+                padding: 2rem 0.5rem;
+            }
+            
+            .layer-card {
+                grid-template-columns: auto 1fr;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .layer-icon {
+                display: none;
+            }
+            
+            .position-marker {
+                position: static;
+                transform: none;
+                margin-top: 1rem;
+            }
+            
+            .layer-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
         }
     </style>
     <script>
@@ -174,69 +692,145 @@
             </header>
 
             <main class="dashboard-content">
-                <div class="learning-path">
-                    <details class="path-module-accordion is-completed">
-                        <summary>
-                            <div class="module-status-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <div class="system-map-container">
+                    
+                    <!-- Início da jornada -->
+                    <div class="journey-start">
+                        <div class="start-icon">🚀</div>
+                        <h4>Início da Jornada</h4>
+                        <p>Construa seu conhecimento camada por camada</p>
+                    </div>
+                    
+                    <div class="system-connector base"></div>
+                    
+                    <!-- Módulo 1: UML (Ativo) -->
+                    <div class="module-layer active level-1">
+                        <div class="layer-card">
+                            <div class="layer-number">01</div>
+                            <div class="layer-content">
+                                <div class="uml-stereotype">«foundation»</div>
+                                <h3>Modelagem com UML</h3>
+                                <p class="layer-type">Foundation Layer</p>
+                                <p class="layer-description">Domine a linguagem padrão para visualizar, especificar e documentar sistemas de software.</p>
+                                
+                                <!-- Progresso -->
+                                <div class="layer-progress">
+                                    <div class="progress-bar-system">
+                                        <div class="fill" style="width: 0%"></div>
+                                    </div>
+                                    <div class="progress-stats">
+                                        <span class="progress-text">0 de 10 aulas</span>
+                                        <span class="progress-percent">0%</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Botão expandir/colapsar -->
+                                <button class="toggle-lessons-btn" data-module="1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                    <span>Ver Aulas do Módulo</span>
+                                </button>
+                                
+                                <!-- Lista de aulas (inicialmente oculta) -->
+                                <div class="lessons-list hidden" data-module="1">
+                                    <ol class="module-lessons">
+                                        <li><span class="lesson-number">01</span><span class="lesson-title">Introdução à UML - Unified Modeling Language</span><span class="lesson-status">⏱️</span></li>
+                                        <li><span class="lesson-number">02</span><span class="lesson-title">O que é um Diagrama de Classes</span><span class="lesson-status">🔒</span></li>
+                                        <li><span class="lesson-number">03</span><span class="lesson-title">Diagrama de Classes - Relacionamentos</span><span class="lesson-status">🔒</span></li>
+                                        <li><span class="lesson-number">04</span><span class="lesson-title">O que são Casos de Uso</span><span class="lesson-status">🔒</span></li>
+                                        <li><span class="lesson-number">05</span><span class="lesson-title">O que são Diagramas de Casos de Uso</span><span class="lesson-status">🔒</span></li>
+                                        <li><span class="lesson-number">06</span><span class="lesson-title">Diagrama de Casos de Uso - Exemplo Básico</span><span class="lesson-status">🔒</span></li>
+                                        <li><span class="lesson-number">07</span><span class="lesson-title">O que é um Diagrama de Sequência</span><span class="lesson-status">🔒</span></li>
+                                        <li><span class="lesson-number">08</span><span class="lesson-title">Diagrama de Sequência UML - Exemplo Básico</span><span class="lesson-status">🔒</span></li>
+                                        <li><span class="lesson-number">09</span><span class="lesson-title">O que é um Diagrama de Atividade UML - Introdução</span><span class="lesson-status">🔒</span></li>
+                                        <li><span class="lesson-number">10</span><span class="lesson-title">Introdução ao Diagrama de Máquina de Estados UML</span><span class="lesson-status">🔒</span></li>
+                                    </ol>
+                                </div>
+                                
+                                <a href="/aulas.html" class="button button-primary layer-cta">
+                                    Continuar Módulo →
+                                </a>
                             </div>
-                            <div class="module-info">
-                                <h3>1. Modelagem com UML</h3>
-                                <p>Domine a linguagem padrão para visualizar, especificar e documentar sistemas de software.</p>
+                            <div class="layer-icon">🎯</div>
+                        </div>
+                        
+                        <!-- Marcador de posição -->
+                        <div class="position-marker">
+                            <div class="pulse"></div>
+                            <span>VOCÊ ESTÁ AQUI</span>
+                        </div>
+                    </div>
+                    
+                    <div class="system-connector active"></div>
+                    
+                    <!-- Módulo 2: Requisitos (Bloqueado) -->
+                    <div class="module-layer locked level-2">
+                        <div class="layer-card">
+                            <div class="layer-number">02</div>
+                            <div class="layer-content">
+                                <div class="uml-stereotype">«component»</div>
+                                <h3>Engenharia de Requisitos</h3>
+                                <p class="layer-type">Business Layer</p>
+                                <p class="layer-description">Aprenda a levantar, documentar e gerenciar os requisitos de um projeto de software.</p>
                             </div>
-                            <a href="/aulas.html" class="button button-primary button-module">Revisar<br>Módulo</a>
-                        </summary>
-                        <ul class="module-lesson-list">
-                            <li><a href="#"><span class="lesson-status-icon completed"></span><span>Conceitos e História da UML</span><span class="duration"></span></a></li>
-                            <li><a href="#"><span class="lesson-status-icon completed"></span><span>Relacionamentos: Associação e Agregação</span><span class="duration"></span></a></li>
-                            <li><a href="#"><span class="lesson-status-icon completed"></span><span>Diagrama de Casos de Uso</span><span class="duration"></span></a></li>
-                            <li><a href="#"><span class="lesson-status-icon completed"></span><span>Diagrama de Classes</span><span class="duration"></span></a></li>
-                            <li><a href="#"><span class="lesson-status-icon completed"></span><span>Diagrama de Sequência</span><span class="duration"></span></a></li>
-                            <li><a href="#"><span class="lesson-status-icon completed"></span><span>Diagrama de Atividades</span><span class="duration"></span></a></li>
-                            <li><a href="#"><span class="lesson-status-icon completed"></span><span>Diagrama de Estados</span><span class="duration"></span></a></li>
-                            <li><a href="#"><span class="lesson-status-icon completed"></span><span>Diagrama de Componentes</span><span class="duration"></span></a></li>
-                            <li><a href="#"><span class="lesson-status-icon completed"></span><span>Estudo de Caso Prático</span><span class="duration"></span></a></li>
-                        </ul>
-                    </details>
-
-                    <details class="path-module-accordion is-locked">
-                        <summary>
-                            <div class="module-status-icon"></div>
-                            <div class="module-info">
-                                <h3>2. Engenharia de Requisitos</h3>
-                                <p>Aprenda a levantar, documentar e gerenciar os requisitos de um projeto de software.</p>
+                            <div class="layer-icon">📋</div>
+                            <div class="lock-overlay">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <span>Bloqueado</span>
                             </div>
-                            <a href="#" class="button button-secondary disabled">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            </a>
-                        </summary>
-                    </details>
-
-                    <details class="path-module-accordion is-locked">
-                        <summary>
-                            <div class="module-status-icon"></div>
-                            <div class="module-info">
-                                <h3>3. Arquitetura de Sistemas</h3>
-                                <p>Projete sistemas escaláveis e robustos com as melhores práticas da indústria.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="system-connector dashed"></div>
+                    
+                    <!-- Módulo 3: Arquitetura (Bloqueado) -->
+                    <div class="module-layer locked level-3">
+                        <div class="layer-card">
+                            <div class="layer-number">03</div>
+                            <div class="layer-content">
+                                <div class="uml-stereotype">«component»</div>
+                                <h3>Arquitetura de Sistemas</h3>
+                                <p class="layer-type">Application Layer</p>
+                                <p class="layer-description">Projete sistemas escaláveis e robustos com as melhores práticas da indústria.</p>
                             </div>
-                            <a href="#" class="button button-secondary disabled">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                             </a>
-                        </summary>
-                    </details>
-
-                    <details class="path-module-accordion is-locked">
-                        <summary>
-                            <div class="module-status-icon"></div>
-                            <div class="module-info">
-                                <h3>4. Padrões de Projeto (Design Patterns)</h3>
-                                <p>Domine soluções consagradas para problemas comuns no design de software.</p>
+                            <div class="layer-icon">🏗️</div>
+                            <div class="lock-overlay">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <span>Bloqueado</span>
                             </div>
-                            <a href="#" class="button button-secondary disabled">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                             </a>
-                        </summary>
-                    </details>
+                        </div>
+                    </div>
+                    
+                    <div class="system-connector dashed"></div>
+                    
+                    <!-- Módulo 4: Padrões (Bloqueado) -->
+                    <div class="module-layer locked level-4">
+                        <div class="layer-card">
+                            <div class="layer-number">04</div>
+                            <div class="layer-content">
+                                <div class="uml-stereotype">«component»</div>
+                                <h3>Padrões de Projeto</h3>
+                                <p class="layer-type">Optimization Layer</p>
+                                <p class="layer-description">Domine soluções consagradas para problemas comuns no design de software.</p>
+                            </div>
+                            <div class="layer-icon">🔧</div>
+                            <div class="lock-overlay">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <span>Bloqueado</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="system-connector dashed"></div>
+                    
+                    <!-- Certificado no final -->
+                    <div class="certificate-goal locked">
+                        <div class="trophy-icon">🏆</div>
+                        <h3>Certificado de Conclusão</h3>
+                        <p>Complete todos os 4 módulos</p>
+                    </div>
+                    
                 </div>
             </main>
         </div>
@@ -246,5 +840,119 @@
 <script src="/js/dark-mode.js"></script>
 <script src="/js/daltonism-mode.js"></script>
 <script src="/js/usability.js"></script>
+
+<!-- Script de integração com backend -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const userData = localStorage.getItem('modela_user');
+    if (!userData) return;
+    
+    const user = JSON.parse(userData);
+    
+    // Busca dados do dashboard
+    fetch(`http://localhost:3001/api/user/${user.id}/dashboard`)
+        .then(r => r.json())
+        .then(data => {
+            console.log('📊 Dados do módulo:', data);
+            
+            // Atualiza progresso do Módulo 1 (UML)
+            const progressBar = document.querySelector('.module-layer.active .progress-bar-system .fill');
+            const progressText = document.querySelector('.module-layer.active .progress-text');
+            const progressPercent = document.querySelector('.module-layer.active .progress-percent');
+            
+            if (progressBar) {
+                progressBar.style.width = `${data.currentModule.progress}%`;
+            }
+            if (progressText) {
+                progressText.textContent = `${data.currentModule.completed} de ${data.currentModule.total} aulas`;
+            }
+            if (progressPercent) {
+                progressPercent.textContent = `${data.currentModule.progress}%`;
+            }
+            
+            // Se módulo completo, remove overlay de bloqueio do módulo 2
+            if (data.currentModule.completed >= 10) {
+                const module2 = document.querySelector('.module-layer.level-2');
+                if (module2) {
+                    module2.classList.remove('locked');
+                    module2.classList.add('active');
+                    const lockOverlay = module2.querySelector('.lock-overlay');
+                    if (lockOverlay) lockOverlay.remove();
+                    
+                    // Adiciona botão CTA
+                    const content = module2.querySelector('.layer-content');
+                    if (content && !content.querySelector('.layer-cta')) {
+                        const btn = document.createElement('a');
+                        btn.href = '/aulas.html'; // TODO: link para módulo 2
+                        btn.className = 'button button-primary layer-cta';
+                        btn.textContent = 'Iniciar Módulo →';
+                        content.appendChild(btn);
+                    }
+                }
+            }
+            
+            // Atualiza troféu se todos módulos completos
+            if (data.modules.completed >= 4) {
+                const trophy = document.querySelector('.certificate-goal');
+                if (trophy) {
+                    trophy.classList.remove('locked');
+                    trophy.innerHTML = `
+                        <div class="trophy-icon">🏆</div>
+                        <h3>Certificado Disponível!</h3>
+                        <p>Parabéns! Você completou todos os módulos</p>
+                        <a href="/certificado.html" class="button button-primary" style="margin-top: 1rem;">Ver Certificado</a>
+                    `;
+                }
+            }
+            
+            // Carrega progresso detalhado para atualizar status das aulas
+            fetch(`http://localhost:3001/api/user/${user.id}/module/1/progress`)
+                .then(r => r.json())
+                .then(progressData => {
+                    if (!progressData.lessons) return;
+                    
+                    // Atualiza status de cada aula
+                    progressData.lessons.forEach(lesson => {
+                        const lessonItem = document.querySelector(`.module-lessons li:nth-child(${lesson.lesson_id})`);
+                        if (lessonItem) {
+                            const statusSpan = lessonItem.querySelector('.lesson-status');
+                            if (lesson.lesson_completed) {
+                                lessonItem.classList.add('completed');
+                                if (statusSpan) statusSpan.textContent = '✅';
+                            } else if (lesson.video_completed || lesson.exercise_completed) {
+                                if (statusSpan) statusSpan.textContent = '⏱️';
+                            }
+                        }
+                    });
+                })
+                .catch(err => console.log('Info: Sem progresso detalhado ainda'));
+        })
+        .catch(err => {
+            console.error('❌ Erro ao carregar dados:', err);
+        });
+    
+    // Funcionalidade de expandir/colapsar aulas
+    const toggleButtons = document.querySelectorAll('.toggle-lessons-btn');
+    toggleButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const moduleId = this.getAttribute('data-module');
+            const lessonsList = document.querySelector(`.lessons-list[data-module="${moduleId}"]`);
+            
+            if (lessonsList) {
+                lessonsList.classList.toggle('hidden');
+                this.classList.toggle('expanded');
+                
+                // Atualiza texto do botão
+                const span = this.querySelector('span');
+                if (span) {
+                    span.textContent = lessonsList.classList.contains('hidden') 
+                        ? 'Ver Aulas do Módulo' 
+                        : 'Ocultar Aulas';
+                }
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
