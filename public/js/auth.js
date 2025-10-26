@@ -42,7 +42,38 @@
     return first + last;
   }
 
-  // 3. PREENCHE DADOS DO USUÁRIO NA INTERFACE
+  // 3. CARREGA PONTUAÇÃO DO USUÁRIO
+  async function loadUserScore(userId) {
+    try {
+      const response = await fetch(`http://localhost:3001/api/user/${userId}/total-score`);
+      const data = await response.json();
+      
+      if (data.success) {
+        // Adicionar pontuação ao dropdown do usuário
+        const dropdownHeaders = document.querySelectorAll('.dropdown-header');
+        dropdownHeaders.forEach(dropdown => {
+          // Remove pontuação anterior se existir
+          const existingScore = dropdown.querySelector('.user-score');
+          if (existingScore) {
+            existingScore.remove();
+          }
+          
+          // Adiciona nova pontuação
+          const scoreDiv = document.createElement('p');
+          scoreDiv.className = 'user-score';
+          scoreDiv.innerHTML = `<strong>${data.totalPoints}</strong> pontos`;
+          scoreDiv.style.cssText = 'margin: 0.5rem 0; padding: 0.5rem; background: var(--muted); border-radius: 4px; text-align: center; font-size: 0.9rem;';
+          dropdown.appendChild(scoreDiv);
+        });
+        
+        console.log('✅ Pontuação carregada:', data.totalPoints, 'pontos');
+      }
+    } catch (error) {
+      console.error('❌ Erro ao carregar pontuação:', error);
+    }
+  }
+
+  // 4. PREENCHE DADOS DO USUÁRIO NA INTERFACE
   function populateUserData(user) {
     const initials = getInitials(user.nome);
     
@@ -73,9 +104,12 @@
     if (userEmails.length > 0) {
       console.log('✅ Email atualizado em', userEmails.length, 'lugares:', user.email);
     }
+
+    // Carregar pontuação do usuário
+    loadUserScore(user.id);
   }
 
-  // 4. CONFIGURA LOGOUT
+  // 5. CONFIGURA LOGOUT
   function setupLogout() {
     // Encontra todos os links de "Sair"
     const allLinks = document.querySelectorAll('a');
@@ -101,7 +135,7 @@
     });
   }
 
-  // 5. INICIALIZAÇÃO
+  // 6. INICIALIZAÇÃO
   document.addEventListener('DOMContentLoaded', function() {
     console.log('🔐 Inicializando autenticação...');
     
