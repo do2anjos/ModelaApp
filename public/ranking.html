@@ -514,7 +514,7 @@
         // Função para carregar ranking geral
         async function loadGeneralRanking() {
             try {
-                const response = await fetch('http://localhost:3001/api/ranking?limit=10');
+                const response = await fetch('/api/ranking?limit=10');
                 const ranking = await response.json();
                 
                 // Ordenar por pontos (maior para menor), depois por ID (ordem de cadastro)
@@ -686,7 +686,7 @@
         // Função para carregar ranking do fórum
         async function loadForumRanking() {
             try {
-                const response = await fetch('http://localhost:3001/api/ranking/forum');
+                const response = await fetch('/api/ranking/forum');
                 const ranking = await response.json();
                 
                 const listContainer = document.getElementById('forum-ranking-list');

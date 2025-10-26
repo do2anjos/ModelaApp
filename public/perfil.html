@@ -253,7 +253,7 @@
                 
                 try {
                     // Atualiza no backend
-                    const resp = await fetch(`http://localhost:3001/api/user/${user.id}`, {
+                    const resp = await fetch(`/api/user/${user.id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ nome: novoNome, username: novoUsername })
@@ -319,7 +319,7 @@
                 
                 try {
                     // Primeiro valida a senha atual via login
-                    const loginResp = await fetch('http://localhost:3001/api/login', {
+                    const loginResp = await fetch('/api/login', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: user.email, senha: senhaAtual })
@@ -331,7 +331,7 @@
                     }
                     
                     // Se senha atual correta, atualiza para nova senha
-                    const resp = await fetch('http://localhost:3001/api/redefinir', {
+                    const resp = await fetch('/api/redefinir', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: user.email, novaSenha: novaSenha })

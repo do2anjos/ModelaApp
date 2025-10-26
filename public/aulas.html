@@ -992,7 +992,7 @@
                     practicalCompleted: progress.practicalSubmitted || false
                 };
                 
-                fetch(`http://localhost:3001/api/user/${user.id}/progress`, {
+                fetch(`/api/user/${user.id}/progress`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -1023,7 +1023,7 @@
         async function checkModuleCompletion(userId, moduleId) {
             try {
                 // Buscar progresso do módulo
-                const response = await fetch(`http://localhost:3001/api/user/${userId}/module/${moduleId}/progress`);
+                const response = await fetch(`/api/user/${userId}/module/${moduleId}/progress`);
                 const data = await response.json();
                 
                 if (!data.success) {
@@ -1040,7 +1040,7 @@
                 
                 if (allCompleted) {
                     // Adicionar pontos do módulo
-                    const scoreResponse = await fetch(`http://localhost:3001/api/user/${userId}/score`, {
+                    const scoreResponse = await fetch(`/api/user/${userId}/score`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

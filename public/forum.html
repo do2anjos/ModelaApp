@@ -419,7 +419,7 @@
         // Função para carregar tópicos do backend
         async function loadTopics() {
             try {
-                const response = await fetch('http://localhost:3001/api/forum/topics');
+                const response = await fetch('/api/forum/topics');
                 const topics = await response.json();
                 
                 // Renderizar tópicos na interface
@@ -485,7 +485,7 @@
         // Função para carregar detalhes do tópico
         async function loadTopicDetail(topicId) {
             try {
-                const response = await fetch(`http://localhost:3001/api/forum/topic/${topicId}`);
+                const response = await fetch(`/api/forum/topic/${topicId}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -566,7 +566,7 @@
             const user = JSON.parse(userData);
 
             try {
-                const response = await fetch('http://localhost:3001/api/forum/reply', {
+                const response = await fetch('/api/forum/reply', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -630,7 +630,7 @@
             const user = JSON.parse(userData);
 
             try {
-                const response = await fetch('http://localhost:3001/api/forum/topic', {
+                const response = await fetch('/api/forum/topic', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

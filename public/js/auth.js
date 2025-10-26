@@ -45,7 +45,7 @@
   // 3. CARREGA PONTUAÇÃO DO USUÁRIO
   async function loadUserScore(userId) {
     try {
-      const response = await fetch(`http://localhost:3001/api/user/${userId}/total-score`);
+      const response = await fetch(`/api/user/${userId}/total-score`);
       const data = await response.json();
       
       if (data.success) {

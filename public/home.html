@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const user = JSON.parse(userData);
   
   // Busca dados do dashboard
-  fetch(`http://localhost:3001/api/user/${user.id}/dashboard`)
+        fetch(`/api/user/${user.id}/dashboard`)
     .then(r => r.json())
     .then(data => {
       console.log('📊 Dashboard data:', data);

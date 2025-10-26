@@ -850,7 +850,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const user = JSON.parse(userData);
     
     // Busca dados do dashboard
-    fetch(`http://localhost:3001/api/user/${user.id}/dashboard`)
+    fetch(`/api/user/${user.id}/dashboard`)
         .then(r => r.json())
         .then(data => {
             console.log('📊 Dados do módulo:', data);
@@ -906,7 +906,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Carrega progresso detalhado para atualizar status das aulas
-            fetch(`http://localhost:3001/api/user/${user.id}/module/1/progress`)
+            fetch(`/api/user/${user.id}/module/1/progress`)
                 .then(r => r.json())
                 .then(progressData => {
                     if (!progressData.lessons) return;
