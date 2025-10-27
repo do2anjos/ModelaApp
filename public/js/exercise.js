@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const userData = localStorage.getItem('modela_user');
         if (!userData) {
             console.error('❌ Usuário não encontrado no localStorage');
-            return;
+            return null;
         }
         
         const user = JSON.parse(userData);
@@ -329,12 +329,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const mapping = window.LESSON_MAPPING ? window.LESSON_MAPPING[lessonTitle] : null;
         if (!mapping) {
             console.warn('❌ LESSON_MAPPING não encontrado para:', lessonTitle);
-            return;
+            return null;
         }
         
         console.log('🗺️ Mapping encontrado:', mapping);
         
         try {
+            console.log('💾 ========================================');
+            console.log('💾 REGISTRANDO TENTATIVA DE EXERCÍCIO');
+            console.log('💾 POST /api/user/' + user.id + '/exercise-attempt');
+            console.log('💾 Payload:', JSON.stringify({
+                lessonId: mapping.lessonId,
+                lessonTitle: lessonTitle,
+                score: score,
+                totalQuestions: total,
+                percentage: percentage
+            }, null, 2));
+            console.log('💾 ========================================');
+            
             const response = await fetch(`/api/user/${user.id}/exercise-attempt`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -350,6 +362,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             console.log('📡 Resposta do backend:', result);
             
+            if (result.success) {
+                console.log('✅ ========================================');
+                console.log('✅ TENTATIVA REGISTRADA COM SUCESSO!');
+                console.log('✅ Pontos:', result.pointsAwarded);
+                console.log('✅ Primeira tentativa:', result.isFirstAttempt);
+                console.log('✅ ========================================');
+            }
+            
             // Armazena resultado globalmente para uso no feedback
             window.exerciseAttemptResult = result;
             
@@ -364,6 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return result;
         } catch (error) {
             console.error('❌ Erro ao registrar tentativa:', error);
+            return null;
         }
     }
 
@@ -656,20 +677,49 @@ document.addEventListener('DOMContentLoaded', () => {
         // Registrar tentativa no backend
         const lessonTitle = getCurrentLessonTitle();
         if (lessonTitle) {
-            registerExerciseAttempt(lessonTitle, score, totalQuestions);
+            // CORREÇÃO CRÍTICA: Registra tentativa e salva estado do exercício
+            const attemptPromise = registerExerciseAttempt(lessonTitle, score, totalQuestions);
             
-            // Salva estado do exercício para persistir após refresh
-            if (typeof window.saveExerciseState === 'function') {
+            // Aguarda o resultado da tentativa
+            if (attemptPromise && typeof attemptPromise.then === 'function') {
+                attemptPromise.then(() => {
+                    console.log('✅ Tentativa registrada, agora salvando estado do exercício...');
+                    saveExerciseState(lessonTitle, score, totalQuestions, percentage);
+                }).catch(err => {
+                    console.error('❌ Erro ao registrar tentativa:', err);
+                    // Mesmo com erro, tenta salvar o estado
+                    saveExerciseState(lessonTitle, score, totalQuestions, percentage);
+                });
+            } else {
+                // Se não retornou Promise, salva imediatamente
+                console.log('⚠️ registerExerciseAttempt não retornou Promise, salvando estado...');
+                saveExerciseState(lessonTitle, score, totalQuestions, percentage);
+            }
+        }
+        
+        // Função auxiliar para salvar estado do exercício
+        function saveExerciseState(lessonTitle, score, totalQuestions, percentage) {
+            if (typeof window.saveExerciseStateToDB === 'function') {
                 const exerciseState = {
+                    lessonTitle: lessonTitle,
                     isCompleted: true,
                     score: score,
                     totalQuestions: totalQuestions,
                     percentage: percentage,
                     pointsAwarded: window.exerciseAttemptResult ? window.exerciseAttemptResult.pointsAwarded : 0,
                     isFirstAttempt: window.exerciseAttemptResult ? window.exerciseAttemptResult.isFirstAttempt : false,
-                    lessonTitle: lessonTitle
+                    feedbackData: {
+                        timestamp: Date.now(),
+                        score: score,
+                        totalQuestions: totalQuestions,
+                        percentage: percentage
+                    }
                 };
-                window.saveExerciseState(exerciseState);
+                
+                console.log('💾 Salvando estado do exercício no banco:', exerciseState);
+                window.saveExerciseStateToDB(exerciseState);
+            } else {
+                console.warn('⚠️ saveExerciseStateToDB não está disponível');
             }
         }
         
@@ -772,10 +822,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (tryAgainBtn) tryAgainBtn.style.display = 'none';
 
-            // A aba de Atividade Prática será desbloqueada pela função updateButtonStates
-            console.log('✅ Exercício 100% correto - atividade prática será desbloqueada');
+            // FLUXO CORRETO: Desbloqueia atividade prática apenas se exercício for 100% correto
+            console.log('✅ Exercício 100% correto - desbloqueando atividade prática');
             
-            // DESBLOQUEIA IMEDIATAMENTE o header quando o feedback aparece
+            // DESBLOQUEIA IMEDIATAMENTE o header quando o feedback aparece (exercício 100% correto)
             const practicalTabEl = document.getElementById('practical-tab');
             if (practicalTabEl) {
                 console.log('🔍 Estado atual da aba prática:', {
@@ -785,8 +835,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     cursor: practicalTabEl.style.cursor
                 });
                 
-                // Desbloqueia imediatamente o header
-                console.log('🔓 Desbloqueando header da atividade prática IMEDIATAMENTE');
+                // Desbloqueia imediatamente o header (exercício 100% correto)
+                console.log('🔓 Desbloqueando header da atividade prática IMEDIATAMENTE (exercício 100% correto)');
                 practicalTabEl.classList.remove('disabled', 'locked');
                 practicalTabEl.disabled = false;
                 practicalTabEl.style.opacity = '1';
@@ -798,7 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>';
                 }
                 
-                console.log('✅ Header da atividade prática desbloqueado IMEDIATAMENTE');
+                console.log('✅ Header da atividade prática desbloqueado IMEDIATAMENTE (exercício 100% correto)');
             }
             
             // Salva estado do exercício no banco de dados
@@ -838,7 +888,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 500);
             }
 
-            // Fluxo padrão: ir para atividade prática após exercício 100% correto
+            // FLUXO CORRETO: ir para atividade prática após exercício 100% correto
             if (tryAgainContainer) {
                 const goBtn = document.createElement('button');
                 goBtn.type = 'button';
@@ -846,9 +896,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 goBtn.className = 'button button-primary';
                 goBtn.textContent = 'Ir para Atividade Prática';
                 goBtn.addEventListener('click', () => {
-                    console.log('🎯 Botão "Ir para Atividade Prática" clicado');
+                    console.log('🎯 Botão "Ir para Atividade Prática" clicado (exercício 100% correto)');
                     
-                    // Primeiro, garante que a aba prática está desbloqueada
+                    // FLUXO CORRETO: Garante que a aba prática está desbloqueada (exercício 100% correto)
                     const practicalTabEl = document.getElementById('practical-tab');
                     if (practicalTabEl) {
                         // Remove todas as classes de bloqueio

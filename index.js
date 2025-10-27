@@ -53,6 +53,8 @@ db.serialize(() => {
         video_completed BOOLEAN DEFAULT 0,
         exercise_completed BOOLEAN DEFAULT 0,
         practical_completed BOOLEAN DEFAULT 0,
+        completed BOOLEAN DEFAULT 0,
+        completed_at DATETIME DEFAULT NULL,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (id)
     )`);
@@ -126,6 +128,34 @@ db.serialize(() => {
     // Índices para performance
     db.run(`CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON user_progress(user_id)`);
     db.run(`CREATE INDEX IF NOT EXISTS idx_user_progress_module_lesson ON user_progress(user_id, module_id, lesson_id)`);
+    // Índice único para permitir INSERT OR REPLACE por (user_id, lesson_id)
+    db.run(`CREATE UNIQUE INDEX IF NOT EXISTS idx_user_progress_user_lesson_unique ON user_progress(user_id, lesson_id)`);
+
+    // Migration check: garante que colunas 'completed' e 'completed_at' existam (para bancos existentes)
+    db.all("PRAGMA table_info('user_progress')", (err, cols) => {
+        if (err) {
+            console.error('Erro ao verificar esquema de user_progress:', err);
+            return;
+        }
+
+        const colNames = (cols || []).map(c => c.name);
+
+        if (!colNames.includes('completed')) {
+            console.log('🔧 Coluna "completed" não encontrada em user_progress - adicionando...');
+            db.run('ALTER TABLE user_progress ADD COLUMN completed BOOLEAN DEFAULT 0', (err) => {
+                if (err) console.error('❌ Erro ao adicionar coluna completed:', err.message);
+                else console.log('✅ Coluna "completed" adicionada com sucesso');
+            });
+        }
+
+        if (!colNames.includes('completed_at')) {
+            console.log('🔧 Coluna "completed_at" não encontrada em user_progress - adicionando...');
+            db.run('ALTER TABLE user_progress ADD COLUMN completed_at DATETIME DEFAULT NULL', (err) => {
+                if (err) console.error('❌ Erro ao adicionar coluna completed_at:', err.message);
+                else console.log('✅ Coluna "completed_at" adicionada com sucesso');
+            });
+        }
+    });
     db.run(`CREATE INDEX IF NOT EXISTS idx_user_scores_user ON user_scores(user_id)`);
     db.run(`CREATE INDEX IF NOT EXISTS idx_exercise_attempts_user ON exercise_attempts(user_id)`);
     db.run(`CREATE INDEX IF NOT EXISTS idx_forum_topics_user ON forum_topics(user_id)`);
@@ -403,24 +433,52 @@ app.get('/api/user/:userId/dashboard', (req, res) => {
     });
 });
 
+// Endpoint para atualizar progresso de uma aula específica
+app.post('/api/user/:userId/lesson-progress', (req, res) => {
+    const userId = req.params.userId;
+    const { lessonTitle, exerciseCompleted, practicalCompleted, completed } = req.body;
+
+    console.log('📝 Atualizando progresso da aula:', { userId, lessonTitle, exerciseCompleted, practicalCompleted, completed });
+
+    if (!lessonTitle) {
+        console.log('❌ Título da aula não fornecido');
+        return res.status(400).json({ success: false, message: 'Título da aula não fornecido' });
+    }
+
+    // CORREÇÃO: Atualiza todos os campos necessários para persistência
+    db.run(`
+        UPDATE user_progress 
+        SET exercise_completed = ?, practical_completed = ?, completed = ?, completed_at = CASE WHEN ? = 1 THEN CURRENT_TIMESTAMP ELSE completed_at END
+        WHERE user_id = ? AND lesson_title = ?
+    `, [exerciseCompleted || false, practicalCompleted || false, completed || false, completed || false, userId, lessonTitle], function(err) {
+        if (err) {
+            console.error('❌ Erro ao atualizar progresso da aula:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao atualizar progresso da aula' });
+        }
+
+        console.log('✅ Progresso da aula atualizado:', this.changes, 'registros');
+        res.json({ success: true, message: 'Progresso da aula atualizado com sucesso' });
+    });
+});
+
 // Endpoint para salvar progresso
 app.post('/api/user/:userId/progress', (req, res) => {
     const userId = req.params.userId;
-    const { moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted } = req.body;
+    const { moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted, completed } = req.body;
 
-    console.log('📝 Salvando progresso:', { userId, moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted });
+    console.log('📝 Salvando progresso:', { userId, moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted, completed });
 
     if (!moduleId || !lessonId || !lessonTitle) {
         console.log('❌ Dados obrigatórios não fornecidos');
         return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
     }
 
-    // Inserir ou atualizar progresso
+    // CORREÇÃO: Inserir ou atualizar progresso com todos os campos necessários
     db.run(`
         INSERT OR REPLACE INTO user_progress 
-        (user_id, module_id, lesson_id, lesson_title, video_completed, exercise_completed, practical_completed)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `, [userId, moduleId, lessonId, lessonTitle, videoCompleted || false, exerciseCompleted || false, practicalCompleted || false], function(err) {
+        (user_id, module_id, lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, completed, completed_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, CASE WHEN ? = 1 THEN CURRENT_TIMESTAMP ELSE NULL END)
+    `, [userId, moduleId, lessonId, lessonTitle, videoCompleted || false, exerciseCompleted || false, practicalCompleted || false, completed || false, completed || false], function(err) {
         if (err) {
             console.error('❌ Erro ao salvar progresso:', err);
             return res.status(500).json({ success: false, message: 'Erro ao salvar progresso', error: err.message });
@@ -477,7 +535,7 @@ app.put('/api/user/:userId', (req, res) => {
 // ENDPOINTS DE PONTUAÇÃO E RANKING
 // ==========================================================================
 
-// Endpoint 1: Adicionar Pontos
+// Endpoint 1: Adicionar Pontos (COM VERIFICAÇÃO DE DUPLICAÇÃO)
 app.post('/api/user/:userId/score', (req, res) => {
     const userId = req.params.userId;
     const { scoreType, sourceId, points } = req.body;
@@ -486,16 +544,40 @@ app.post('/api/user/:userId/score', (req, res) => {
         return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
     }
 
-    db.run(
-        'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
-        [userId, scoreType, sourceId, points],
-        function(err) {
+    // CORREÇÃO: Verifica se já existe pontuação para evitar duplicação
+    db.get(
+        'SELECT id FROM user_scores WHERE user_id = ? AND score_type = ? AND source_id = ?',
+        [userId, scoreType, sourceId],
+        function(err, existingScore) {
             if (err) {
-                console.error('Erro ao adicionar pontos:', err);
-                return res.status(500).json({ success: false, message: 'Erro ao adicionar pontos' });
+                console.error('Erro ao verificar pontuação existente:', err);
+                return res.status(500).json({ success: false, message: 'Erro ao verificar pontuação' });
             }
 
-            res.json({ success: true, message: 'Pontos adicionados com sucesso', pointsAdded: points });
+            if (existingScore) {
+                console.log(`⚠️ Pontuação já existe para user_id=${userId}, score_type=${scoreType}, source_id=${sourceId}`);
+                return res.json({ 
+                    success: true, 
+                    message: 'Pontuação já registrada anteriormente', 
+                    pointsAdded: 0,
+                    alreadyExists: true 
+                });
+            }
+
+            // Adiciona pontos apenas se não existir
+            db.run(
+                'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
+                [userId, scoreType, sourceId, points],
+                function(err) {
+                    if (err) {
+                        console.error('Erro ao adicionar pontos:', err);
+                        return res.status(500).json({ success: false, message: 'Erro ao adicionar pontos' });
+                    }
+
+                    console.log(`✅ Pontos adicionados: user_id=${userId}, score_type=${scoreType}, source_id=${sourceId}, points=${points}`);
+                    res.json({ success: true, message: 'Pontos adicionados com sucesso', pointsAdded: points });
+                }
+            );
         }
     );
 });
@@ -539,13 +621,29 @@ app.post('/api/user/:userId/exercise-attempt', (req, res) => {
                         return res.status(500).json({ success: false, message: 'Erro ao registrar tentativa' });
                     }
 
-                    // Adicionar pontos se for primeira tentativa e 100%
+                    // CORREÇÃO: Adicionar pontos apenas se for primeira tentativa e 100% E não existir pontuação anterior
                     if (pointsAwarded > 0) {
-                        db.run(
-                            'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
-                            [userId, 'exercise', lessonId.toString(), pointsAwarded],
-                            (err) => {
-                                if (err) console.error('Erro ao adicionar pontos:', err);
+                        db.get(
+                            'SELECT id FROM user_scores WHERE user_id = ? AND score_type = ? AND source_id = ?',
+                            [userId, 'exercise', lessonId.toString()],
+                            (err, existingScore) => {
+                                if (err) {
+                                    console.error('Erro ao verificar pontuação de exercício:', err);
+                                    return;
+                                }
+                                
+                                if (!existingScore) {
+                                    db.run(
+                                        'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
+                                        [userId, 'exercise', lessonId.toString(), pointsAwarded],
+                                        (err) => {
+                                            if (err) console.error('Erro ao adicionar pontos:', err);
+                                            else console.log(`✅ Pontos de exercício adicionados: ${pointsAwarded} para aula ${lessonId}`);
+                                        }
+                                    );
+                                } else {
+                                    console.log(`⚠️ Pontuação de exercício já existe para aula ${lessonId}`);
+                                }
                             }
                         );
                     }

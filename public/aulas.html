@@ -645,7 +645,7 @@
         const fileStatus = document.getElementById('file-status');
         const fileUploadModal = document.getElementById('file-upload-modal');
         const fileUploadOkBtn = document.getElementById('file-upload-ok-btn');
-        const feedbackNextLessonBtn = document.getElementById('feedback-next-lesson-btn');
+    let feedbackNextLessonBtn = document.getElementById('feedback-next-lesson-btn');
 
         // Navegação entre passos da Atividade Prática
         const practicalRoot = document.querySelector('.lesson-practical-content');
@@ -963,15 +963,30 @@
                     
                     data.lessons.forEach(lesson => {
                         const lessonTitle = lesson.lesson_title;
+                        // CORREÇÃO: Diferencia entre "desbloqueada" e "enviada"
+                        // practical_completed no banco = atividade prática foi enviada
+                        // Se practical_completed = true, então practicalSubmitted = true
                         userProgress[lessonTitle] = {
                             videoCompleted: lesson.video_completed,
                             exerciseCompleted: lesson.exercise_completed,
+                            practicalSubmitted: lesson.practical_completed, // Só true se foi realmente enviada
                             practicalCompleted: lesson.practical_completed,
-                            completed: lesson.video_completed && lesson.exercise_completed && lesson.practical_completed
+                            completed: lesson.completed || false
                         };
+                        
+                        console.log(`📊 Progresso carregado para ${lessonTitle}:`, {
+                            videoCompleted: lesson.video_completed,
+                            exerciseCompleted: lesson.exercise_completed,
+                            practicalSubmitted: lesson.practical_completed,
+                            practicalCompleted: lesson.practical_completed,
+                            completed: lesson.completed || false
+                        });
                     });
                     
                     console.log('✅ Progresso carregado do banco de dados:', userProgress);
+                    
+                    // CORREÇÃO CRÍTICA: Atualiza estado visual de TODAS as aulas baseado no progresso carregado
+                    updateAllLessonsVisualState();
                     
                     // ATUALIZA OS BOTÕES APÓS CARREGAR O PROGRESSO
                     const activeLessonLink = document.querySelector('.lesson-list a.active');
@@ -992,29 +1007,127 @@
             }
         }
 
-        function updateUserProgress(lessonTitle, updates) {
+        // CORREÇÃO CRÍTICA: Atualiza estado visual de todas as aulas baseado no progresso carregado
+        function updateAllLessonsVisualState() {
+            console.log('🔄 Atualizando estado visual de todas as aulas...');
+            
+            lessonLinks.forEach(link => {
+                const listItem = link.parentElement;
+                const allSpans = link.querySelectorAll('span');
+                let titleSpan = null;
+                
+                // Encontra o span do título (não é duração nem ícone)
+                for (let span of allSpans) {
+                    if (!span.classList.contains('lesson-duration') && !span.classList.contains('lesson-icon')) {
+                        titleSpan = span;
+                        break;
+                    }
+                }
+                
+                if (!titleSpan) return;
+                
+                const lessonTitle = titleSpan.textContent.trim();
+                const progress = userProgress[lessonTitle];
+                
+                if (progress) {
+                    console.log(`📚 Processando aula: ${lessonTitle}`, progress);
+                    
+                    // CORREÇÃO: Só desbloqueia se realmente foi marcada como concluída
+                    if (progress.completed === true) {
+                        listItem.classList.remove('lesson-locked');
+                        listItem.classList.add('lesson-unlocked');
+                        
+                        // Remove ícone de cadeado e adiciona ícone de aula concluída
+                        const lockIcon = listItem.querySelector('svg');
+                        if (lockIcon) {
+                            lockIcon.remove();
+                        }
+                        
+                        // Adiciona ícone de aula concluída
+                        let iconSpan = link.querySelector('.lesson-icon');
+                        if (!iconSpan) {
+                            iconSpan = document.createElement('span');
+                            iconSpan.className = 'lesson-icon';
+                            link.insertBefore(iconSpan, link.firstChild);
+                        }
+                        iconSpan.className = 'lesson-icon completed';
+                        
+                        console.log(`✅ Aula desbloqueada: ${lessonTitle}`);
+                    } else {
+                        // Verifica se deve estar bloqueada (aula anterior não concluída)
+                        const currentIndex = Array.from(lessonLinks).indexOf(link);
+                        if (currentIndex > 0) {
+                            const previousLink = lessonLinks[currentIndex - 1];
+                            const previousTitleSpan = previousLink.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
+                            const previousTitle = previousTitleSpan ? previousTitleSpan.textContent.trim() : '';
+                            const previousProgress = userProgress[previousTitle];
+                            
+                            if (!previousProgress || !previousProgress.completed) {
+                                listItem.classList.add('lesson-locked');
+                                listItem.classList.remove('lesson-unlocked');
+                                
+                                // Adiciona ícone de cadeado se não existir
+                                if (!listItem.querySelector('svg')) {
+                                    const lockIcon = document.createElement('svg');
+                                    lockIcon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                                    lockIcon.setAttribute('width', '16');
+                                    lockIcon.setAttribute('height', '16');
+                                    lockIcon.setAttribute('viewBox', '0 0 24 24');
+                                    lockIcon.setAttribute('fill', 'none');
+                                    lockIcon.setAttribute('stroke', 'currentColor');
+                                    lockIcon.setAttribute('stroke-width', '2');
+                                    lockIcon.setAttribute('stroke-linecap', 'round');
+                                    lockIcon.setAttribute('stroke-linejoin', 'round');
+                                    lockIcon.innerHTML = '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>';
+                                    link.insertBefore(lockIcon, link.firstChild);
+                                }
+                                
+                                console.log(`🔒 Aula bloqueada: ${lessonTitle}`);
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Atualiza contadores de progresso
+            accordions.forEach(accordion => {
+                updateTopicProgress(accordion);
+            });
+        }
+
+        // CORREÇÃO: Move updateUserProgress para escopo global para evitar erro de referência
+        window.updateUserProgress = function(lessonTitle, updates) {
             if (!userProgress[lessonTitle]) userProgress[lessonTitle] = {};
             Object.assign(userProgress[lessonTitle], updates);
+            
+            console.log('💾 updateUserProgress chamado para:', lessonTitle, updates);
             
             // Sincroniza com o backend
             syncProgressToBackend(lessonTitle);
             
-            // Verificar conclusão de módulo se todas as atividades foram completadas
-            const userData = localStorage.getItem('modela_user');
-            if (userData) {
-                const user = JSON.parse(userData);
-                const mapping = LESSON_MAPPING[lessonTitle];
-                if (mapping) {
-                    checkModuleCompletion(user.id, mapping.moduleId);
+            // CORREÇÃO: Verificar conclusão de módulo APENAS quando uma aula é realmente concluída
+            // e não a cada atualização de progresso
+            if (updates.completed === true || updates.fullyCompleted === true) {
+                const userData = localStorage.getItem('modela_user');
+                if (userData) {
+                    const user = JSON.parse(userData);
+                    const mapping = LESSON_MAPPING[lessonTitle];
+                    if (mapping) {
+                        console.log('🎯 Verificando conclusão de módulo após conclusão de aula');
+                        checkModuleCompletion(user.id, mapping.moduleId);
+                    }
                 }
             }
-        }
+        };
         
         // Sincroniza progresso com o backend
         function syncProgressToBackend(lessonTitle) {
             try {
                 const userData = localStorage.getItem('modela_user');
-                if (!userData) return;
+                if (!userData) {
+                    console.warn('⚠️ Usuário não autenticado');
+                    return;
+                }
                 
                 const user = JSON.parse(userData);
                 const progress = userProgress[lessonTitle] || {};
@@ -1031,17 +1144,26 @@
                     lessonTitle: lessonTitle,
                     videoCompleted: progress.videoCompleted || false,
                     exerciseCompleted: progress.exerciseCompleted || false,
-                    practicalCompleted: progress.practicalSubmitted || false
+                    practicalCompleted: progress.practicalSubmitted || progress.practicalCompleted || false,
+                    completed: progress.completed || false
                 };
                 
+                console.log('💾 Enviando para banco:', lessonTitle, payload);
+                
+                // CORREÇÃO: Usa fetch com async/await para garantir que o salvamento complete
                 fetch(`/api/user/${user.id}/progress`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    keepalive: true // Garante que a requisição continue mesmo se o usuário sair da página
                 })
                 .then(r => r.json())
                 .then(data => {
-                    console.log('✅ Progresso sincronizado com backend:', lessonTitle, data);
+                    if (data.success) {
+                        console.log('✅ Progresso SAVED no banco:', lessonTitle);
+                    } else {
+                        console.error('❌ Erro ao salvar:', data.message);
+                    }
                 })
                 .catch(err => {
                     console.error('❌ Erro ao sincronizar progresso:', err);
@@ -1061,9 +1183,11 @@
             setTimeout(() => notification.remove(), 3000);
         }
 
-        // Função para verificar conclusão de módulo e pontuar
+        // Função para verificar conclusão de módulo e pontuar (COM VERIFICAÇÃO DE DUPLICAÇÃO)
         async function checkModuleCompletion(userId, moduleId) {
             try {
+                console.log(`🔍 Verificando conclusão do módulo ${moduleId} para usuário ${userId}`);
+                
                 // Buscar progresso do módulo
                 const response = await fetch(`/api/user/${userId}/module/${moduleId}/progress`);
                 const data = await response.json();
@@ -1080,8 +1204,10 @@
                     lesson.practical_completed
                 );
                 
+                console.log(`📊 Módulo ${moduleId}: ${allCompleted ? 'COMPLETO' : 'INCOMPLETO'} (${data.lessons.length} aulas)`);
+                
                 if (allCompleted) {
-                    // Adicionar pontos do módulo
+                    // CORREÇÃO: Adicionar pontos do módulo (o backend já verifica duplicação)
                     const scoreResponse = await fetch(`/api/user/${userId}/score`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1092,13 +1218,23 @@
                         })
                     });
                     
+                    const scoreResult = await scoreResponse.json();
+                    
                     if (scoreResponse.ok) {
-                        showPointsNotification(50);
-                        console.log('✅ Módulo completo! +50 pontos adicionados');
+                        if (scoreResult.alreadyExists) {
+                            console.log('⚠️ Pontos do módulo já foram adicionados anteriormente');
+                        } else {
+                            showPointsNotification(50);
+                            console.log('✅ Módulo completo! +50 pontos adicionados');
+                        }
+                    } else {
+                        console.error('❌ Erro ao adicionar pontos do módulo:', scoreResult);
                     }
+                } else {
+                    console.log('⏳ Módulo ainda não está completo');
                 }
             } catch (error) {
-                console.error('Erro ao verificar conclusão do módulo:', error);
+                console.error('❌ Erro ao verificar conclusão do módulo:', error);
             }
         }
 
@@ -1214,9 +1350,36 @@
             }
         }
 
-        // Carrega o conteúdo de uma aula específica
+        // Carrega o conteúdo de uma aula específica (COM REINÍCIO DO CICLO)
         function loadLesson(lessonLink) {
             console.log('🎬 loadLesson chamada com:', lessonLink);
+            
+            // REINÍCIO DO CICLO: Reseta estado das abas para nova aula
+            console.log('🔄 Reiniciando ciclo para nova aula...');
+            
+            // Limpa estado do exercício da aula anterior para evitar carry-over
+            try {
+                const previousLesson = window.getCurrentLessonTitle ? window.getCurrentLessonTitle() : '';
+                if (previousLesson) {
+                    console.log('🧹 Limpando estado do exercício da aula anterior:', previousLesson);
+                    if (typeof clearExerciseStateOnLessonChange === 'function') {
+                        clearExerciseStateOnLessonChange(previousLesson);
+                    }
+                }
+            } catch (e) {
+                console.warn('⚠️ Falha ao limpar estado anterior:', e);
+            }
+
+            // 1. Bloqueia todas as abas inicialmente e garante que o botão "Próxima Aula" fique DISABLED
+            lockExerciseTab();
+            lockPracticalTab();
+            try {
+                // Garante que o botão de próxima aula esteja travado (disabled) e oculto
+                if (typeof lockNextLessonButton === 'function') lockNextLessonButton();
+            } catch (e) {
+                console.warn('⚠️ lockNextLessonButton não disponível:', e);
+            }
+            hideNextLessonButton();
             
             // Desativa a aula anterior
             lessonLinks.forEach(link => {
@@ -1271,13 +1434,13 @@
             // Inicializa o player do YouTube
             initializeYouTubePlayer(videoId, currentLessonTitle);
 
-            // Atualiza estado dos botões
+            // REINÍCIO DO CICLO: Atualiza estado dos botões baseado no progresso salvo
             updateButtonStates(currentLessonTitle, activeIcon);
 
             // Reinicia o formulário de exercícios
             resetExerciseForm();
 
-            // Reseta para a tab de vídeo
+            // FLUXO CORRETO: Reseta para a tab de vídeo (reinicia o ciclo)
             switchTab('video');
 
             // Rola para o topo da página suavemente
@@ -1287,6 +1450,8 @@
                     behavior: 'smooth'
                 });
             }, 300);
+            
+            console.log('✅ Ciclo reiniciado para:', currentLessonTitle);
         }
 
         // Inicializa o player do YouTube com API
@@ -1460,6 +1625,13 @@
             console.log('✅ Aba Atividade Prática desbloqueada:', practicalTab.disabled);
         }
 
+        // Expõe a função globalmente para prevenir ReferenceError quando chamada de outras rotinas
+        try {
+            window.unlockPracticalTab = unlockPracticalTab;
+        } catch (e) {
+            console.warn('⚠️ Não foi possível expor unlockPracticalTab no window:', e);
+        }
+
         function lockPracticalTab() {
             if (!practicalTab) return;
             
@@ -1510,8 +1682,8 @@
             console.log('🔓 Botão "Próxima Aula" desbloqueado');
         }
 
-        // Garante que a aba correta esteja ativa baseada no conteúdo que está sendo exibido
-        function ensureCorrectTabIsActive() {
+        // CORREÇÃO: Move ensureCorrectTabIsActive para escopo global para evitar erro de referência
+        window.ensureCorrectTabIsActive = function() {
             console.log('🔄 Verificando qual aba deve estar ativa baseada no conteúdo atual');
             
             // Verifica qual conteúdo está visível
@@ -1545,42 +1717,50 @@
                 activeTab.setAttribute('aria-selected', 'true');
                 console.log('✅ Aba sincronizada:', activeTabId);
             }
-        }
+        };
 
-        // Atualiza o estado dos botões
-        function updateButtonStates(lessonTitle, activeIcon) {
+        // CORREÇÃO: Move updateButtonStates para escopo global para evitar erro de referência
+        window.updateButtonStates = function(lessonTitle, activeIcon) {
             const p = userProgress[lessonTitle] || {};
             console.log('🔧 updateButtonStates - progress:', p, 'lessonTitle:', lessonTitle);
 
-            // Tab Exercício - desbloqueia se vídeo foi assistido
+            // FLUXO CORRETO: Vídeo 90% → Exercício → Atividade Prática → Enviar Atividade Prática → Próxima Aula
+
+            // 1. Tab Exercício - desbloqueia se vídeo foi assistido (90%+)
             if (p.videoCompleted) {
                 unlockExerciseTab();
+                console.log('✅ Exercício desbloqueado (vídeo 90%+)');
             } else {
                 lockExerciseTab();
+                console.log('🔒 Exercício bloqueado (vídeo < 90%)');
             }
 
-            // Tab Atividade Prática - desbloqueia se exercício foi completado
+            // 2. Tab Atividade Prática - desbloqueia se exercício foi completado (100%)
             if (typeof unlockPracticalTab === 'function') {
                 if (p.exerciseCompleted) {
                     console.log('🔓 updateButtonStates: Desbloqueando Atividade Prática');
                     unlockPracticalTab();
+                    console.log('✅ Atividade Prática desbloqueada (exercício 100%)');
                 } else {
                     console.log('🔒 updateButtonStates: Bloqueando Atividade Prática');
                     lockPracticalTab();
+                    console.log('🔒 Atividade Prática bloqueada (exercício < 100%)');
                 }
             } else {
                 console.log('❌ updateButtonStates: unlockPracticalTab não é uma função');
             }
 
-            // Botão Próxima Aula
-            // Fluxo: Video 90% + Exercício 100% + Atividade Prática (se houver)
-            const canShow = !!(p.videoCompleted && p.exerciseCompleted && p.practicalCompleted);
-            console.log('🔍 updateButtonStates - canShow:', canShow, 'progress:', p);
+            // 3. Botão Próxima Aula - desbloqueia se atividade prática foi enviada
+            // FLUXO CORRETO: Video 90% + Exercício 100% + Atividade Prática Enviada
+            // CORREÇÃO: Verifica se realmente foi enviada (não apenas desbloqueada)
+            const canShow = !!(p.videoCompleted && p.exerciseCompleted && p.practicalSubmitted && p.practicalSubmitted === true);
+            console.log('🔍 updateButtonStates - canShow Próxima Aula:', canShow, 'progress:', p);
             
             if (canShow) {
                 showNextLessonButton();
                 unlockNextLessonButton();
-                console.log('✅ Botão "Próxima Aula" mostrado e desbloqueado');
+                console.log('✅ Botão "Próxima Aula" mostrado e desbloqueado (atividade prática enviada)');
+                
                 // Scroll automático para o botão quando ele aparece
                 setTimeout(() => {
                     if (nextLessonBtn && !nextLessonBtn.classList.contains('hidden')) {
@@ -1590,10 +1770,10 @@
                 }, 300);
             } else {
                 hideNextLessonButton();
-                console.log('❌ Botão "Próxima Aula" oculto - critérios não atendidos');
+                console.log('❌ Botão "Próxima Aula" oculto - atividade prática não enviada');
             }
-        }
-
+        };
+        
         // Atualiza o contador de progresso de um tópico
         function updateTopicProgress(accordionElement) {
             // Não atualiza tópicos bloqueados (locked-topic)
@@ -1802,15 +1982,45 @@
             const currentListItem = activeLessonLink.parentElement;
             const nextListItem = currentListItem.nextElementSibling;
             
+            // FLUXO CORRETO: MARCA A AULA ATUAL COMO CONCLUÍDA AUTOMATICAMENTE ANTES DE NAVEGAR
+            const titleSpan = activeLessonLink.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
+            const currentLessonTitle = titleSpan ? titleSpan.textContent.trim() : '';
+            
+            if (currentLessonTitle) {
+                console.log('🎯 FLUXO CORRETO: Marcando aula como concluída automaticamente:', currentLessonTitle);
+                console.log('📊 Estado atual antes da atualização:', userProgress[currentLessonTitle]);
+                
+                // FLUXO CORRETO: Marca como concluída automaticamente ao clicar em "Próxima Aula"
+                updateUserProgress(currentLessonTitle, { 
+                    completed: true,
+                    fullyCompleted: true,
+                    completedAt: new Date().toISOString()
+                });
+                
+                console.log('📊 Estado após atualização:', userProgress[currentLessonTitle]);
+                
+                // Atualiza o ícone da aula atual para "completed"
+                const activeIcon = activeLessonLink.querySelector('.lesson-icon');
+                if (activeIcon) {
+                    activeIcon.className = 'lesson-icon completed';
+                    console.log('✅ Ícone da aula atual atualizado para "completed"');
+                }
+                
+                // Atualiza o estado dos botões
+                if (typeof window.updateButtonStates === 'function') {
+                    window.updateButtonStates(currentLessonTitle);
+                }
+                
+                // Desbloqueia a próxima aula após marcar como concluída
+                unlockNextLesson(currentLessonTitle);
+            }
+            
             if (nextListItem) {
                 const nextLessonLink = nextListItem.querySelector('a');
                 
-                // Neste fluxo, este botão só é exibido quando a aula atual foi concluída.
-                // Portanto, a próxima aula deve estar desbloqueada aqui. Navega diretamente.
-                nextLessonLink.click();
-                
-                // Volta para a tab de vídeo
-                switchTab('video');
+                // FLUXO CORRETO: Navega para próxima aula e reinicia o ciclo
+                console.log('🔄 Navegando para próxima aula e reiniciando ciclo...');
+                loadLesson(nextLessonLink);
             } else {
                 alert('Não há mais aulas neste tópico.');
             }
@@ -2040,38 +2250,78 @@
                     alert('Selecione um arquivo antes de enviar.');
                     return;
                 }
-                // Marca atividade como enviada e conclui a aula atual
-                updateUserProgress(currentLessonTitle, { practicalSubmitted: true, fullyCompleted: true, completed: true });
-                // Desbloqueia explicitamente a próxima aula
-                unlockNextLesson(currentLessonTitle);
+                
+                // FLUXO CORRETO: Marca atividade como enviada (mas NÃO conclui a aula ainda)
+                console.log('💾 Salvando atividade prática no banco...');
+                updateUserProgress(currentLessonTitle, { 
+                    practicalSubmitted: true, 
+                    practicalCompleted: true
+                });
+                console.log('✅ Atividade prática salva');
 
                 // Feedback visual da prática
                 if (practicalFeedback) practicalFeedback.classList.remove('hidden');
 
-                // Mostra e desbloqueia o botão do cabeçalho
-                if (typeof showNextLessonButton === 'function') showNextLessonButton();
-                if (typeof unlockNextLessonButton === 'function') unlockNextLessonButton();
-
-                // Garante que o botão de próxima aula no feedback permaneça oculto
-                if (feedbackNextLessonBtn) {
-                    feedbackNextLessonBtn.classList.add('hidden');
-                    feedbackNextLessonBtn.style.display = 'none';
-                }
-
-                // Rola automaticamente até o botão do cabeçalho
+                // Aguarda um pouco para garantir salvamento no banco
                 setTimeout(() => {
-                    if (nextLessonBtn && !nextLessonBtn.disabled) {
-                        nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Mostra e desbloqueia o botão do cabeçalho
+                    console.log('🎯 Enviando atividade - desbloqueando botão "Próxima Aula"');
+                    if (typeof showNextLessonButton === 'function') {
+                        showNextLessonButton();
+                        console.log('✅ Botão "Próxima Aula" mostrado');
                     }
-                }, 200);
+                    if (typeof unlockNextLessonButton === 'function') {
+                        unlockNextLessonButton();
+                        console.log('✅ Botão "Próxima Aula" desbloqueado');
+                    }
+
+                    // Garante que o botão de próxima aula no feedback permaneça oculto
+                    if (feedbackNextLessonBtn) {
+                        feedbackNextLessonBtn.classList.add('hidden');
+                        feedbackNextLessonBtn.style.display = 'none';
+                    }
+
+                    // Atualiza o estado dos botões após o envio
+                    if (typeof window.updateButtonStates === 'function') {
+                        console.log('🔄 Atualizando estado dos botões após envio da atividade');
+                        window.updateButtonStates(currentLessonTitle);
+                    }
+
+                    // Rola automaticamente até o botão do cabeçalho
+                    setTimeout(() => {
+                        if (nextLessonBtn && !nextLessonBtn.disabled) {
+                            nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            console.log('📜 Scroll automático para botão "Próxima Aula"');
+                        }
+                    }, 200);
+                }, 500); // Aguarda 500ms para garantir que o salvamento complete
             });
         }
 
         // Evento para o botão de próxima aula no feedback (movido para o final para garantir que nextLessonBtn esteja disponível)
         setTimeout(() => {
+            // Se o botão de feedback não existir no DOM, cria um fallback simples para garantir a ação
+            if (!feedbackNextLessonBtn) {
+                try {
+                    console.warn('⚠️ feedbackNextLessonBtn não encontrado — criando fallback dinamicamente');
+                    const fb = document.createElement('button');
+                    fb.id = 'feedback-next-lesson-btn';
+                    fb.className = 'button button-primary';
+                    fb.textContent = 'Próxima Aula';
+                    fb.style.marginTop = '0.75rem';
+                    // Insere dentro do container de feedback do exercício se possível
+                    const container = document.getElementById('exercise-feedback') || document.getElementById('practical-feedback') || document.body;
+                    container.appendChild(fb);
+                    feedbackNextLessonBtn = fb;
+                    console.log('🔨 Fallback feedbackNextLessonBtn criado');
+                } catch (e) {
+                    console.error('❌ Falha ao criar fallback para feedbackNextLessonBtn:', e);
+                }
+            }
+
             if (feedbackNextLessonBtn && nextLessonBtn) {
                 feedbackNextLessonBtn.addEventListener('click', function() {
-                    console.log('🔘 Botão de próxima aula no feedback clicado');
+                    console.log('🔘 Botão de próxima aula no feedback clicado (fallback/normal)');
 
                     // Executa a mesma lógica do botão original diretamente
                     const activeLessonLink = document.querySelector('.lesson-list a.active');
@@ -2082,31 +2332,46 @@
 
                     const currentListItem = activeLessonLink.parentElement;
                     const nextListItem = currentListItem.nextElementSibling;
+                    
+                    // Marca a aula atual como concluída automaticamente antes de navegar
+                    const titleSpan = activeLessonLink.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
+                    const currentLessonTitle = titleSpan ? titleSpan.textContent.trim() : '';
+                    
+                    if (currentLessonTitle) {
+                        console.log('🎯 Marcando aula como concluída automaticamente:', currentLessonTitle);
+                        updateUserProgress(currentLessonTitle, { 
+                            completed: true,
+                            fullyCompleted: true,
+                            completedAt: new Date().toISOString()
+                        });
+                        
+                        // Atualiza o ícone da aula atual para "completed"
+                        const activeIcon = activeLessonLink.querySelector('.lesson-icon');
+                        if (activeIcon) {
+                            activeIcon.className = 'lesson-icon completed';
+                        }
+
+                        if (typeof window.updateButtonStates === 'function') {
+                            window.updateButtonStates(currentLessonTitle);
+                        }
+                    }
 
                     if (nextListItem) {
                         const nextLessonLink = nextListItem.querySelector('a');
                         console.log('🔗 Carregando próxima aula:', nextLessonLink);
+                        loadLesson(nextLessonLink);
 
-                        // Como o botão só aparece quando tudo está completo, não precisamos verificar bloqueio aqui
-                        // A verificação já foi feita quando o botão foi mostrado no feedback
-                
-                // Carrega a próxima aula
-                nextLessonLink.click();
-                
-                // Volta para a tab de vídeo
-                switchTab('video');
-
-                        // Rola automaticamente até o botão "Próxima Aula" no cabeçalho após navegação
                         setTimeout(() => {
                             if (nextLessonBtn && !nextLessonBtn.classList.contains('hidden')) {
                                 nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 console.log('📜 Scroll automático para botão "Próxima Aula" no cabeçalho');
                             }
                         }, 500);
-            } else {
-                alert('Não há mais aulas neste tópico.');
-            }
-        });
+                    } else {
+                        alert('Não há mais aulas neste tópico.');
+                    }
+                });
+
                 console.log('✅ Evento de clique adicionado ao botão de feedback');
             } else {
                 console.error('❌ Não foi possível adicionar evento - elementos não encontrados');
@@ -2273,6 +2538,14 @@
                     console.log('🔄 Inicialização: Atualizando botões para:', lessonTitle);
                     console.log('📊 Progresso carregado:', userProgress[lessonTitle]);
                     updateButtonStates(lessonTitle);
+                    
+                    // CORREÇÃO: Se a aula está concluída, mostrar botão "Próxima Aula"
+                    const progress = userProgress[lessonTitle];
+                    if (progress && progress.completed === true) {
+                        showNextLessonButton();
+                        unlockNextLessonButton();
+                        console.log('✅ Aula concluída - botão "Próxima Aula" mostrado na inicialização');
+                    }
                     
                     // GARANTE que a aba correta esteja ativa baseada no conteúdo atual
                     ensureCorrectTabIsActive();
@@ -2656,9 +2929,10 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        lessonId: mapping.lessonId,
                         lessonTitle: exerciseState.lessonTitle,
-                        exerciseCompleted: true
+                        exerciseCompleted: true,
+                        practicalCompleted: false,
+                        completed: false
                     })
                 });
                 
@@ -2672,6 +2946,10 @@
             
         } catch (error) {
             console.error('❌ Erro ao salvar estado do exercício:', error);
+            // Se for erro de JSON, tenta fazer parse manual
+            if (error.message && error.message.includes('Unexpected token')) {
+                console.log('⚠️ Erro de JSON detectado, tentando continuar...');
+            }
         }
     }
     
@@ -2742,11 +3020,12 @@
             console.log('🔄 Verificando estado do exercício para:', lessonTitle);
             
             const savedState = await loadExerciseStateFromDB(lessonTitle);
+            console.log('🔍 Resultado de loadExerciseStateFromDB:', savedState);
             if (!savedState) {
                 console.log('❌ Nenhum estado encontrado para esta aula');
                 return;
             }
-            
+
             console.log('✅ Estado encontrado:', savedState);
             
             // Verifica se o estado não é muito antigo (1 hora)
@@ -2788,9 +3067,6 @@
     }
     
         // Torna funções globalmente disponíveis
-        window.updateUserProgress = updateUserProgress;
-        window.updateButtonStates = updateButtonStates;
-        window.ensureCorrectTabIsActive = ensureCorrectTabIsActive;
         window.unlockPracticalTab = unlockPracticalTab;
         window.lockPracticalTab = lockPracticalTab;
         window.saveExerciseStateToDB = saveExerciseStateToDB;
