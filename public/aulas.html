@@ -1100,8 +1100,6 @@
             if (!userProgress[lessonTitle]) userProgress[lessonTitle] = {};
             Object.assign(userProgress[lessonTitle], updates);
             
-            console.log('💾 updateUserProgress chamado para:', lessonTitle, updates);
-            
             // Sincroniza com o backend
             syncProgressToBackend(lessonTitle);
             
@@ -1124,10 +1122,7 @@
         function syncProgressToBackend(lessonTitle) {
             try {
                 const userData = localStorage.getItem('modela_user');
-                if (!userData) {
-                    console.warn('⚠️ Usuário não autenticado');
-                    return;
-                }
+                if (!userData) return;
                 
                 const user = JSON.parse(userData);
                 const progress = userProgress[lessonTitle] || {};
@@ -1148,22 +1143,22 @@
                     completed: progress.completed || false
                 };
                 
-                console.log('💾 Enviando para banco:', lessonTitle, payload);
-                
-                // CORREÇÃO: Usa fetch com async/await para garantir que o salvamento complete
                 fetch(`/api/user/${user.id}/progress`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                    keepalive: true // Garante que a requisição continue mesmo se o usuário sair da página
+                    body: JSON.stringify(payload)
                 })
                 .then(r => r.json())
                 .then(data => {
-                    if (data.success) {
-                        console.log('✅ Progresso SAVED no banco:', lessonTitle);
-                    } else {
-                        console.error('❌ Erro ao salvar:', data.message);
-                    }
+                    console.log('✅ Progresso sincronizado com backend:', lessonTitle, data);
+                    
+                    // CORREÇÃO: Atualiza contador de progresso após salvar no banco
+                    setTimeout(() => {
+                        const accordion = document.querySelector('.topic');
+                        if (accordion) {
+                            updateTopicProgress(accordion);
+                        }
+                    }, 100);
                 })
                 .catch(err => {
                     console.error('❌ Erro ao sincronizar progresso:', err);
@@ -1786,6 +1781,7 @@
             const completedLessons = accordionElement.querySelectorAll('.lesson-icon.completed');
             
             progressSpan.textContent = `${completedLessons.length}/${lessons.length}`;
+            console.log('📊 Contador de progresso atualizado:', `${completedLessons.length}/${lessons.length}`);
         }
 
         // Verifica se pode desbloquear próxima aula
@@ -2018,9 +2014,12 @@
             if (nextListItem) {
                 const nextLessonLink = nextListItem.querySelector('a');
                 
-                // FLUXO CORRETO: Navega para próxima aula e reinicia o ciclo
-                console.log('🔄 Navegando para próxima aula e reiniciando ciclo...');
-                loadLesson(nextLessonLink);
+                // CORREÇÃO: Aguarda um pouco para garantir que o salvamento complete
+                setTimeout(() => {
+                    // FLUXO CORRETO: Navega para próxima aula e reinicia o ciclo
+                    console.log('🔄 Navegando para próxima aula e reiniciando ciclo...');
+                    loadLesson(nextLessonLink);
+                }, 500);
             } else {
                 alert('Não há mais aulas neste tópico.');
             }
@@ -2250,51 +2249,45 @@
                     alert('Selecione um arquivo antes de enviar.');
                     return;
                 }
-                
                 // FLUXO CORRETO: Marca atividade como enviada (mas NÃO conclui a aula ainda)
-                console.log('💾 Salvando atividade prática no banco...');
                 updateUserProgress(currentLessonTitle, { 
                     practicalSubmitted: true, 
                     practicalCompleted: true
                 });
-                console.log('✅ Atividade prática salva');
 
                 // Feedback visual da prática
                 if (practicalFeedback) practicalFeedback.classList.remove('hidden');
 
-                // Aguarda um pouco para garantir salvamento no banco
+                // Mostra e desbloqueia o botão do cabeçalho
+                console.log('🎯 Enviando atividade - desbloqueando botão "Próxima Aula"');
+                if (typeof showNextLessonButton === 'function') {
+                    showNextLessonButton();
+                    console.log('✅ Botão "Próxima Aula" mostrado');
+                }
+                if (typeof unlockNextLessonButton === 'function') {
+                    unlockNextLessonButton();
+                    console.log('✅ Botão "Próxima Aula" desbloqueado');
+                }
+
+                // Garante que o botão de próxima aula no feedback permaneça oculto
+                if (feedbackNextLessonBtn) {
+                    feedbackNextLessonBtn.classList.add('hidden');
+                    feedbackNextLessonBtn.style.display = 'none';
+                }
+
+                // Atualiza o estado dos botões após o envio
+                if (typeof window.updateButtonStates === 'function') {
+                    console.log('🔄 Atualizando estado dos botões após envio da atividade');
+                    window.updateButtonStates(currentLessonTitle);
+                }
+
+                // Rola automaticamente até o botão do cabeçalho
                 setTimeout(() => {
-                    // Mostra e desbloqueia o botão do cabeçalho
-                    console.log('🎯 Enviando atividade - desbloqueando botão "Próxima Aula"');
-                    if (typeof showNextLessonButton === 'function') {
-                        showNextLessonButton();
-                        console.log('✅ Botão "Próxima Aula" mostrado');
+                    if (nextLessonBtn && !nextLessonBtn.disabled) {
+                        nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        console.log('📜 Scroll automático para botão "Próxima Aula"');
                     }
-                    if (typeof unlockNextLessonButton === 'function') {
-                        unlockNextLessonButton();
-                        console.log('✅ Botão "Próxima Aula" desbloqueado');
-                    }
-
-                    // Garante que o botão de próxima aula no feedback permaneça oculto
-                    if (feedbackNextLessonBtn) {
-                        feedbackNextLessonBtn.classList.add('hidden');
-                        feedbackNextLessonBtn.style.display = 'none';
-                    }
-
-                    // Atualiza o estado dos botões após o envio
-                    if (typeof window.updateButtonStates === 'function') {
-                        console.log('🔄 Atualizando estado dos botões após envio da atividade');
-                        window.updateButtonStates(currentLessonTitle);
-                    }
-
-                    // Rola automaticamente até o botão do cabeçalho
-                    setTimeout(() => {
-                        if (nextLessonBtn && !nextLessonBtn.disabled) {
-                            nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            console.log('📜 Scroll automático para botão "Próxima Aula"');
-                        }
-                    }, 200);
-                }, 500); // Aguarda 500ms para garantir que o salvamento complete
+                }, 200);
             });
         }
 
