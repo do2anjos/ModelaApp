@@ -312,13 +312,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const progressBarEl = continueCard.querySelector('.progress-fill');
         
         if (data.currentModule) {
-          // Atualiza com dados do módulo atual
+          // Usa dados do backend (inclui última aula acessada)
           if (titleEl) titleEl.textContent = data.currentModule.title;
           if (subtitleEl) subtitleEl.textContent = data.currentModule.currentLesson;
           if (progressEl) progressEl.textContent = `${data.currentModule.progress}%`;
           if (progressBarEl) progressBarEl.style.width = `${data.currentModule.progress}%`;
         } else {
-          // Novo usuário: mostra mensagem inicial
+          // Novo usuário
           if (titleEl) titleEl.textContent = 'Modelagem com UML';
           if (subtitleEl) subtitleEl.textContent = 'Aula 01: Introdução à UML';
           if (progressEl) progressEl.textContent = '0%';
