@@ -375,48 +375,56 @@
                         <div class="exercise-wrapper">
                             <div class="exercise-slide active" id="exercise-form-slide">
                                 <form id="exercise-form" aria-label="Formulário de exercício">
-                                    <fieldset class="exercise-question">
-                                        <div class="radio-group">
-                                        <legend>1. CESPE / CEBRASPE – 2025 – AEB – Tecnologista Júnior – Especialidade: TI<br>Acerca dos diagramas da UML, assinale a opção correta.</legend>
-
-                                            <label><input type="radio" name="q1" value="a" required> a) No diagrama de estados, uma transição entre dois estados só pode ocorrer se houver uma ação explícita associada a ela.</label>
-                                            <label><input type="radio" name="q1" value="b" required> b) No diagrama de atividades, as swimlanes não podem expressar paralelismo no fluxo de atividades.</label>
-                                            <label><input type="radio" name="q1" value="c" required> c) O diagrama de componentes da UML é usado para modelar interações entre usuários e o sistema.</label>
-                                            <label><input type="radio" name="q1" value="d" required> d) Em um diagrama de casos de uso, atores precisam necessariamente ser pessoas (seres humanos).</label>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="exercise-question">
-                                        <div class="radio-group">
-                                        <legend>2. Quadrix – 2023 – COFFITO – Analista de Tecnologia da Informação<br>A UML é uma linguagem gráfica utilizada para modelar e visualizar sistemas de software, facilitando a comunicação entre desenvolvedores, analistas e clientes do projeto.</legend>
-
-                                            <label><input type="radio" name="q2" value="a" required> A) A UML serve apenas para documentar sistemas já implementados.</label>
-                                            <label><input type="radio" name="q2" value="b" required> B) A UML é usada exclusivamente para programação em linguagens orientadas a objetos.</label>
-                                            <label><input type="radio" name="q2" value="c" required> C) A UML facilita a comunicação entre desenvolvedores, analistas e clientes do projeto</label>
-                                            <label><input type="radio" name="q2" value="d" required> D) A UML é uma linguagem textual utilizada para descrever algoritmos complexos.</label>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="exercise-question">
-                                        <div class="radio-group">
-                                        <legend>3. FGV – 2023 – AL-MA – Analista de Sistemas<br>A especificação UML tem uma abordagem padrão para desenhar diagramas de classe com três itens referentes à classe. Assinale a alternativa correta:</legend>
-
-                                            <label><input type="radio" name="q3" value="a" required> a) Entidade, eventos e métodos.</label>
-                                            <label><input type="radio" name="q3" value="b" required> b) Objeto, classificação e nome.</label>
-                                            <label><input type="radio" name="q3" value="c" required> c) Atributos, métodos e entidade.</label>
-                                            <label><input type="radio" name="q3" value="d" required> d) Nome, atributos e métodos.</label>
-                                            <label><input type="radio" name="q3" value="e" required> e) Métodos, objeto e eventos.</label>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="exercise-question">
-                                        <div class="radio-group">
-                                        <legend>4. CESPE / CEBRASPE – 2024 – TCE-AC – Analista de TI (Sistemas de Informação)<br>Em um sistema de elementos comunicantes, o diagrama de estrutura composta da UML 2 é uma escolha adequada para modelar a colaboração entre entidades cooperativas na execução de uma função específica. Assinale a alternativa correta:</legend>
-
-                                            <label><input type="radio" name="q4" value="a" required> a) O diagrama de estrutura composta da UML 2 modela a colaboração entre partes internas de uma classe ou componente.</label>
-                                            <label><input type="radio" name="q4" value="b" required> b) O diagrama de estrutura composta é utilizado para representar o fluxo de atividades do sistema.</label>
-                                            <label><input type="radio" name="q4" value="c" required> c) O diagrama de estrutura composta substitui o diagrama de classes em sistemas orientados a objetos.</label>
-                                            <label><input type="radio" name="q4" value="d" required> d) O diagrama de estrutura composta serve exclusivamente para modelagem de requisitos.</label>
-                                            <label><input type="radio" name="q4" value="e" required> e) O diagrama de estrutura composta é responsável pela modelagem de comportamento de atores externos</label>
-                                        </div>
-                                    </fieldset>
+                                    <!-- Navegação por passos das perguntas -->
+                                    <div class="step-nav" aria-label="Navegação entre questões">
+                                        <button class="button step-prev" id="prev-question-form-btn" aria-label="Questão anterior" disabled>◀</button>
+                                        <span class="step-counter" aria-live="polite">
+                                            <strong id="current-question-form">1</strong> / <span class="total-questions-form">4</span>
+                                        </span>
+                                        <button class="button step-next" id="next-question-form-btn" aria-label="Próxima questão">▶</button>
+                                    </div>
+                                    
+                                    <!-- Container das questões (uma por vez) -->
+                                    <div class="questions-form-container">
+                                        <fieldset class="exercise-question" data-question="1" style="display: block;">
+                                            <legend>1. CESPE / CEBRASPE – 2025 – AEB – Tecnologista Júnior – Especialidade: TI<br>Acerca dos diagramas da UML, assinale a opção correta.</legend>
+                                            <div class="radio-group">
+                                                <label><input type="radio" name="q1" value="a" required> a) No diagrama de estados, uma transição entre dois estados só pode ocorrer se houver uma ação explícita associada a ela.</label>
+                                                <label><input type="radio" name="q1" value="b" required> b) No diagrama de atividades, as swimlanes não podem expressar paralelismo no fluxo de atividades.</label>
+                                                <label><input type="radio" name="q1" value="c" required> c) O diagrama de componentes da UML é usado para modelar interações entre usuários e o sistema.</label>
+                                                <label><input type="radio" name="q1" value="d" required> d) Em um diagrama de casos de uso, atores precisam necessariamente ser pessoas (seres humanos).</label>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="exercise-question" data-question="2" style="display: none;">
+                                            <legend>2. Quadrix – 2023 – COFFITO – Analista de Tecnologia da Informação<br>A UML é uma linguagem gráfica utilizada para modelar e visualizar sistemas de software, facilitando a comunicação entre desenvolvedores, analistas e clientes do projeto.</legend>
+                                            <div class="radio-group">
+                                                <label><input type="radio" name="q2" value="a" required> A) A UML serve apenas para documentar sistemas já implementados.</label>
+                                                <label><input type="radio" name="q2" value="b" required> B) A UML é usada exclusivamente para programação em linguagens orientadas a objetos.</label>
+                                                <label><input type="radio" name="q2" value="c" required> C) A UML facilita a comunicação entre desenvolvedores, analistas e clientes do projeto</label>
+                                                <label><input type="radio" name="q2" value="d" required> D) A UML é uma linguagem textual utilizada para descrever algoritmos complexos.</label>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="exercise-question" data-question="3" style="display: none;">
+                                            <legend>3. FGV – 2023 – AL-MA – Analista de Sistemas<br>A especificação UML tem uma abordagem padrão para desenhar diagramas de classe com três itens referentes à classe. Assinale a alternativa correta:</legend>
+                                            <div class="radio-group">
+                                                <label><input type="radio" name="q3" value="a" required> a) Entidade, eventos e métodos.</label>
+                                                <label><input type="radio" name="q3" value="b" required> b) Objeto, classificação e nome.</label>
+                                                <label><input type="radio" name="q3" value="c" required> c) Atributos, métodos e entidade.</label>
+                                                <label><input type="radio" name="q3" value="d" required> d) Nome, atributos e métodos.</label>
+                                                <label><input type="radio" name="q3" value="e" required> e) Métodos, objeto e eventos.</label>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="exercise-question" data-question="4" style="display: none;">
+                                            <legend>4. CESPE / CEBRASPE – 2024 – TCE-AC – Analista de TI (Sistemas de Informação)<br>Em um sistema de elementos comunicantes, o diagrama de estrutura composta da UML 2 é uma escolha adequada para modelar a colaboração entre entidades cooperativas na execução de uma função específica. Assinale a alternativa correta:</legend>
+                                            <div class="radio-group">
+                                                <label><input type="radio" name="q4" value="a" required> a) O diagrama de estrutura composta da UML 2 modela a colaboração entre partes internas de uma classe ou componente.</label>
+                                                <label><input type="radio" name="q4" value="b" required> b) O diagrama de estrutura composta é utilizado para representar o fluxo de atividades do sistema.</label>
+                                                <label><input type="radio" name="q4" value="c" required> c) O diagrama de estrutura composta substitui o diagrama de classes em sistemas orientados a objetos.</label>
+                                                <label><input type="radio" name="q4" value="d" required> d) O diagrama de estrutura composta serve exclusivamente para modelagem de requisitos.</label>
+                                                <label><input type="radio" name="q4" value="e" required> e) O diagrama de estrutura composta é responsável pela modelagem de comportamento de atores externos</label>
+                                            </div>
+                                        </fieldset>
+                                    </div>
                                     <div class="exercise-actions">
                                         <button type="button" id="submit-exercise" class="button button-primary">Verificar Respostas</button>
                                     </div>
@@ -693,8 +701,8 @@
 
         // --- DADOS E ESTADO ---
         
-        // Mapeamento de aulas para módulo e ID
-        const LESSON_MAPPING = {
+        // Mapeamento de aulas para módulo e ID (GLOBAL)
+        window.LESSON_MAPPING = {
             "Introdução à UML - Unified Modeling Language": { moduleId: 1, lessonId: 1 },
             "O que é um Diagrama de Classes": { moduleId: 1, lessonId: 2 },
             "Diagrama de Classes - Relacionamentos": { moduleId: 1, lessonId: 3 },
@@ -706,6 +714,8 @@
             "O que é um Diagrama de Atividade UML - Introdução": { moduleId: 1, lessonId: 9 },
             "Introdução ao Diagrama de Máquina de Estados UML": { moduleId: 1, lessonId: 10 }
         };
+        
+        const LESSON_MAPPING = window.LESSON_MAPPING; // Referência local
         
         const lessonData = {
             "Introdução à UML - Unified Modeling Language": {
@@ -936,23 +946,55 @@
         }
 
         // Persistência do progresso
-        function loadProgressFromStorage() {
+        async function loadProgressFromBackend() {
             try {
-                const saved = localStorage.getItem('userProgress');
-                if (saved) userProgress = JSON.parse(saved);
-            } catch (e) { console.error('Erro ao carregar progresso:', e); }
-        }
-
-        function saveProgressToStorage() {
-            try {
-                localStorage.setItem('userProgress', JSON.stringify(userProgress));
-            } catch (e) { console.error('Erro ao salvar progresso:', e); }
+                const userData = localStorage.getItem('modela_user');
+                if (!userData) return;
+                
+                const user = JSON.parse(userData);
+                
+                // Busca progresso de todas as aulas do módulo 1
+                const response = await fetch(`/api/user/${user.id}/module/1/progress`);
+                const data = await response.json();
+                
+                if (data.success && data.lessons) {
+                    // Limpa userProgress e carrega apenas do banco
+                    userProgress = {};
+                    
+                    data.lessons.forEach(lesson => {
+                        const lessonTitle = lesson.lesson_title;
+                        userProgress[lessonTitle] = {
+                            videoCompleted: lesson.video_completed,
+                            exerciseCompleted: lesson.exercise_completed,
+                            practicalCompleted: lesson.practical_completed,
+                            completed: lesson.video_completed && lesson.exercise_completed && lesson.practical_completed
+                        };
+                    });
+                    
+                    console.log('✅ Progresso carregado do banco de dados:', userProgress);
+                    
+                    // ATUALIZA OS BOTÕES APÓS CARREGAR O PROGRESSO
+                    const activeLessonLink = document.querySelector('.lesson-list a.active');
+                    if (activeLessonLink) {
+                        const titleSpan = activeLessonLink.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
+                        const lessonTitle = titleSpan ? titleSpan.textContent.trim() : '';
+                        if (lessonTitle) {
+                            console.log('🔄 Atualizando botões após carregar progresso para:', lessonTitle);
+                            updateButtonStates(lessonTitle);
+                            
+                            // GARANTE que a aba correta esteja ativa baseada no conteúdo atual
+                            ensureCorrectTabIsActive();
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Erro ao carregar progresso do backend:', error);
+            }
         }
 
         function updateUserProgress(lessonTitle, updates) {
             if (!userProgress[lessonTitle]) userProgress[lessonTitle] = {};
             Object.assign(userProgress[lessonTitle], updates);
-            saveProgressToStorage();
             
             // Sincroniza com o backend
             syncProgressToBackend(lessonTitle);
@@ -1237,7 +1279,6 @@
 
             // Reseta para a tab de vídeo
             switchTab('video');
-            lockExerciseTab();
 
             // Rola para o topo da página suavemente
             setTimeout(() => {
@@ -1354,14 +1395,14 @@
         function handleVideoCompleted(lessonTitle) {
             console.log('✅ Vídeo completado:', lessonTitle);
             
-            if (!userProgress[lessonTitle]) {
-                userProgress[lessonTitle] = {};
-            }
-            userProgress[lessonTitle].videoCompleted = true;
-            userProgress[lessonTitle].videoProgress = 100;
+            // Salva progresso no banco de dados
+            updateUserProgress(lessonTitle, {
+                videoCompleted: true,
+                videoProgress: 100
+            });
             
-            // Desbloqueia a tab de exercício
-            unlockExerciseTab();
+            // Atualiza estado dos botões após completar vídeo
+            updateButtonStates(lessonTitle);
             
             // Atualiza o ícone da aula para mostrar que o vídeo foi assistido
             const activeLessonLink = document.querySelector('.lesson-list a.active');
@@ -1396,23 +1437,47 @@
 
         // Controle da aba de Atividade Prática
         function unlockPracticalTab() {
-            if (!practicalTab) return;
+            if (!practicalTab) {
+                console.log('❌ practicalTab não encontrado');
+                return;
+            }
+            console.log('🔓 Desbloqueando aba Atividade Prática');
+            
+            // Remove todas as classes de bloqueio
+            practicalTab.classList.remove('disabled', 'locked');
             practicalTab.disabled = false;
+            
+            // Atualiza o ícone de cadeado para check
             const lockIndicator = practicalTab.querySelector('.lock-indicator');
             if (lockIndicator) {
                 lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>';
             }
+            
+            // Remove qualquer estilo inline de opacidade
             practicalTab.style.opacity = '1';
+            practicalTab.style.cursor = 'pointer';
+            
+            console.log('✅ Aba Atividade Prática desbloqueada:', practicalTab.disabled);
         }
 
         function lockPracticalTab() {
             if (!practicalTab) return;
+            
+            // Adiciona classes de bloqueio
+            practicalTab.classList.add('disabled', 'locked');
             practicalTab.disabled = true;
+            
+            // Atualiza o ícone para cadeado
             const lockIndicator = practicalTab.querySelector('.lock-indicator');
             if (lockIndicator) {
                 lockIndicator.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
             }
+            
+            // Define estilos de bloqueio
             practicalTab.style.opacity = '0.5';
+            practicalTab.style.cursor = 'not-allowed';
+            
+            console.log('🔒 Aba Atividade Prática bloqueada');
         }
 
         function showNextLessonButton() {
@@ -1445,22 +1510,73 @@
             console.log('🔓 Botão "Próxima Aula" desbloqueado');
         }
 
+        // Garante que a aba correta esteja ativa baseada no conteúdo que está sendo exibido
+        function ensureCorrectTabIsActive() {
+            console.log('🔄 Verificando qual aba deve estar ativa baseada no conteúdo atual');
+            
+            // Verifica qual conteúdo está visível
+            const videoContent = document.getElementById('video-content');
+            const exerciseContent = document.getElementById('exercise-content');
+            const practicalContent = document.getElementById('practical-content');
+            
+            let activeTabId = 'video-tab'; // Padrão
+            
+            if (videoContent && videoContent.classList.contains('active')) {
+                activeTabId = 'video-tab';
+                console.log('📺 Conteúdo ativo: vídeo');
+            } else if (exerciseContent && exerciseContent.classList.contains('active')) {
+                activeTabId = 'exercise-tab';
+                console.log('📝 Conteúdo ativo: exercício');
+            } else if (practicalContent && practicalContent.classList.contains('active')) {
+                activeTabId = 'practical-tab';
+                console.log('🔧 Conteúdo ativo: atividade prática');
+            }
+            
+            // Remove active de todas as abas
+            document.querySelectorAll('.tab-button').forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+            });
+            
+            // Ativa a aba correspondente
+            const activeTab = document.getElementById(activeTabId);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                activeTab.setAttribute('aria-selected', 'true');
+                console.log('✅ Aba sincronizada:', activeTabId);
+            }
+        }
+
         // Atualiza o estado dos botões
         function updateButtonStates(lessonTitle, activeIcon) {
             const p = userProgress[lessonTitle] || {};
             console.log('🔧 updateButtonStates - progress:', p, 'lessonTitle:', lessonTitle);
 
-            // Tab Exercício
-            p.videoCompleted ? unlockExerciseTab() : lockExerciseTab();
-
-            // Tab Atividade Prática
-            if (typeof unlockPracticalTab === 'function') {
-                p.exerciseCompleted ? unlockPracticalTab() : lockPracticalTab();
+            // Tab Exercício - desbloqueia se vídeo foi assistido
+            if (p.videoCompleted) {
+                unlockExerciseTab();
+            } else {
+                lockExerciseTab();
             }
 
-            // Exibição do botão Próxima Aula (fluxo estrito)
-            const canShow = !!(p.videoCompleted && p.exerciseCompleted && p.modelDownloaded && p.diagramSaved && p.practicalSubmitted);
+            // Tab Atividade Prática - desbloqueia se exercício foi completado
+            if (typeof unlockPracticalTab === 'function') {
+                if (p.exerciseCompleted) {
+                    console.log('🔓 updateButtonStates: Desbloqueando Atividade Prática');
+                    unlockPracticalTab();
+                } else {
+                    console.log('🔒 updateButtonStates: Bloqueando Atividade Prática');
+                    lockPracticalTab();
+                }
+            } else {
+                console.log('❌ updateButtonStates: unlockPracticalTab não é uma função');
+            }
+
+            // Botão Próxima Aula
+            // Fluxo: Video 90% + Exercício 100% + Atividade Prática (se houver)
+            const canShow = !!(p.videoCompleted && p.exerciseCompleted && p.practicalCompleted);
             console.log('🔍 updateButtonStates - canShow:', canShow, 'progress:', p);
+            
             if (canShow) {
                 showNextLessonButton();
                 unlockNextLessonButton();
@@ -2036,9 +2152,12 @@
             // Fluxo Estrito: ao acertar 100%, desbloqueia apenas a Atividade Prática
             if (result.allCorrect) {
                 updateUserProgress(lessonTitle, { exerciseCompleted: true });
-                if (typeof unlockPracticalTab === 'function') {
-                    unlockPracticalTab();
+                
+                // Atualiza os botões e abas após salvar o progresso
+                if (typeof window.updateButtonStates === 'function') {
+                    window.updateButtonStates(lessonTitle);
                 }
+                
                 // Mostra o botão Próxima Aula ainda oculto/bloqueado pela regra global
                 hideNextLessonButton();
             } else {
@@ -2141,9 +2260,111 @@
         }
 
         // Inicialização completa
-        function initializeAll() {
-            initializeProgress();
+        async function initializeAll() {
+            await loadProgressFromBackend(); // Carrega apenas do banco de dados
             initializeSidebarState();
+            
+            // Atualiza UI com progresso carregado
+            const firstLesson = document.querySelector('.lesson-list a.active');
+            if (firstLesson) {
+                const titleSpan = firstLesson.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
+                const lessonTitle = titleSpan ? titleSpan.textContent : '';
+                if (lessonTitle) {
+                    console.log('🔄 Inicialização: Atualizando botões para:', lessonTitle);
+                    console.log('📊 Progresso carregado:', userProgress[lessonTitle]);
+                    updateButtonStates(lessonTitle);
+                    
+                    // GARANTE que a aba correta esteja ativa baseada no conteúdo atual
+                    ensureCorrectTabIsActive();
+                }
+            }
+            
+            // Inicializa navegação das perguntas padrão (Introdução à UML)
+            setTimeout(() => {
+                initializeDefaultQuestionsNavigation();
+            }, 100);
+            
+            // Restaura estado do exercício após um pequeno delay
+            setTimeout(() => {
+                restoreExerciseState();
+            }, 500);
+        }
+
+        // Inicializa navegação das perguntas padrão (Introdução à UML)
+        function initializeDefaultQuestionsNavigation() {
+            const questions = document.querySelectorAll('.exercise-question[data-question]');
+            if (!questions.length) return;
+
+            let currentFormQuestionIndex = 0;
+            const totalFormQuestionsCount = questions.length;
+
+            // Função para navegar entre perguntas do formulário
+            function navigateFormQuestion(direction) {
+                // Esconde pergunta atual
+                questions[currentFormQuestionIndex].style.display = 'none';
+
+                // Calcula nova posição
+                if (direction === 'next') {
+                    currentFormQuestionIndex = Math.min(currentFormQuestionIndex + 1, questions.length - 1);
+                } else if (direction === 'prev') {
+                    currentFormQuestionIndex = Math.max(currentFormQuestionIndex - 1, 0);
+                }
+
+                // Mostra nova pergunta
+                questions[currentFormQuestionIndex].style.display = 'block';
+
+                // Atualiza controles
+                updateFormNavigation();
+            }
+
+            // Atualiza estado dos botões de navegação do formulário
+            function updateFormNavigation() {
+                const prevBtn = document.getElementById('prev-question-form-btn');
+                const nextBtn = document.getElementById('next-question-form-btn');
+                const currentQuestionSpan = document.getElementById('current-question-form');
+
+                if (prevBtn) {
+                    prevBtn.disabled = currentFormQuestionIndex === 0;
+                    prevBtn.setAttribute('aria-label', currentFormQuestionIndex === 0 ? 'Primeira questão' : 'Questão anterior');
+                }
+                if (nextBtn) {
+                    nextBtn.disabled = currentFormQuestionIndex === totalFormQuestionsCount - 1;
+                    nextBtn.setAttribute('aria-label', currentFormQuestionIndex === totalFormQuestionsCount - 1 ? 'Última questão' : 'Próxima questão');
+                }
+                if (currentQuestionSpan) {
+                    currentQuestionSpan.textContent = currentFormQuestionIndex + 1;
+                }
+            }
+
+            // Adiciona event listeners aos botões
+            const prevBtn = document.getElementById('prev-question-form-btn');
+            const nextBtn = document.getElementById('next-question-form-btn');
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => navigateFormQuestion('prev'));
+            }
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => navigateFormQuestion('next'));
+            }
+
+            // Atalhos de teclado para navegação das perguntas
+            const handleFormKeydown = function(e) {
+                const formVisible = document.querySelector('.questions-form-container');
+                if (!formVisible) return;
+
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    navigateFormQuestion('prev');
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    navigateFormQuestion('next');
+                }
+            };
+
+            document.addEventListener('keydown', handleFormKeydown);
+
+            // Atualiza estado inicial
+            updateFormNavigation();
         }
 
         initializeAll();
@@ -2390,6 +2611,202 @@
         `;
         document.head.appendChild(style);
     });
+
+    // ===== SISTEMA DE PERSISTÊNCIA DO ESTADO DE FEEDBACK =====
+    
+    // Salva estado do exercício no banco de dados
+    async function saveExerciseStateToDB(exerciseState) {
+        console.log('💾 saveExerciseStateToDB chamada com:', exerciseState);
+        try {
+            const userData = localStorage.getItem('modela_user');
+            if (!userData) return;
+            
+            const user = JSON.parse(userData);
+            const mapping = LESSON_MAPPING[exerciseState.lessonTitle];
+            if (!mapping) return;
+            
+            const response = await fetch(`/api/user/${user.id}/exercise-state`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    lessonId: mapping.lessonId,
+                    lessonTitle: exerciseState.lessonTitle,
+                    isCompleted: exerciseState.isCompleted,
+                    score: exerciseState.score,
+                    totalQuestions: exerciseState.totalQuestions,
+                    percentage: exerciseState.percentage,
+                    pointsAwarded: exerciseState.pointsAwarded,
+                    isFirstAttempt: exerciseState.isFirstAttempt,
+                    feedbackData: {
+                        timestamp: Date.now(),
+                        lessonTitle: exerciseState.lessonTitle
+                    }
+                })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                console.log('✅ Estado do exercício salvo no banco de dados');
+            }
+            
+            // IMPORTANTE: Também atualiza o progresso da aula no banco
+            if (exerciseState.isCompleted && exerciseState.feedbackData && exerciseState.feedbackData.allCorrect) {
+                console.log('🔄 Atualizando progresso da aula no banco de dados');
+                const progressResponse = await fetch(`/api/user/${user.id}/lesson-progress`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lessonId: mapping.lessonId,
+                        lessonTitle: exerciseState.lessonTitle,
+                        exerciseCompleted: true
+                    })
+                });
+                
+                const progressResult = await progressResponse.json();
+                if (progressResult.success) {
+                    console.log('✅ Progresso da aula atualizado no banco de dados');
+                } else {
+                    console.error('❌ Erro ao atualizar progresso da aula:', progressResult);
+                }
+            }
+            
+        } catch (error) {
+            console.error('❌ Erro ao salvar estado do exercício:', error);
+        }
+    }
+    
+    // Carrega estado do exercício do banco de dados
+    async function loadExerciseStateFromDB(lessonTitle) {
+        try {
+            const userData = localStorage.getItem('modela_user');
+            if (!userData) return null;
+            
+            const user = JSON.parse(userData);
+            const mapping = LESSON_MAPPING[lessonTitle];
+            if (!mapping) {
+                console.warn('❌ LESSON_MAPPING não encontrado para:', lessonTitle);
+                return null;
+            }
+            
+            const response = await fetch(`/api/user/${user.id}/exercise-state/${mapping.lessonId}`);
+            const result = await response.json();
+            
+            if (result.success && result.state) {
+                console.log('✅ Estado do exercício carregado do banco:', result.state);
+                return result.state;
+            }
+            
+            return null;
+        } catch (error) {
+            console.error('❌ Erro ao carregar estado do exercício:', error);
+            return null;
+        }
+    }
+    
+    // Limpa estado do exercício do banco de dados
+    async function clearExerciseStateFromDB(lessonTitle) {
+        try {
+            const userData = localStorage.getItem('modela_user');
+            if (!userData) return;
+            
+            const user = JSON.parse(userData);
+            const mapping = LESSON_MAPPING[lessonTitle];
+            if (!mapping) {
+                console.warn('❌ LESSON_MAPPING não encontrado para:', lessonTitle);
+                return;
+            }
+            
+            const response = await fetch(`/api/user/${user.id}/exercise-state/${mapping.lessonId}`, {
+                method: 'DELETE'
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                console.log('✅ Estado do exercício limpo do banco de dados');
+            }
+        } catch (error) {
+            console.error('❌ Erro ao limpar estado do exercício:', error);
+        }
+    }
+    
+    // Restaura estado do exercício após refresh
+    async function restoreExerciseState() {
+        try {
+            const activeLessonLink = document.querySelector('.lesson-list a.active');
+            if (!activeLessonLink) return;
+            
+            const titleSpan = activeLessonLink.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
+            const lessonTitle = titleSpan ? titleSpan.textContent.trim() : '';
+            if (!lessonTitle) return;
+            
+            console.log('🔄 Verificando estado do exercício para:', lessonTitle);
+            
+            const savedState = await loadExerciseStateFromDB(lessonTitle);
+            if (!savedState) {
+                console.log('❌ Nenhum estado encontrado para esta aula');
+                return;
+            }
+            
+            console.log('✅ Estado encontrado:', savedState);
+            
+            // Verifica se o estado não é muito antigo (1 hora)
+            const oneHourAgo = Date.now() - (60 * 60 * 1000);
+            if (savedState.createdAt) {
+                const createdAt = new Date(savedState.createdAt).getTime();
+                if (createdAt < oneHourAgo) {
+                    console.log('⏰ Estado muito antigo, ignorando');
+                    await clearExerciseStateFromDB(lessonTitle);
+                    return;
+                }
+            }
+            
+            console.log('✅ Restaurando estado do exercício:', savedState);
+            
+            // Muda para a aba de exercício se não estiver
+            // NÃO força a troca de aba - deixa o usuário na aba atual
+            // A função ensureCorrectTabIsActive() será chamada na inicialização para sincronizar
+            console.log('📝 Estado do exercício restaurado, mas mantendo aba atual');
+            
+            // Chama função global para mostrar feedback
+            if (typeof window.showExerciseFeedback === 'function') {
+                window.showExerciseFeedback(savedState.score, savedState.totalQuestions, savedState.percentage);
+            }
+            
+        } catch (error) {
+            console.error('❌ Erro ao restaurar estado do exercício:', error);
+        }
+    }
+    
+    // Limpa estado ao tentar novamente
+    function clearExerciseStateOnRetry(lessonTitle) {
+        clearExerciseStateFromDB(lessonTitle);
+    }
+    
+    // Limpa estado ao mudar de aula
+    function clearExerciseStateOnLessonChange(lessonTitle) {
+        clearExerciseStateFromDB(lessonTitle);
+    }
+    
+        // Torna funções globalmente disponíveis
+        window.updateUserProgress = updateUserProgress;
+        window.updateButtonStates = updateButtonStates;
+        window.ensureCorrectTabIsActive = ensureCorrectTabIsActive;
+        window.unlockPracticalTab = unlockPracticalTab;
+        window.lockPracticalTab = lockPracticalTab;
+        window.saveExerciseStateToDB = saveExerciseStateToDB;
+        window.loadExerciseStateFromDB = loadExerciseStateFromDB;
+        window.clearExerciseStateFromDB = clearExerciseStateFromDB;
+        window.restoreExerciseState = restoreExerciseState;
+        window.clearExerciseStateOnRetry = clearExerciseStateOnRetry;
+        window.clearExerciseStateOnLessonChange = clearExerciseStateOnLessonChange;
+        window.getCurrentLessonTitle = function() {
+            const activeLessonLink = document.querySelector('.lesson-list a.active');
+            if (!activeLessonLink) return '';
+            const titleSpan = activeLessonLink.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
+            return titleSpan ? titleSpan.textContent.trim() : '';
+        };
+    
+    // ===== FIM SISTEMA DE PERSISTÊNCIA =====
 </script>
 
 <!-- INCLUIR O dark-mode.js ANTES do script personalizado (removido duplicado) -->
