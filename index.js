@@ -82,6 +82,25 @@ db.serialize(() => {
         FOREIGN KEY (user_id) REFERENCES users (id)
     )`);
 
+    // Tabela de estado dos exercícios (para persistir feedback após refresh)
+    db.run(`CREATE TABLE IF NOT EXISTS exercise_states (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        lesson_id INTEGER NOT NULL,
+        lesson_title TEXT NOT NULL,
+        is_completed BOOLEAN DEFAULT 0,
+        score INTEGER NOT NULL,
+        total_questions INTEGER NOT NULL,
+        percentage INTEGER NOT NULL,
+        points_awarded INTEGER DEFAULT 0,
+        is_first_attempt BOOLEAN DEFAULT 1,
+        feedback_data TEXT,            -- JSON com dados do feedback
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users (id),
+        UNIQUE(user_id, lesson_id)
+    )`);
+
     // Tabela de tópicos do fórum
     db.run(`CREATE TABLE IF NOT EXISTS forum_topics (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -354,12 +373,32 @@ app.get('/api/user/:userId/dashboard', (req, res) => {
             currentModule.progress = Math.round((progress.completed / progress.total) * 100);
         }
 
+        // Buscar última aula acessada (mais recente por started_at)
+        let lastAccessedLesson = null;
+        if (progressRows.length > 0) {
+            const sortedRows = progressRows.sort((a, b) => new Date(b.started_at || 0) - new Date(a.started_at || 0));
+            const lastRow = sortedRows[0];
+            
+            // Mapear lesson_id para título da aula
+            const lessonTitles = {
+                1: 'Aula 01: Introdução à UML',
+                2: 'Aula 02: O que é um Diagrama de Classes',
+                3: 'Aula 03: Diagrama de Casos de Uso',
+                4: 'Aula 04: Diagrama de Sequência'
+            };
+            
+            lastAccessedLesson = lessonTitles[lastRow.lesson_id] || 'Aula 01: Introdução à UML';
+        }
+
         res.json({
             success: true,
             exercises,
             modules,
             certificates,
-            currentModule
+            currentModule: lastAccessedLesson ? {
+                ...currentModule,
+                currentLesson: lastAccessedLesson
+            } : currentModule
         });
     });
 });
@@ -369,20 +408,25 @@ app.post('/api/user/:userId/progress', (req, res) => {
     const userId = req.params.userId;
     const { moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted } = req.body;
 
+    console.log('📝 Salvando progresso:', { userId, moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted });
+
     if (!moduleId || !lessonId || !lessonTitle) {
+        console.log('❌ Dados obrigatórios não fornecidos');
         return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
     }
 
     // Inserir ou atualizar progresso
     db.run(`
         INSERT OR REPLACE INTO user_progress 
-        (user_id, module_id, lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        (user_id, module_id, lesson_id, lesson_title, video_completed, exercise_completed, practical_completed)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     `, [userId, moduleId, lessonId, lessonTitle, videoCompleted || false, exerciseCompleted || false, practicalCompleted || false], function(err) {
         if (err) {
-            return res.status(500).json({ success: false, message: 'Erro ao salvar progresso' });
+            console.error('❌ Erro ao salvar progresso:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao salvar progresso', error: err.message });
         }
 
+        console.log('✅ Progresso salvo com sucesso');
         res.json({ success: true, message: 'Progresso salvo com sucesso' });
     });
 });
@@ -478,9 +522,11 @@ app.post('/api/user/:userId/exercise-attempt', (req, res) => {
             const isFirstAttempt = !row;
             let pointsAwarded = 0;
 
-            // Só pontua se for primeira tentativa e 100% correto
-            if (isFirstAttempt && percentage === 100) {
-                pointsAwarded = 10;
+            // Pontua proporcionalmente apenas na primeira tentativa
+            if (isFirstAttempt) {
+                // Calcula pontos proporcionais ao percentual de acertos
+                // Máximo de 10 pontos por exercício
+                pointsAwarded = Math.round((percentage / 100) * 10);
             }
 
             // Registrar tentativa
@@ -508,12 +554,246 @@ app.post('/api/user/:userId/exercise-attempt', (req, res) => {
                         success: true,
                         isFirstAttempt,
                         pointsAwarded,
+                        percentage,
                         message: isFirstAttempt ? 'Tentativa registrada' : 'Tentativa adicional registrada'
                     });
                 }
             );
         }
     );
+});
+
+// Endpoint: Forçar Criação da Tabela Exercise States
+app.get('/api/force-create-exercise-states-table', (req, res) => {
+    console.log('🔄 Forçando criação da tabela exercise_states...');
+    
+    // Remove a tabela se existir
+    db.run('DROP TABLE IF EXISTS exercise_states', (err) => {
+        if (err) {
+            console.error('❌ Erro ao remover tabela:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao remover tabela', error: err.message });
+        }
+        
+        console.log('✅ Tabela removida com sucesso');
+        
+        // Cria a tabela com a estrutura correta
+        db.run(`CREATE TABLE exercise_states (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            lesson_id INTEGER NOT NULL,
+            lesson_title TEXT NOT NULL,
+            is_completed BOOLEAN DEFAULT 0,
+            score INTEGER NOT NULL,
+            total_questions INTEGER NOT NULL,
+            percentage INTEGER NOT NULL,
+            points_awarded INTEGER DEFAULT 0,
+            is_first_attempt BOOLEAN DEFAULT 1,
+            feedback_data TEXT,            -- JSON com dados do feedback
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id),
+            UNIQUE(user_id, lesson_id)
+        )`, (err) => {
+            if (err) {
+                console.error('❌ Erro ao criar tabela:', err);
+                return res.status(500).json({ success: false, message: 'Erro ao criar tabela', error: err.message });
+            }
+            
+            console.log('✅ Tabela exercise_states criada com sucesso');
+            res.json({ success: true, message: 'Tabela exercise_states criada com sucesso' });
+        });
+    });
+});
+
+// Endpoint: Verificar/Criar Tabela Exercise States
+app.get('/api/check-exercise-states-table', (req, res) => {
+    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='exercise_states'", (err, row) => {
+        if (err) {
+            console.error('❌ Erro ao verificar tabela:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao verificar tabela', error: err.message });
+        }
+        
+        if (!row) {
+            console.log('📋 Tabela exercise_states não existe, criando...');
+            
+            // Criar tabela se não existir
+            db.run(`CREATE TABLE IF NOT EXISTS exercise_states (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                lesson_id INTEGER NOT NULL,
+                lesson_title TEXT NOT NULL,
+                is_completed BOOLEAN DEFAULT 0,
+                score INTEGER NOT NULL,
+                total_questions INTEGER NOT NULL,
+                percentage INTEGER NOT NULL,
+                points_awarded INTEGER DEFAULT 0,
+                is_first_attempt BOOLEAN DEFAULT 1,
+                feedback_data TEXT,            -- JSON com dados do feedback
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id),
+                UNIQUE(user_id, lesson_id)
+            )`, (err) => {
+                if (err) {
+                    console.error('❌ Erro ao criar tabela:', err);
+                    return res.status(500).json({ success: false, message: 'Erro ao criar tabela', error: err.message });
+                }
+                
+                console.log('✅ Tabela exercise_states criada com sucesso');
+                res.json({ success: true, message: 'Tabela exercise_states criada com sucesso', created: true });
+            });
+        } else {
+            console.log('✅ Tabela exercise_states já existe');
+            res.json({ success: true, message: 'Tabela exercise_states já existe', created: false });
+        }
+    });
+});
+
+// Endpoint: Salvar Estado do Exercício (para persistir feedback)
+app.post('/api/user/:userId/exercise-state', (req, res) => {
+    const userId = req.params.userId;
+    const { lessonId, lessonTitle, isCompleted, score, totalQuestions, percentage, pointsAwarded, isFirstAttempt, feedbackData } = req.body;
+
+    if (!lessonId || !lessonTitle || score === undefined || !totalQuestions || percentage === undefined) {
+        return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
+    }
+
+    console.log('💾 Salvando estado do exercício:', { userId, lessonId, lessonTitle, isCompleted, score, totalQuestions, percentage });
+
+    // Primeiro verifica se a tabela existe
+    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='exercise_states'", (err, row) => {
+        if (err) {
+            console.error('❌ Erro ao verificar tabela:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao verificar tabela', error: err.message });
+        }
+        
+        if (!row) {
+            console.log('📋 Tabela exercise_states não existe, criando...');
+            
+            // Criar tabela se não existir
+            db.run(`CREATE TABLE IF NOT EXISTS exercise_states (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                lesson_id INTEGER NOT NULL,
+                lesson_title TEXT NOT NULL,
+                is_completed BOOLEAN DEFAULT 0,
+                score INTEGER NOT NULL,
+                total_questions INTEGER NOT NULL,
+                percentage INTEGER NOT NULL,
+                points_awarded INTEGER DEFAULT 0,
+                is_first_attempt BOOLEAN DEFAULT 1,
+                feedback_data TEXT,            -- JSON com dados do feedback
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id),
+                UNIQUE(user_id, lesson_id)
+            )`, (err) => {
+                if (err) {
+                    console.error('❌ Erro ao criar tabela:', err);
+                    return res.status(500).json({ success: false, message: 'Erro ao criar tabela', error: err.message });
+                }
+                
+                console.log('✅ Tabela exercise_states criada com sucesso');
+                // Após criar a tabela, tenta inserir novamente
+                insertExerciseState();
+            });
+        } else {
+            console.log('✅ Tabela exercise_states já existe');
+            // Tabela existe, pode inserir
+            insertExerciseState();
+        }
+    });
+
+    function insertExerciseState() {
+        // Inserir ou atualizar estado do exercício
+        db.run(`
+            INSERT OR REPLACE INTO exercise_states 
+            (user_id, lesson_id, lesson_title, is_completed, score, total_questions, percentage, points_awarded, is_first_attempt, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        `, [userId, lessonId, lessonTitle, isCompleted || false, score, totalQuestions, percentage, pointsAwarded || 0, isFirstAttempt || false], function(err) {
+            if (err) {
+                console.error('❌ Erro ao salvar estado do exercício:', err);
+                return res.status(500).json({ success: false, message: 'Erro ao salvar estado do exercício', error: err.message });
+            }
+
+            console.log('✅ Estado do exercício salvo com sucesso');
+            res.json({ success: true, message: 'Estado do exercício salvo com sucesso' });
+        });
+    }
+});
+
+// Endpoint: Carregar Estado do Exercício
+app.get('/api/user/:userId/exercise-state/:lessonId', (req, res) => {
+    const userId = req.params.userId;
+    const lessonId = req.params.lessonId;
+
+    console.log('📂 Carregando estado do exercício:', { userId, lessonId });
+
+    db.get(`
+        SELECT * FROM exercise_states 
+        WHERE user_id = ? AND lesson_id = ?
+    `, [userId, lessonId], (err, row) => {
+        if (err) {
+            console.error('❌ Erro ao carregar estado do exercício:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao carregar estado do exercício', error: err.message });
+        }
+
+        if (!row) {
+            console.log('❌ Nenhum estado encontrado para esta aula');
+            return res.json({ success: true, state: null });
+        }
+
+        console.log('✅ Estado do exercício carregado:', row);
+        
+        // Parse do feedback_data se existir
+        let feedbackData = {};
+        if (row.feedback_data) {
+            try {
+                feedbackData = JSON.parse(row.feedback_data);
+            } catch (e) {
+                console.error('❌ Erro ao fazer parse do feedback_data:', e);
+            }
+        }
+
+        res.json({
+            success: true,
+            state: {
+                id: row.id,
+                lessonId: row.lesson_id,
+                lessonTitle: row.lesson_title,
+                isCompleted: row.is_completed,
+                score: row.score,
+                totalQuestions: row.total_questions,
+                percentage: row.percentage,
+                pointsAwarded: row.points_awarded,
+                isFirstAttempt: row.is_first_attempt,
+                feedbackData: feedbackData,
+                createdAt: row.created_at,
+                updatedAt: row.updated_at
+            }
+        });
+    });
+});
+
+// Endpoint: Limpar Estado do Exercício
+app.delete('/api/user/:userId/exercise-state/:lessonId', (req, res) => {
+    const userId = req.params.userId;
+    const lessonId = req.params.lessonId;
+
+    console.log('🗑️ Limpando estado do exercício:', { userId, lessonId });
+
+    db.run(`
+        DELETE FROM exercise_states 
+        WHERE user_id = ? AND lesson_id = ?
+    `, [userId, lessonId], function(err) {
+        if (err) {
+            console.error('❌ Erro ao limpar estado do exercício:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao limpar estado do exercício', error: err.message });
+        }
+
+        console.log('✅ Estado do exercício limpo com sucesso');
+        res.json({ success: true, message: 'Estado do exercício limpo com sucesso' });
+    });
 });
 
 // Endpoint 3: Buscar Pontuação Total do Usuário
