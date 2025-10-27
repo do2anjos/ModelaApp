@@ -1151,14 +1151,6 @@
                 .then(r => r.json())
                 .then(data => {
                     console.log('✅ Progresso sincronizado com backend:', lessonTitle, data);
-                    
-                    // CORREÇÃO: Atualiza contador de progresso após salvar no banco
-                    setTimeout(() => {
-                        const accordion = document.querySelector('.topic');
-                        if (accordion) {
-                            updateTopicProgress(accordion);
-                        }
-                    }, 100);
                 })
                 .catch(err => {
                     console.error('❌ Erro ao sincronizar progresso:', err);
@@ -1781,44 +1773,73 @@
             const completedLessons = accordionElement.querySelectorAll('.lesson-icon.completed');
             
             progressSpan.textContent = `${completedLessons.length}/${lessons.length}`;
-            console.log('📊 Contador de progresso atualizado:', `${completedLessons.length}/${lessons.length}`);
         }
 
         // Verifica se pode desbloquear próxima aula
         function unlockNextLesson(currentLessonTitle) {
-            const currentLessonLink = document.querySelector(`.lesson-list a.active`);
-            const currentListItem = currentLessonLink.parentElement;
-            const nextListItem = currentListItem.nextElementSibling;
+            console.log('🔓 unlockNextLesson chamada para:', currentLessonTitle);
             
-            if (nextListItem && nextListItem.classList.contains('lesson-locked')) {
-                const nextLessonLink = nextListItem.querySelector('a');
-                const allSpans = nextLessonLink.querySelectorAll('span');
-                let titleSpan = null;
-                for (let span of allSpans) {
-                    if (!span.classList.contains('lesson-duration') && !span.classList.contains('lesson-icon')) {
-                        titleSpan = span;
-                        break;
-                    }
+            try {
+                const currentLessonLink = document.querySelector(`.lesson-list a.active`);
+                if (!currentLessonLink) {
+                    console.error('❌ currentLessonLink não encontrado');
+                    return;
                 }
-                const nextLessonTitle = titleSpan ? titleSpan.textContent : 'Aula sem título';
                 
-                // Desbloqueia próxima aula se a atual foi concluída
-                if (userProgress[currentLessonTitle] && userProgress[currentLessonTitle].completed) {
-                    // Remove classe de bloqueio e adiciona classe de desbloqueio
-                    nextListItem.classList.remove('lesson-locked');
-                    nextListItem.classList.add('lesson-unlocked');
-                    
-                    // Remove o ícone de cadeado e adiciona ícone padrão
-                    const lockIcon = nextListItem.querySelector('svg');
-                    if (lockIcon) {
-                        lockIcon.remove();
-                    }
-                    
-                    // Adiciona o ícone padrão de aula
-                    const iconSpan = document.createElement('span');
-                    iconSpan.className = 'lesson-icon todo';
-                    nextLessonLink.insertBefore(iconSpan, nextLessonLink.firstChild);
+                const currentListItem = currentLessonLink.parentElement;
+                if (!currentListItem) {
+                    console.error('❌ currentListItem não encontrado');
+                    return;
                 }
+                
+                const nextListItem = currentListItem.nextElementSibling;
+                console.log('📋 Próxima aula encontrada:', !!nextListItem);
+                
+                if (nextListItem && nextListItem.classList.contains('lesson-locked')) {
+                    const nextLessonLink = nextListItem.querySelector('a');
+                    const allSpans = nextLessonLink.querySelectorAll('span');
+                    let titleSpan = null;
+                    for (let span of allSpans) {
+                        if (!span.classList.contains('lesson-duration') && !span.classList.contains('lesson-icon')) {
+                            titleSpan = span;
+                            break;
+                        }
+                    }
+                    const nextLessonTitle = titleSpan ? titleSpan.textContent : 'Aula sem título';
+                    console.log('📝 Próxima aula:', nextLessonTitle);
+                    
+                    // Desbloqueia próxima aula se a atual foi concluída
+                    console.log('📊 Verificando progresso da aula atual:', userProgress[currentLessonTitle]);
+                    
+                    if (userProgress[currentLessonTitle] && userProgress[currentLessonTitle].completed) {
+                        console.log('✅ Aula atual concluída - desbloqueando próxima aula');
+                        
+                        // Remove classe de bloqueio e adiciona classe de desbloqueio
+                        nextListItem.classList.remove('lesson-locked');
+                        nextListItem.classList.add('lesson-unlocked');
+                        
+                        // Remove o ícone de cadeado e adiciona ícone padrão
+                        const lockIcon = nextListItem.querySelector('svg');
+                        if (lockIcon) {
+                            lockIcon.remove();
+                            console.log('🔓 Ícone de cadeado removido');
+                        }
+                        
+                        // Adiciona o ícone padrão de aula
+                        const iconSpan = document.createElement('span');
+                        iconSpan.className = 'lesson-icon todo';
+                        nextLessonLink.insertBefore(iconSpan, nextLessonLink.firstChild);
+                        
+                        console.log('✅ Próxima aula desbloqueada com sucesso');
+                    } else {
+                        console.log('❌ Aula atual não está marcada como concluída no userProgress');
+                    }
+                } else {
+                    console.log('ℹ️ Próxima aula não está bloqueada ou não existe');
+                }
+            } catch (error) {
+                console.error('❌ Erro em unlockNextLesson:', error);
+                throw error;
             }
         }
 
@@ -2007,19 +2028,38 @@
                     window.updateButtonStates(currentLessonTitle);
                 }
                 
-                // Desbloqueia a próxima aula após marcar como concluída
-                unlockNextLesson(currentLessonTitle);
+                // CORREÇÃO CRÍTICA: Garantir que unlockNextLesson seja chamada
+                try {
+                    console.log('🔓 Chamando unlockNextLesson para:', currentLessonTitle);
+                    console.log('📊 Estado do progresso antes de desbloquear:', userProgress[currentLessonTitle]);
+                    
+                    // Desbloqueia a próxima aula após marcar como concluída
+                    unlockNextLesson(currentLessonTitle);
+                    
+                    console.log('✅ unlockNextLesson executada com sucesso');
+                    
+                    // Fallback: força atualização do progresso do tópico
+                    const accordions = document.querySelectorAll('.topic-accordion');
+                    accordions.forEach(accordion => {
+                        updateTopicProgress(accordion);
+                    });
+                } catch (error) {
+                    console.error('❌ Erro em unlockNextLesson:', error);
+                    
+                    // Fallback: atualiza progresso do tópico manualmente
+                    const accordions = document.querySelectorAll('.topic-accordion');
+                    accordions.forEach(accordion => {
+                        updateTopicProgress(accordion);
+                    });
+                }
             }
             
             if (nextListItem) {
                 const nextLessonLink = nextListItem.querySelector('a');
                 
-                // CORREÇÃO: Aguarda um pouco para garantir que o salvamento complete
-                setTimeout(() => {
-                    // FLUXO CORRETO: Navega para próxima aula e reinicia o ciclo
-                    console.log('🔄 Navegando para próxima aula e reiniciando ciclo...');
-                    loadLesson(nextLessonLink);
-                }, 500);
+                // FLUXO CORRETO: Navega para próxima aula e reinicia o ciclo
+                console.log('🔄 Navegando para próxima aula e reiniciando ciclo...');
+                loadLesson(nextLessonLink);
             } else {
                 alert('Não há mais aulas neste tópico.');
             }
