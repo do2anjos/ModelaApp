@@ -2,6 +2,35 @@
 
 Este arquivo documenta todas as mudanças significativas implementadas no projeto Modela App.
 
+## [v1.4.1] - Correção de Sincronização de Abas e Melhorias de Persistência
+**Data**: 26 de Outubro de 2025
+
+### Adicionado
+- **Função `ensureCorrectTabIsActive()`**: Sincronização automática entre conteúdo exibido e aba ativa no header
+- **Sistema de Sincronização Robusto**: Garantia de que a aba correta esteja ativa após carregar progresso do banco
+- **Logs Detalhados**: Sistema de debug aprimorado para rastreamento de sincronização de abas
+- **Correção de Persistência**: Melhorias no sistema de salvamento de estado de exercícios
+
+### Modificado
+- **Sistema de Carregamento**: `loadProgressFromBackend()` agora chama `ensureCorrectTabIsActive()` após carregar progresso
+- **Inicialização**: `initializeAll()` garante sincronização correta na inicialização da página
+- **Restauração de Estado**: `restoreExerciseState()` não força mais troca desnecessária de abas
+- **Função `updateButtonStates()`**: Melhorada para trabalhar em conjunto com sistema de sincronização
+
+### Corrigido
+- **Bug de Sincronização**: Após refresh, vídeo aparecia mas header mostrava "Exercício" selecionado
+- **Persistência de Estado**: Estado de exercícios agora persiste corretamente após refresh
+- **Sincronização Frontend-Backend**: Comunicação mais robusta entre carregamento de progresso e interface
+- **Desbloqueio de Abas**: Sistema de desbloqueio automático funciona corretamente com persistência
+
+### Melhorias Técnicas
+- **Função Global**: `ensureCorrectTabIsActive()` disponível globalmente para uso em outros contextos
+- **Debug Aprimorado**: Logs detalhados para monitoramento de sincronização
+- **Performance**: Otimização do carregamento e sincronização de estado
+- **Robustez**: Sistema mais resistente a falhas de sincronização
+
+---
+
 ## [v1.4.0] - Sistema Backend Completo e Arquitetura Full-Stack
 **Data**: 27 de Janeiro de 2025
 
@@ -390,6 +419,6 @@ function unlockNextLessonButton() {
 
 ---
 
-**📅 Última atualização**: 25 de outubro de 2025  
+**📅 Última atualização**: 26 de outubro de 2025  
 **👨‍💻 Desenvolvedor**: _Do2anjos  
-**📋 Versão**: 1.4.0
+**📋 Versão**: 1.4.1
