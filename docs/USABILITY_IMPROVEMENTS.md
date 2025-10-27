@@ -1341,7 +1341,7 @@ Todas as melhorias foram implementadas seguindo **as 10 Heurísticas de Nielsen*
 
 ---
 
-**📅 Última atualização**: 25 de Outubro de 2025  
+**📅 Última atualização**: 26 de Outubro de 2025  
 **👨‍💻 Desenvolvedor**: _Do2anjos  
-**�� Versão**: 1.4.0
+**📋 Versão**: 1.4.1
 
