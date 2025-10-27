@@ -122,6 +122,71 @@ ModelaApp/
 
 ## 🎥 Sistema de Aulas Interativo
 
+### **Sistema de Sincronização de Abas Aprimorado**
+**📅 Implementado em: 26 de Outubro de 2025**
+
+O sistema implementa uma sincronização robusta entre o conteúdo exibido e a aba ativa no header, garantindo consistência visual após carregamento de progresso do banco de dados.
+
+#### **Características Principais:**
+- **Sincronização Automática**: Função `ensureCorrectTabIsActive()` verifica qual conteúdo está visível e ativa a aba correspondente
+- **Carregamento Inteligente**: Após carregar progresso do banco, o sistema sincroniza automaticamente a interface
+- **Debug Aprimorado**: Logs detalhados para monitoramento de sincronização
+- **Robustez**: Sistema resistente a falhas de sincronização
+
+#### **Implementação Técnica:**
+```javascript
+// Função de sincronização automática
+function ensureCorrectTabIsActive() {
+    console.log('🔄 Verificando qual aba deve estar ativa baseada no conteúdo atual');
+    
+    // Verifica qual conteúdo está visível
+    const videoContent = document.getElementById('video-content');
+    const exerciseContent = document.getElementById('exercise-content');
+    const practicalContent = document.getElementById('practical-content');
+    
+    let activeTabId = 'video-tab'; // Padrão
+    
+    if (exerciseContent && !exerciseContent.classList.contains('hidden')) {
+        activeTabId = 'exercise-tab';
+    } else if (practicalContent && !practicalContent.classList.contains('hidden')) {
+        activeTabId = 'practical-tab';
+    }
+    
+    // Ativa a aba correspondente
+    const activeTab = document.getElementById(activeTabId);
+    if (activeTab) {
+        activeTab.classList.add('active');
+        activeTab.setAttribute('aria-selected', 'true');
+        console.log('✅ Aba sincronizada:', activeTabId);
+    }
+}
+
+// Integração com carregamento de progresso
+async function loadProgressFromBackend() {
+    // ... carregar progresso ...
+    
+    // ATUALIZA OS BOTÕES APÓS CARREGAR O PROGRESSO
+    const activeLessonLink = document.querySelector('.lesson-list a.active');
+    if (activeLessonLink) {
+        const titleSpan = activeLessonLink.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
+        const lessonTitle = titleSpan ? titleSpan.textContent.trim() : '';
+        if (lessonTitle) {
+            console.log('🔄 Atualizando botões após carregar progresso para:', lessonTitle);
+            updateButtonStates(lessonTitle);
+            
+            // GARANTE que a aba correta esteja ativa baseada no conteúdo atual
+            ensureCorrectTabIsActive();
+        }
+    }
+}
+```
+
+#### **Benefícios da Implementação:**
+- **Consistência Visual**: Interface sempre reflete o estado real do conteúdo
+- **Experiência do Usuário**: Elimina confusão sobre qual aba está ativa
+- **Robustez**: Sistema funciona corretamente mesmo após refresh da página
+- **Manutenibilidade**: Código organizado e bem documentado
+
 ### **Sistema de Tabs Moderno e Fluxo Sequencial**
 **📅 Implementado em: 19 de Outubro de 2025**
 
@@ -759,6 +824,6 @@ A implementação segue **melhores práticas** de desenvolvimento web moderno, c
 
 ---
 
-**📅 Última atualização**: 25 de Outubro de 2025  
+**📅 Última atualização**: 26 de Outubro de 2025  
 **👨‍💻 Desenvolvedor**: _Do2anjos  
-**📋 Versão**: 1.4.0
+**📋 Versão**: 1.4.1
