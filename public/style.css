@@ -1411,10 +1411,13 @@ html[data-daltonismo] .logo img,
   background-color: transparent;
 }
 
-.tab-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  color: var(--muted-foreground);
+.tab-button:disabled,
+.tab-button.disabled,
+.tab-button.locked {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  color: var(--muted-foreground) !important;
+  pointer-events: none !important;
 }
 
 .tab-button svg {
@@ -1647,6 +1650,32 @@ html[data-daltonismo] .logo img,
 .feedback-error h4 {
   color: var(--foreground);
   margin-bottom: 1rem;
+}
+
+/* Estilo para informação de pontos */
+.points-info {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(76, 175, 80, 0.1);
+  border-left: 3px solid #4CAF50;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: #2e7d32;
+}
+
+.points-info strong {
+  color: #1b5e20;
+  font-weight: 600;
+}
+
+/* Dark mode para points-info */
+[data-theme="dark"] .points-info {
+  background: rgba(76, 175, 80, 0.15);
+  color: #81c784;
+}
+
+[data-theme="dark"] .points-info strong {
+  color: #a5d6a7;
 }
 
 /* Melhor espaçamento para o botão de ação */
