@@ -174,17 +174,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return { q1: 'b', q2: 'a', q3: 'c', q4: 'a' };
         }
         // Introdução à UML - Unified Modeling Language - formulário padrão inicial
-        return { q1: 'a', q2: 'c', q3: 'd', q4: 'a' };
+        return { q1: 'b', q2: 'c', q3: 'd', q4: 'a' };
     }
 
     // Explicações adicionais para feedback detalhado (Introdução)
     const explanationsIntro = {
         q1: {
-            correct: 'Correto. No diagrama de estados, uma transição entre dois estados realmente só pode ocorrer se houver uma ação, evento ou condição associada a ela.',
+            correct: 'Correto. A UML fornece uma linguagem visual padrão para modelar sistemas de software, permitindo que desenvolvedores, analistas e stakeholders visualizem, especifiquem, construam e documentem os artefatos de um sistema de forma unificada.',
             incorrect: {
-                b: 'Incorreto. As swimlanes (raias) no diagrama de atividades podem expressar paralelismo no fluxo de atividades.',
-                c: 'Incorreto. O diagrama de componentes modela a estrutura e organização de componentes de software, não as interações entre usuários e o sistema (isso seria o diagrama de casos de uso).',
-                d: 'Incorreto. Atores em diagramas de casos de uso podem ser pessoas, sistemas externos, hardwares ou qualquer entidade externa que interaja com o sistema.'
+                a: 'Incorreto. A UML não é usada para escrever código-fonte final, mas sim para modelar e visualizar sistemas antes da implementação. O código é escrito em linguagens de programação específicas.',
+                b: '',
+                c: 'Incorreto. A UML não é uma ferramenta de gerenciamento de projetos para cronogramas e custos. Ela é especificamente uma linguagem de modelagem de software.',
+                d: 'Incorreto. A UML não é usada para testar segurança de bancos de dados. Ela é uma linguagem de modelagem que ajuda a visualizar e documentar sistemas de software.'
             }
         },
         q2: {
