@@ -111,5 +111,3 @@ async function resetUserData(userId) {
     db.close();
   }
 })();
-
-
