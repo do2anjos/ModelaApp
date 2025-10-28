@@ -436,27 +436,48 @@ app.get('/api/user/:userId/dashboard', (req, res) => {
 // Endpoint para atualizar progresso de uma aula específica
 app.post('/api/user/:userId/lesson-progress', (req, res) => {
     const userId = req.params.userId;
-    const { lessonTitle, exerciseCompleted, practicalCompleted, completed } = req.body;
-
-    console.log('📝 Atualizando progresso da aula:', { userId, lessonTitle, exerciseCompleted, practicalCompleted, completed });
+    const { lessonTitle, ...updates } = req.body;
 
     if (!lessonTitle) {
-        console.log('❌ Título da aula não fornecido');
         return res.status(400).json({ success: false, message: 'Título da aula não fornecido' });
     }
 
-    // CORREÇÃO: Atualiza todos os campos necessários para persistência
-    db.run(`
-        UPDATE user_progress 
-        SET exercise_completed = ?, practical_completed = ?, completed = ?, completed_at = CASE WHEN ? = 1 THEN CURRENT_TIMESTAMP ELSE completed_at END
-        WHERE user_id = ? AND lesson_title = ?
-    `, [exerciseCompleted || false, practicalCompleted || false, completed || false, completed || false, userId, lessonTitle], function(err) {
+    const fields = [];
+    const params = [];
+
+    // Constrói a query dinamicamente
+    if (updates.exerciseCompleted !== undefined) {
+        fields.push('exercise_completed = ?');
+        params.push(updates.exerciseCompleted);
+    }
+    if (updates.practicalCompleted !== undefined) {
+        fields.push('practical_completed = ?');
+        params.push(updates.practicalCompleted);
+    }
+    if (updates.completed !== undefined) {
+        fields.push('completed = ?');
+        params.push(updates.completed);
+        // Atualiza a data de conclusão apenas se a aula estiver sendo marcada como completa
+        if (updates.completed) {
+            fields.push('completed_at = CURRENT_TIMESTAMP');
+        }
+    }
+    
+    // Não adiciona updated_at pois a coluna não existe na tabela user_progress
+
+    if (fields.length === 0) { // Verifica se há campos para atualizar
+        return res.json({ success: true, message: 'Nenhum campo de progresso para atualizar' });
+    }
+
+    const sql = `UPDATE user_progress SET ${fields.join(', ')} WHERE user_id = ? AND lesson_title = ?`;
+    params.push(userId, lessonTitle);
+
+    db.run(sql, params, function(err) {
         if (err) {
             console.error('❌ Erro ao atualizar progresso da aula:', err);
             return res.status(500).json({ success: false, message: 'Erro ao atualizar progresso da aula' });
         }
-
-        console.log('✅ Progresso da aula atualizado:', this.changes, 'registros');
+        console.log(`✅ Progresso da aula "${lessonTitle}" atualizado para usuário ${userId}:`, this.changes, 'registros');
         res.json({ success: true, message: 'Progresso da aula atualizado com sucesso' });
     });
 });
@@ -495,7 +516,7 @@ app.get('/api/user/:userId/module/:moduleId/progress', (req, res) => {
     const moduleId = req.params.moduleId;
 
     db.all(`
-        SELECT lesson_id, lesson_title, video_completed, exercise_completed, practical_completed
+        SELECT lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, completed
         FROM user_progress 
         WHERE user_id = ? AND module_id = ?
         ORDER BY lesson_id

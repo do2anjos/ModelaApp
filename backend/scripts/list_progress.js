@@ -16,7 +16,7 @@ console.log(`\n📊 Progresso do usuário ID: ${userId}\n`);
 db.all(
   `SELECT 
     id, module_id, lesson_id, lesson_title,
-    video_completed, exercise_completed, practical_completed, lesson_completed,
+    video_completed, exercise_completed, practical_completed, completed,
     started_at, completed_at
   FROM user_progress 
   WHERE user_id = ? 
@@ -33,14 +33,14 @@ db.all(
     } else {
       console.log('Aulas em Progresso/Concluídas:\n');
       rows.forEach((row) => {
-        const status = row.lesson_completed ? '✅' : '🔄';
+        const status = row.completed ? '✅' : '🔄';
         console.log(`${status} Módulo ${row.module_id} - Aula ${row.lesson_id}: ${row.lesson_title}`);
         console.log(`   Vídeo: ${row.video_completed ? '✅' : '❌'} | Exercício: ${row.exercise_completed ? '✅' : '❌'} | Prática: ${row.practical_completed ? '✅' : '❌'}`);
         console.log(`   Iniciada: ${row.started_at} | Concluída: ${row.completed_at || 'N/A'}\n`);
       });
       
       // Resumo
-      const completed = rows.filter(r => r.lesson_completed).length;
+      const completed = rows.filter(r => r.completed).length;
       const exercises = rows.filter(r => r.exercise_completed).length;
       console.log(`\n📈 Resumo:`);
       console.log(`   Aulas concluídas: ${completed}`);

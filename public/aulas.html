@@ -967,19 +967,19 @@
                         // practical_completed no banco = atividade prática foi enviada
                         // Se practical_completed = true, então practicalSubmitted = true
                         userProgress[lessonTitle] = {
-                            videoCompleted: lesson.video_completed,
-                            exerciseCompleted: lesson.exercise_completed,
-                            practicalSubmitted: lesson.practical_completed, // Só true se foi realmente enviada
-                            practicalCompleted: lesson.practical_completed,
-                            completed: lesson.completed || false
+                            videoCompleted: !!lesson.video_completed,
+                            exerciseCompleted: !!lesson.exercise_completed,
+                            practicalSubmitted: !!lesson.practical_completed, // Só true se foi realmente enviada
+                            practicalCompleted: !!lesson.practical_completed,
+                            completed: !!lesson.completed
                         };
                         
                         console.log(`📊 Progresso carregado para ${lessonTitle}:`, {
-                            videoCompleted: lesson.video_completed,
-                            exerciseCompleted: lesson.exercise_completed,
-                            practicalSubmitted: lesson.practical_completed,
-                            practicalCompleted: lesson.practical_completed,
-                            completed: lesson.completed || false
+                            videoCompleted: !!lesson.video_completed,
+                            exerciseCompleted: !!lesson.exercise_completed,
+                            practicalSubmitted: !!lesson.practical_completed,
+                            practicalCompleted: !!lesson.practical_completed,
+                            completed: !!lesson.completed
                         });
                     });
                     
@@ -2963,9 +2963,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         lessonTitle: exerciseState.lessonTitle,
-                        exerciseCompleted: true,
-                        practicalCompleted: false,
-                        completed: false
+                        exerciseCompleted: true
                     })
                 });
                 
@@ -3082,6 +3080,18 @@
             // Chama função global para mostrar feedback
             if (typeof window.showExerciseFeedback === 'function') {
                 window.showExerciseFeedback(savedState.score, savedState.totalQuestions, savedState.percentage);
+                
+                // Garante que o slide de feedback está visível após restaurar o estado
+                setTimeout(() => {
+                    const formSlide = document.getElementById('exercise-form-slide');
+                    const feedbackSlide = document.getElementById('exercise-feedback-slide');
+                    
+                    if (formSlide && feedbackSlide) {
+                        formSlide.classList.remove('active');
+                        feedbackSlide.classList.add('active');
+                        console.log('✅ Slide de feedback ativado após restaurar estado');
+                    }
+                }, 200);
             }
             
         } catch (error) {
@@ -3100,8 +3110,6 @@
     }
     
         // Torna funções globalmente disponíveis
-        window.unlockPracticalTab = unlockPracticalTab;
-        window.lockPracticalTab = lockPracticalTab;
         window.saveExerciseStateToDB = saveExerciseStateToDB;
         window.loadExerciseStateFromDB = loadExerciseStateFromDB;
         window.clearExerciseStateFromDB = clearExerciseStateFromDB;
