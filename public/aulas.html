@@ -134,6 +134,148 @@
             gap: .75rem !important;
             margin-top: .25rem !important;
         }
+
+        /* Remover hover dos botões de materiais de apoio */
+        .materials-btn.button-primary {
+            background-color: var(--primary) !important;
+            color: var(--primary-foreground) !important;
+            border-color: var(--primary) !important;
+            transition: none !important;
+        }
+        
+        .materials-btn.button-primary:hover {
+            background-color: var(--primary) !important;
+            color: var(--primary-foreground) !important;
+            border-color: var(--primary) !important;
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        
+        .materials-btn.button-primary:active {
+            background-color: var(--primary) !important;
+            transform: scale(0.98) !important;
+        }
+
+        /* Estilos para pré-visualização de arquivos */
+        .file-preview-area {
+            margin-top: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--card);
+            overflow: hidden;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: var(--muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .preview-header h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .preview-content {
+            padding: 1.5rem;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-content img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .preview-content iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: var(--radius);
+        }
+
+        .file-info {
+            padding: 1rem 1.5rem;
+            background: var(--muted);
+            border-top: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        .file-info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .file-info-label {
+            font-weight: 500;
+            color: var(--muted-foreground);
+        }
+
+        .file-info-value {
+            color: var(--foreground);
+        }
+
+        .file-type-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-area {
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area.dragover {
+            background: var(--muted);
+            border-color: var(--primary);
+        }
+
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--primary);
+            background: var(--muted);
+        }
+
+        .file-upload-label h4 {
+            margin: 0;
+            font-size: 1.125rem;
+            color: var(--foreground);
+        }
+
+        .file-upload-label p {
+            margin: 0;
+            color: var(--muted-foreground);
+        }
+
+        .file-upload-label small {
+            color: var(--muted-foreground);
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 <body class="lesson-body">
@@ -451,7 +593,7 @@
                         <div class="step-nav" aria-label="Navegação por passos">
                             <button class="button step-prev" aria-label="Passo anterior" disabled>◀</button>
                             <span class="step-counter" aria-live="polite">
-                                <strong>1</strong> / <span class="step-total">3</span>
+                                <strong>1</strong> / <span class="step-total">4</span>
                             </span>
                             <button class="button step-next" aria-label="Próximo passo">▶</button>
                         </div>
@@ -462,9 +604,59 @@
                                 <div class="step-number">1</div>
                                 <h3>Materiais de apoio</h3>
                             </div>
-                            <p>Acesse o <a href="https://docs.google.com/document/d/1dAn3jqXbqtZUG5ESqDuLgxDuYXlvBMzfJ4j59WXUKL4/edit?tab=t.0#heading=h.sdugyshgcp0c" target="_blank" rel="noopener noreferrer">material de apoio</a> e siga as instruções para criar o seu diagrama.</p>
-                            <div class="editor-controls">
-                                <button class="button" id="download-model-btn">Visualizar Modelo (PDF)</button>
+                            <p>Acesse os materiais de apoio para criar o seu diagrama. Você pode visualizar diretamente ou fazer download.</p>
+                            
+                            <!-- Grade de materiais -->
+                            <div style="display: grid; gap: 1rem; margin-top: 1.5rem;">
+                                
+                                <!-- Card 1: Material Google Docs -->
+                                <div style="border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; background: var(--card);">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #4285F4;">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                        <h4 style="margin: 0; font-size: 1rem; font-weight: 600;">Material de Apoio: Modelagem UML</h4>
+                                    </div>
+                                    <p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--muted-foreground);">Documento com instruções e exemplos de diagramas UML</p>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <button class="button button-primary materials-btn" onclick="window.open('https://docs.google.com/document/d/1dAn3jqXbqtZUG5ESqDuLgxDuYXlvBMzfJ4j59WXUKL4/edit?tab=t.0', '_blank')" style="flex: 1; min-width: 150px;">
+                                            📄 Visualizar Online
+                                        </button>
+                                    </div>
+                                    <!-- Viewer inline do Google Docs (inicialmente oculto) -->
+                                    <div id="docs-viewer" style="display: none; margin-top: 1rem; border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <iframe src="https://docs.google.com/document/d/1dAn3jqXbqtZUG5ESqDuLgxDuYXlvBMzfJ4j59WXUKL4/preview" style="width: 100%; height: 500px; border: none;"></iframe>
+                                    </div>
+                                </div>
+                                
+                                <!-- Card 2: Livro PDF -->
+                                <div style="border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; background: var(--card);">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #EA4335;">
+                                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                        </svg>
+                                        <h4 style="margin: 0; font-size: 1rem; font-weight: 600;">Livro: UML - Eduardo Bezerra</h4>
+                                    </div>
+                                    <p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--muted-foreground);">Referência completa sobre UML e modelagem de sistemas</p>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <button class="button button-primary materials-btn" onclick="window.open('https://drive.google.com/file/d/1wiBHqeJHbjm8jndpn_uymGbNWHmVfdWc/view?usp=sharing', '_blank')" style="flex: 1; min-width: 150px;">
+                                            📄 Visualizar Online
+                                        </button>
+                                        <a href="documents/UML_Eduardo_Bezerra.pdf" download class="button button-primary materials-btn" style="flex: 1; min-width: 150px; text-align: center; text-decoration: none;">
+                                            📥 Baixar PDF
+                                        </a>
+                                    </div>
+                                    <!-- Viewer inline do PDF (inicialmente oculto) -->
+                                    <div id="pdf-viewer" style="display: none; margin-top: 1rem; border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <iframe src="documents/UML_Eduardo_Bezerra.pdf" style="width: 100%; height: 600px; border: none;"></iframe>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
 
@@ -476,31 +668,163 @@
                             </div>
                             <div class="editor-help">
                                 <details open>
-                                    <summary>Guia rápido do editor</summary>
-                                    <div>
-                                        <h4 style="margin: .5rem 0">Comece assim</h4>
-                                        <ul>
-                                            <li>Selecione um <strong>Tipo</strong> no dropdown abaixo para carregar um <em>template mínimo</em> correspondente.</li>
-                                            <li>Você pode editar, apagar ou adicionar elementos livremente após o carregamento.</li>
-                                        </ul>
-                                        <h4 style="margin: .75rem 0 .25rem">Exportar</h4>
-                                        <ul>
-                                            <li>No menu do editor: <strong>File → Export as</strong> (PNG, SVG, PDF, etc.).</li>
-                                            <li>Dica: para imagem nítida, escolha um <em>scale</em> maior (ex.: 2x).</li>
-                                        </ul>
-                                        <h4 style="margin: .75rem 0 .25rem">Atalhos úteis</h4>
-                                        <ul>
-                                            <li><kbd>Ctrl</kbd> + <kbd>Z</kbd>: desfazer • <kbd>Ctrl</kbd> + <kbd>Y</kbd>: refazer</li>
-                                            <li><kbd>Del</kbd>: apagar seleção • <kbd>Shift</kbd> + arrastar: seleção múltipla</li>
-                                            <li><kbd>Ctrl</kbd> + <kbd>C</kbd>/<kbd>V</kbd>: copiar/colar • <kbd>Ctrl</kbd> + <kbd>D</kbd>: duplicar</li>
-                                        </ul>
-                                        <h4 style="margin: .75rem 0 .25rem">Como enviar?</h4>
-                                        <ul>
-                                            <li><kbd>Para enviar, clique na seta para avança para o passo 3</kbd></li>
-                                        </ul>
+                                    <summary>📝 Atividade Prática: Modelando um Caixa Eletrônico (ATM)</summary>
+                                    <div style="padding: 1rem 0;">
+                                        <p style="margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.6;">
+                                            Vamos criar um <strong>Diagrama de Casos de Uso</strong> para um sistema super simples de Caixa Eletrônico. 
+                                            Você precisará de <strong>apenas 3 minutos</strong>!
+                                        </p>
+
+                                        <div style="background: var(--muted); padding: 1rem; border-radius: var(--radius); margin-bottom: 1.5rem;">
+                                            <h4 style="margin: 0 0 0.5rem 0; color: var(--primary);">📋 Você vai precisar de:</h4>
+                                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                                <li>Uma folha de papel e uma caneta (ou um quadro branco)</li>
+                                                <li>3 minutos do seu tempo</li>
+                                            </ul>
+                                        </div>
+
+                                        <div style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem;">
+                                            <h4 style="margin: 0 0 0.75rem 0;">🎯 Passo 1: Desenhe o Sistema</h4>
+                                            <p style="margin: 0 0 0.5rem 0;">O sistema é a "caixa" onde tudo acontece.</p>
+                                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                                <li>Desenhe um <strong>retângulo</strong> (uma caixa) grande no meio da sua página</li>
+                                                <li>Escreva o nome do sistema no topo: <strong>"Sistema do Caixa Eletrônico"</strong></li>
+                                                <li style="color: var(--primary); font-weight: 500;">💡 Tudo o que estiver DENTRO desta caixa são as funções do sistema. Tudo o que estiver FORA são os usuários.</li>
+                                            </ul>
+                                        </div>
+
+                                        <div style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem;">
+                                            <h4 style="margin: 0 0 0.75rem 0;">👤 Passo 2: Identifique os Atores (Quem usa?)</h4>
+                                            <p style="margin: 0 0 0.5rem 0;">Atores são as entidades externas que interagem com o sistema. Geralmente são pessoas, mas podem ser outros sistemas.</p>
+                                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                                <li>À <strong>esquerda da caixa</strong>, desenhe um <strong>boneco-palito</strong> (stick figure)</li>
+                                                <li>Escreva o nome dele abaixo: <strong>"Cliente"</strong></li>
+                                            </ul>
+                                        </div>
+
+                                        <div style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem;">
+                                            <h4 style="margin: 0 0 0.75rem 0;">⚙️ Passo 3: Identifique os Casos de Uso (O que o sistema faz?)</h4>
+                                            <p style="margin: 0 0 0.5rem 0;">Casos de Uso são as funções que o sistema oferece aos atores. Eles são representados por ovais.</p>
+                                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                                <li><strong>Dentro da caixa do sistema</strong>, desenhe <strong>três ovais</strong></li>
+                                                <li>Escreva uma função em cada oval:
+                                                    <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                                                        <li>"<strong>Sacar Dinheiro</strong>"</li>
+                                                        <li>"<strong>Consultar Saldo</strong>"</li>
+                                                        <li>"<strong>Fazer Transferência</strong>"</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem;">
+                                            <h4 style="margin: 0 0 0.75rem 0;">🔗 Passo 4: Ligue os Pontos (Quem faz o quê?)</h4>
+                                            <p style="margin: 0 0 0.5rem 0;">Agora, simplesmente conecte os Atores aos Casos de Uso com os quais eles interagem.</p>
+                                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                                <li>Desenhe uma <strong>linha reta</strong> do ator "Cliente" até o oval "<strong>Sacar Dinheiro</strong>"</li>
+                                                <li>Desenhe uma <strong>linha reta</strong> do ator "Cliente" até o oval "<strong>Consultar Saldo</strong>"</li>
+                                                <li>Desenhe uma <strong>linha reta</strong> do ator "Cliente" até o oval "<strong>Fazer Transferência</strong>"</li>
+                                            </ul>
+                                        </div>
+
+                                        <div style="background: hsl(142 76% 36% / 0.1); border: 1px solid hsl(142 76% 36% / 0.3); padding: 1rem; border-radius: var(--radius);">
+                                            <h4 style="margin: 0 0 0.5rem 0; color: hsl(142 76% 36%);">✅ Pronto! Você criou seu primeiro Diagrama de Casos de Uso!</h4>
+                                            <p style="margin: 0; font-size: 0.95rem;">
+                                                Agora siga para o próximo passo onde você encontrará o guia rápido e o editor para criar a versão digital do seu diagrama!
+                                            </p>
+                                        </div>
+
                                     </div>
                                 </details>
                             </div>
+                        </div>
+
+                        <!-- Passo 3: Guia Rápido do Editor -->
+                        <div class="practical-step" id="practical-step-3">
+                            <div class="step-header">
+                                <div class="step-number">3</div>
+                                <h3>💡 Guia Rápido do Editor</h3>
+                            </div>
+                            <p>Aqui estão as principais funcionalidades e atalhos para você usar o editor de forma eficiente:</p>
+                            
+                            <div class="editor-guide-tabs">
+                                
+                                    
+                                    <!-- Aba Exportar -->
+                                    <div class="tab-content active" id="tab-export">
+                                    <h4>📤 Exportar seu Diagrama</h4>
+                                    <p><strong>Passo a Passo:</strong></p>
+                                    <ol>
+                                                        <li>No editor: <strong>File → Export as → PNG</strong></li>
+                                                        <li>Configure: <strong>Scale: 2x</strong> (para alta qualidade)</li>
+                                                        <li>Marque: <strong>Include a copy of my diagram</strong></li>
+                                                        <li>Clique em <strong>Export</strong></li>
+                                                    </ol>
+                                    <p><strong>Formatos Recomendados:</strong></p>
+                                    <ul>
+                                                            <li><strong>PNG</strong> - Melhor para apresentações</li>
+                                                            <li><strong>SVG</strong> - Para edição futura</li>
+                                                            <li><strong>PDF</strong> - Para documentos</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <!-- Aba Atalhos -->
+                                    <div class="tab-content" id="tab-shortcuts">
+                                    <h4>⌨️ Atalhos Essenciais</h4>
+                                    <p><strong>Edição Básica:</strong></p>
+                                    <ul>
+                                        <li><strong>Desfazer:</strong> Ctrl + Z</li>
+                                        <li><strong>Refazer:</strong> Ctrl + Y</li>
+                                        <li><strong>Copiar:</strong> Ctrl + C</li>
+                                        <li><strong>Colar:</strong> Ctrl + V</li>
+                                        <li><strong>Duplicar:</strong> Ctrl + D</li>
+                                        <li><strong>Agrupar:</strong> Ctrl + G</li>
+                                        <li><strong>Desagrupar:</strong> Ctrl + Shift + G</li>
+                                    </ul>
+                                    </div>
+                                    
+                                    <!-- Aba Design -->
+                                    <div class="tab-content" id="tab-design">
+                                    <h4>🎨 Dicas de Design</h4>
+                                    <p><strong>Cores:</strong></p>
+                                    <ul>
+                                                            <li>Use máximo 3-4 cores principais</li>
+                                                            <li>Mantenha consistência visual</li>
+                                                            <li>Use contraste adequado</li>
+                                        </ul>
+                                    <p><strong>Layout:</strong></p>
+                                    <ul>
+                                                            <li>Alinhe elementos à grade</li>
+                                                            <li>Use espaçamento uniforme</li>
+                                                            <li>Evite sobreposições desnecessárias</li>
+                                                        </ul>
+                                    </div>
+                                    
+                                    <!-- Aba Workflow -->
+                                    <div class="tab-content" id="tab-workflow">
+                                    <h4>🔄 Workflow Eficiente</h4>
+                                    <p><strong>Dicas Rápidas:</strong></p>
+                                    <ul>
+                                                            <li>Use templates como base</li>
+                                                            <li>Salve frequentemente (Ctrl+S)</li>
+                                                            <li>Teste diferentes layouts</li>
+                                                            <li>Peça feedback antes de finalizar</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <!-- Aba Solução de Problemas -->
+                                    <div class="tab-content" id="tab-troubleshooting">
+                                    <h4>🔧 Solução de Problemas</h4>
+                                    <p><strong>Problemas Comuns:</strong></p>
+                                    <ul>
+                                        <li><strong>Qualidade baixa:</strong> Use Scale 2x ou 3x na exportação PNG</li>
+                                        <li><strong>Editor lento:</strong> Feche abas desnecessárias</li>
+                                        <li><strong>Arquivo não carrega:</strong> Verifique o formato (PNG, JPG, SVG)</li>
+                                    </ul>
+                                                    </div>
+                                                </div>
+                                                
+                            <!-- Editor UML -->
                             <div class="editor-controls">
                                 <label class="select-group" for="uml-diagram-type" style="display:flex;align-items:center;gap:.5rem;">
                                     <span>Tipo:</span>
@@ -518,44 +842,129 @@
                                     🔄 Testar Conexão
                                 </button>
                                 <span id="editor-status" class="status-indicator">Pronto</span>
-                            </div>
+                                                        </div>
                             <div class="uml-editor-container">
                                 <iframe id="uml-editor-iframe" src="https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=uml;general&grid=1&nav=1&shadow=0&splash=0" width="100%" height="600"></iframe>
-                            </div>
-                            
+                                </div>
+                                
                             <div id="saved-work-preview" class="saved-work-preview hidden">
                                 <h4>Seu trabalho salvo:</h4>
                                 <img id="diagram-thumbnail" alt="Pré-visualização do diagrama" />
                             </div>
                         </div>
 
-                        <!-- Passo 3: Envio -->
-                        <div class="practical-step" id="practical-step-3">
+                        <!-- Passo 4: Envio -->
+                        <div class="practical-step" id="practical-step-4">
                             <div class="step-header">
-                                <div class="step-number">3</div>
+                                <div class="step-number">4</div>
                                 <h3>Envie seu Trabalho</h3>
                             </div>
+                            <p>Envie seu diagrama para completar esta atividade.</p>
 
-                            <!-- Área de upload de arquivo -->
-                            <div class="file-upload-area">
-                                <label for="diagram-file-input" class="file-upload-label">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                                        <polyline points="10 9 9 9 8 9"></polyline>
-                                    </svg>
-                                    <span>Clique para selecionar o arquivo do diagrama</span>
+                            <!-- Área de upload de arquivo melhorada -->
+                            <div class="file-upload-area" id="file-upload-area" style="position: relative; border: 2px dashed var(--border); border-radius: var(--radius); padding: 2rem; text-align: center; background: var(--muted); transition: all 0.3s ease; cursor: pointer;">
+                                <label for="diagram-file-input" class="file-upload-label" id="file-upload-label" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; cursor: pointer;">
+                                    <div style="position: relative;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                            <polyline points="10 9 9 9 8 9"></polyline>
+                                        </svg>
+                                        <div id="upload-progress" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
+                                            <div style="width: 40px; height: 40px; border: 3px solid var(--muted); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin: 0 0 0.5rem 0; color: var(--primary); font-size: 1.25rem;">📁 Selecione seu arquivo</h4>
+                                        <p style="margin: 0 0 0.75rem 0; color: var(--muted-foreground);">Arraste e solte ou clique para escolher</p>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 0.75rem;">
+                                            <span style="background: var(--primary); color: white; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500;">PNG</span>
+                                            <span style="background: var(--primary); color: white; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500;">JPG</span>
+                                            <span style="background: var(--primary); color: white; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500;">SVG</span>
+                                            <span style="background: var(--primary); color: white; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500;">PDF</span>
+                                        </div>
+                                        <small style="color: var(--muted-foreground);">Tamanho máximo: 10MB</small>
+                                    </div>
                                 </label>
-                                <input type="file" id="diagram-file-input" accept=".png,.jpg,.jpeg,.svg,.pdf" class="file-input">
-                                <div id="file-status" class="file-status">Nenhum arquivo selecionado</div>
+                                <input type="file" id="diagram-file-input" accept=".png,.jpg,.jpeg,.svg,.pdf" class="file-input" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                                <div id="file-status" class="file-status" style="margin-top: 1rem; padding: 0.75rem; background: var(--background); border: 1px solid var(--border); border-radius: var(--radius); color: var(--muted-foreground);">Nenhum arquivo selecionado</div>
                             </div>
 
-                            <button class="button button-success" id="submit-practical-btn" disabled>Enviar Atividade</button>
-                            <div id="practical-feedback" class="practical-feedback hidden">
-                                <strong>Atividade enviada com sucesso!</strong>
-                                <p>Você já pode avançar para a próxima aula.</p>
+                            <!-- Área de pré-visualização melhorada -->
+                            <div id="file-preview-area" class="file-preview-area hidden" style="background: var(--muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin: 1.5rem 0;">
+                                <div class="preview-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <h4 style="margin: 0; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                                        📄 Pré-visualização do arquivo
+                                        <span id="file-quality-badge" style="background: hsl(142 76% 36%); color: white; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500;">✓ Qualidade OK</span>
+                                    </h4>
+                                    <button type="button" id="remove-file-btn" class="button button-ghost" style="padding: 0.5rem 1rem; font-size: 0.875rem; border: 1px solid var(--border);">
+                                        ✕ Remover Arquivo
+                                    </button>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; align-items: start;">
+                                    <div id="file-preview-content" class="preview-content" style="background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; text-align: center; min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                                        <!-- Conteúdo da pré-visualização será inserido aqui -->
+                                    </div>
+                                    
+                                    <div id="file-info" class="file-info" style="background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem;">
+                                        <h5 style="margin: 0 0 1rem 0; color: var(--foreground);">📊 Informações do Arquivo</h5>
+                                        <div style="display: grid; gap: 0.75rem;">
+                                            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--muted); border-radius: 0.375rem;">
+                                                <span style="font-size: 0.875rem; color: var(--muted-foreground);">Nome:</span>
+                                                <span id="file-name" style="font-size: 0.875rem; font-weight: 500; word-break: break-all;">-</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--muted); border-radius: 0.375rem;">
+                                                <span style="font-size: 0.875rem; color: var(--muted-foreground);">Tamanho:</span>
+                                                <span id="file-size" style="font-size: 0.875rem; font-weight: 500;">-</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--muted); border-radius: 0.375rem;">
+                                                <span style="font-size: 0.875rem; color: var(--muted-foreground);">Tipo:</span>
+                                                <span id="file-type" style="font-size: 0.875rem; font-weight: 500;">-</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: var(--muted); border-radius: 0.375rem;">
+                                                <span style="font-size: 0.875rem; color: var(--muted-foreground);">Dimensões:</span>
+                                                <span id="file-dimensions" style="font-size: 0.875rem; font-weight: 500;">-</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Análise de Qualidade -->
+                                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                                            <h6 style="margin: 0 0 0.75rem 0; color: var(--foreground); font-size: 0.875rem;">🔍 Análise de Qualidade</h6>
+                                            <div id="quality-analysis" style="display: grid; gap: 0.5rem;">
+                                                <!-- Análise será inserida aqui dinamicamente -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botão de envio melhorado -->
+                            <div style="text-align: center; margin: 2rem 0;">
+                                <button class="button button-success" id="submit-practical-btn" disabled style="padding: 1rem 2rem; font-size: 1.1rem; font-weight: 600; border-radius: var(--radius); position: relative; overflow: hidden;">
+                                    <span id="submit-text">🚀 Enviar Atividade</span>
+                                    <div id="submit-progress" style="position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 2s infinite; display: none;"></div>
+                                </button>
+                                <div style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--muted-foreground);">
+                                    <span id="submit-hint">Selecione um arquivo para habilitar o envio</span>
+                                </div>
+                            </div>
+
+                            <!-- Feedback de sucesso melhorado -->
+                            <div id="practical-feedback" class="practical-feedback hidden" style="background: linear-gradient(135deg, hsl(142 76% 36% / 0.1) 0%, hsl(142 76% 36% / 0.05) 100%); border: 1px solid hsl(142 76% 36% / 0.2); padding: 2rem; border-radius: var(--radius); text-align: center; margin: 2rem 0;">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                                <h3 style="margin: 0 0 0.75rem 0; color: hsl(142 76% 36%);">Atividade Enviada com Sucesso!</h3>
+                                <p style="margin: 0 0 1.5rem 0; color: var(--muted-foreground);">Parabéns! Seu diagrama foi enviado e está sendo processado.</p>
+                                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                                    <button class="button button-primary" onclick="location.reload()" style="padding: 0.75rem 1.5rem;">
+                                        📝 Nova Atividade
+                                    </button>
+                                    <button class="button button-ghost" onclick="window.location.href='/aulas.html'" style="padding: 0.75rem 1.5rem;">
+                                        📚 Voltar às Aulas
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -633,7 +1042,10 @@
         const videoContent = document.getElementById('video-content');
         const exerciseContent = document.getElementById('exercise-content');
         const practicalContent = document.getElementById('practical-content');
-        const downloadModelBtn = document.getElementById('download-model-btn');
+        const toggleDocsViewerBtn = document.getElementById('toggle-docs-viewer');
+        const togglePdfViewerBtn = document.getElementById('toggle-pdf-viewer');
+        const docsViewer = document.getElementById('docs-viewer');
+        const pdfViewer = document.getElementById('pdf-viewer');
         const umlEditorIframe = document.getElementById('uml-editor-iframe');
         const saveDiagramBtn = document.getElementById('save-diagram-btn');
         const savedWorkPreview = document.getElementById('saved-work-preview');
@@ -2080,16 +2492,35 @@
             }
         });
 
-        // Evento: Visualizar Modelo Orientativo
-        if (downloadModelBtn) {
-            downloadModelBtn.addEventListener('click', function() {
-                if (!currentLessonTitle) return;
-                updateUserProgress(currentLessonTitle, { modelDownloaded: true });
-                console.log('📥 Modelo orientativo visualizado');
-                
-                // Abre o PDF diretamente no navegador
-                const pdfPath = 'file:///C:/Users/Do2anjos/Downloads/UML_Eduardo_Bezerra.pdf';
-                window.open(pdfPath, '_blank');
+        // Evento: Toggle Viewer do Google Docs
+        if (toggleDocsViewerBtn && docsViewer) {
+            toggleDocsViewerBtn.addEventListener('click', function() {
+                if (docsViewer.style.display === 'none' || !docsViewer.style.display) {
+                    docsViewer.style.display = 'block';
+                    toggleDocsViewerBtn.innerHTML = '🔼 Ocultar Visualização';
+                } else {
+                    docsViewer.style.display = 'none';
+                    toggleDocsViewerBtn.innerHTML = '👁️ Visualizar Aqui';
+                }
+            });
+        }
+
+        // Evento: Toggle Viewer do PDF
+        if (togglePdfViewerBtn && pdfViewer) {
+            togglePdfViewerBtn.addEventListener('click', function() {
+                if (pdfViewer.style.display === 'none' || !pdfViewer.style.display) {
+                    pdfViewer.style.display = 'block';
+                    togglePdfViewerBtn.innerHTML = '🔼 Ocultar PDF';
+                    
+                    // Registra progresso quando visualiza o material
+                    if (currentLessonTitle) {
+                        updateUserProgress(currentLessonTitle, { modelDownloaded: true });
+                        console.log('📥 Material visualizado');
+                    }
+                } else {
+                    pdfViewer.style.display = 'none';
+                    togglePdfViewerBtn.innerHTML = '👁️ Visualizar PDF';
+                }
             });
         }
 
@@ -2261,20 +2692,107 @@
         }
 
         // Modo livre: sem template pré-carregado
-        // Controle do upload de arquivo
+        // Controle do upload de arquivo com pré-visualização melhorada
         let selectedFile = null;
+        const fileUploadArea = document.getElementById('file-upload-area');
+        const filePreviewArea = document.getElementById('file-preview-area');
+        const filePreviewContent = document.getElementById('file-preview-content');
+        const fileInfo = document.getElementById('file-info');
+        const removeFileBtn = document.getElementById('remove-file-btn');
 
+        // Função para formatar tamanho do arquivo
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Função para obter ícone do tipo de arquivo
+        function getFileTypeIcon(fileType) {
+            if (fileType.startsWith('image/')) return '🖼️';
+            if (fileType === 'application/pdf') return '📄';
+            if (fileType.includes('svg')) return '🎨';
+            return '📁';
+        }
+
+        // Função para criar pré-visualização
+        function createFilePreview(file) {
+            const fileType = file.type;
+            const fileName = file.name;
+            const fileSize = formatFileSize(file.size);
+            const fileIcon = getFileTypeIcon(fileType);
+
+            // Criar informações do arquivo
+            fileInfo.innerHTML = `
+                <div class="file-info-item">
+                    <span class="file-info-label">Nome:</span>
+                    <span class="file-info-value">${fileName}</span>
+                </div>
+                <div class="file-info-item">
+                    <span class="file-info-label">Tamanho:</span>
+                    <span class="file-info-value">${fileSize}</span>
+                </div>
+                <div class="file-info-item">
+                    <span class="file-info-label">Tipo:</span>
+                    <span class="file-info-value">${fileType || 'Desconhecido'}</span>
+                </div>
+            `;
+
+            // Criar pré-visualização baseada no tipo
+            if (fileType.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    filePreviewContent.innerHTML = `
+                        <img src="${e.target.result}" alt="Pré-visualização de ${fileName}" />
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else if (fileType === 'application/pdf') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    filePreviewContent.innerHTML = `
+                        <iframe src="${e.target.result}#toolbar=0&navpanes=0&scrollbar=0" 
+                                title="Pré-visualização de ${fileName}">
+                        </iframe>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                filePreviewContent.innerHTML = `
+                    <div>
+                        <div class="file-type-icon">${fileIcon}</div>
+                        <h4>${fileName}</h4>
+                        <p>Arquivo selecionado com sucesso!</p>
+                        <small>Pré-visualização não disponível para este tipo de arquivo.</small>
+                    </div>
+                `;
+            }
+        }
+
+        // Event listeners para upload
         if (diagramFileInput) {
             diagramFileInput.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (file) {
+                    // Validar tamanho (10MB)
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('Arquivo muito grande! Tamanho máximo: 10MB');
+                        return;
+                    }
+
                     selectedFile = file;
-                    if (fileStatus) fileStatus.innerHTML = `<strong>Arquivo carregado com sucesso:</strong> ${file.name} <span style="color: var(--muted-foreground)">(${(file.size / 1024).toFixed(1)} KB)</span>`;
+                    
+                    // Ocultar área de upload e mostrar pré-visualização
+                    fileUploadArea.style.display = 'none';
+                    filePreviewArea.classList.remove('hidden');
+                    
+                    // Criar pré-visualização
+                    createFilePreview(file);
 
                     // Marca diagrama como salvo quando arquivo é selecionado
                     updateUserProgress(currentLessonTitle, { diagramSaved: true });
-
-                    // Mantém o desbloqueio da próxima aula apenas no envio da atividade
 
                     if (submitPracticalBtn) submitPracticalBtn.disabled = false;
                     console.log('📁 Arquivo selecionado e diagrama marcado como salvo');
@@ -2288,6 +2806,45 @@
                     selectedFile = null;
                     if (fileStatus) fileStatus.textContent = 'Nenhum arquivo selecionado';
                     if (submitPracticalBtn) submitPracticalBtn.disabled = true;
+                }
+            });
+        }
+
+        // Event listener para remover arquivo
+        if (removeFileBtn) {
+            removeFileBtn.addEventListener('click', function() {
+                selectedFile = null;
+                diagramFileInput.value = '';
+                
+                // Mostrar área de upload e ocultar pré-visualização
+                fileUploadArea.style.display = 'block';
+                filePreviewArea.classList.add('hidden');
+                
+                if (submitPracticalBtn) submitPracticalBtn.disabled = true;
+                console.log('📁 Arquivo removido');
+            });
+        }
+
+        // Drag and drop
+        if (fileUploadArea) {
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            fileUploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    diagramFileInput.files = files;
+                    diagramFileInput.dispatchEvent(new Event('change'));
                 }
             });
         }
@@ -2932,6 +3489,35 @@
             @keyframes fadeIn {
                 from { opacity: 0; transform: translateY(-10px); }
                 to { opacity: 1; transform: translateY(0); }
+            }
+            
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            @keyframes shimmer {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(100%); }
+            }
+            
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+            
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-10px); }
+                60% { transform: translateY(-5px); }
+            }
+            
+            .pulse-animation {
+                animation: pulse 2s infinite;
+            }
+            
+            .bounce-animation {
+                animation: bounce 1s;
             }
         `;
         document.head.appendChild(style);
