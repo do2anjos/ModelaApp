@@ -460,11 +460,11 @@
                         <div class="practical-step" id="practical-step-1">
                             <div class="step-header">
                                 <div class="step-number">1</div>
-                                <h3>Modelo Orientativo</h3>
+                                <h3>Materiais de apoio</h3>
                             </div>
-                            <p>Baixe o modelo e siga as instruções para criar o seu diagrama.</p>
+                            <p>Acesse o <a href="https://docs.google.com/document/d/1dAn3jqXbqtZUG5ESqDuLgxDuYXlvBMzfJ4j59WXUKL4/edit?tab=t.0#heading=h.sdugyshgcp0c" target="_blank" rel="noopener noreferrer">material de apoio</a> e siga as instruções para criar o seu diagrama.</p>
                             <div class="editor-controls">
-                                <button class="button" id="download-model-btn">Baixar Modelo (PDF)</button>
+                                <button class="button" id="download-model-btn">Visualizar Modelo (PDF)</button>
                             </div>
                         </div>
 
@@ -2080,12 +2080,16 @@
             }
         });
 
-        // Evento: Download do Modelo Orientativo
+        // Evento: Visualizar Modelo Orientativo
         if (downloadModelBtn) {
             downloadModelBtn.addEventListener('click', function() {
                 if (!currentLessonTitle) return;
                 updateUserProgress(currentLessonTitle, { modelDownloaded: true });
-                console.log('📥 Modelo orientativo baixado');
+                console.log('📥 Modelo orientativo visualizado');
+                
+                // Abre o PDF diretamente no navegador
+                const pdfPath = 'file:///C:/Users/Do2anjos/Downloads/UML_Eduardo_Bezerra.pdf';
+                window.open(pdfPath, '_blank');
             });
         }
 
