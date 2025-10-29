@@ -124,6 +124,33 @@ function getCacheKey(sql, params) {
     return `${sql}:${JSON.stringify(params)}`;
 }
 
+// Utilitário: retry com backoff simples para operações que podem falhar com SQLITE_BUSY
+async function withRetry(operationFn, options = {}) {
+    const {
+        retries = 3,
+        baseDelayMs = 150,
+        factor = 2,
+        onRetry
+    } = options;
+
+    let attempt = 0;
+    let delay = baseDelayMs;
+    while (true) {
+        try {
+            return await operationFn();
+        } catch (err) {
+            const isBusy = err && (err.code === 'SQLITE_BUSY' || /busy/i.test(err.message || ''));
+            if (!isBusy || attempt >= retries) {
+                throw err;
+            }
+            attempt += 1;
+            onRetry && onRetry(err, attempt, delay);
+            await new Promise(r => setTimeout(r, delay));
+            delay = Math.min(delay * factor, 1000);
+        }
+    }
+}
+
 // Helpers de Promises para o driver (Turso/SQLite) COM CACHE
 function runAsync(sql, params = []) {
     return new Promise((resolve, reject) => {
@@ -315,25 +342,25 @@ app.post('/api/cadastro', async (req, res) => {
             });
         }
 
-        // Verificar se email já existe
-        const emailExists = await new Promise((resolve, reject) => {
+        // Verificar se email já existe (com retry)
+        const emailExists = await withRetry(() => new Promise((resolve, reject) => {
             db.get('SELECT id FROM users WHERE email = ?', [email], (err, row) => {
                 if (err) reject(err);
                 else resolve(row);
             });
-        }).catch(() => null);
+        }), { onRetry: (err, attempt) => console.warn(`🔁 Retry SELECT email (tentativa ${attempt})`, err?.message) }).catch(() => null);
 
         if (emailExists) {
             return res.status(400).json({ success: false, message: 'Email já cadastrado' });
         }
 
-        // Verificar se matrícula já existe
-        const matriculaExists = await new Promise((resolve, reject) => {
+        // Verificar se matrícula já existe (com retry)
+        const matriculaExists = await withRetry(() => new Promise((resolve, reject) => {
             db.get('SELECT id FROM users WHERE matricula = ?', [matricula], (err, row) => {
                 if (err) reject(err);
                 else resolve(row);
             });
-        }).catch(() => null);
+        }), { onRetry: (err, attempt) => console.warn(`🔁 Retry SELECT matrícula (tentativa ${attempt})`, err?.message) }).catch(() => null);
 
         if (matriculaExists) {
             return res.status(400).json({ success: false, message: 'Matrícula já cadastrada' });
@@ -343,8 +370,8 @@ app.post('/api/cadastro', async (req, res) => {
         const senhaHash = await bcrypt.hash(senha, 10);
         const username = generateUsername(nome);
 
-        // Inserir usuário
-        const result = await new Promise((resolve, reject) => {
+        // Inserir usuário (com retry em SQLITE_BUSY)
+        const result = await withRetry(() => new Promise((resolve, reject) => {
             db.run(
                 'INSERT INTO users (nome, email, matricula, telefone, senha_hash, username) VALUES (?, ?, ?, ?, ?, ?)',
                 [nome, email, matricula, telefone, senhaHash, username],
@@ -353,7 +380,7 @@ app.post('/api/cadastro', async (req, res) => {
                     else resolve({ lastID: this.lastID, changes: this.changes });
                 }
             );
-        });
+        }), { onRetry: (err, attempt) => console.warn(`🔁 Retry INSERT usuário (tentativa ${attempt})`, err?.message) });
 
         res.json({ 
             success: true, 
@@ -362,8 +389,12 @@ app.post('/api/cadastro', async (req, res) => {
             username: username
         });
     } catch (error) {
+        if (error && error.code === 'SQLITE_CONSTRAINT') {
+            console.warn('⚠️ Violação de unicidade no cadastro:', error?.message);
+            return res.status(409).json({ success: false, message: 'Email ou matrícula já cadastrados' });
+        }
         console.error('Erro no cadastro:', error);
-        res.status(500).json({ success: false, message: 'Erro interno do servidor: ' + error.message });
+        res.status(500).json({ success: false, message: 'Erro interno do servidor: ' + (error?.message || 'desconhecido') });
     }
 });
 
