@@ -99,6 +99,94 @@
             from { transform: translateX(400px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
+        
+        /* Estilos para o cabeçalho do tópico */
+        .topic-detail-header {
+            display: flex;
+            flex-direction: column; /* sempre coluna: botão em cima, título abaixo */
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .topic-header-nav {
+            display: flex;
+            justify-content: flex-start;
+            /* Alinha com o mesmo recuo de conteúdo (sem margem extra) */
+            margin: 0;
+        }
+        
+        .topic-title-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .topic-title-section h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--foreground);
+        }
+        
+        .topic-title-section .topic-category {
+            font-size: 0.9rem;
+            color: var(--muted-foreground);
+            background-color: var(--muted);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            width: fit-content;
+        }
+        
+        /* Sem alteração para desktop: mantém coluna para respeitar ordem visual pedida */
+
+        /* Card do conteúdo do tópico e visual mais claro */
+        .topic-detail-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+        }
+
+        .topic-detail-content {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: var(--foreground);
+        }
+
+        /* Correções visuais no modo escuro para posts dentro do tópico */
+        [data-theme="dark"] .topic-card .post-item {
+            background-color: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            padding: 1rem;
+        }
+        [data-theme="dark"] .topic-card .post-item .post-body {
+            color: var(--foreground);
+        }
+        [data-theme="dark"] .topic-card .post-item .author-info span {
+            color: var(--muted-foreground);
+        }
+
+        .topic-detail-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--muted-foreground);
+            margin-bottom: 1rem;
+        }
+
+        .topic-detail-meta .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .replies-section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin: 0 0 0.75rem 0;
+        }
     </style>
 </head>
 <body class="dashboard-body forum-page">
@@ -196,7 +284,7 @@
                         <div class="forum-topic-list">
                             <div class="topic-item">
                                 <div class="topic-main">
-                                    <img src="https://picsum.photos/seed/aluno1/48" class="topic-avatar" alt="Avatar">
+                                    <img src="https://picsum.photos/seed/aluno1/48" class="topic-avatar" alt="Avatar" onerror="this.onerror=null;this.src=window.DEFAULT_AVATAR;">
                                     <div class="topic-info">
                                         <a href="#" class="topic-title">Dúvida sobre Diagrama de Classes na Aula 4</a>
                                         <p class="topic-meta">por <strong>Aluno Exemplo</strong> em <strong>Modelagem com UML</strong></p>
@@ -207,7 +295,7 @@
                             </div>
                             <div class="topic-item">
                                 <div class="topic-main">
-                                    <img src="https://picsum.photos/seed/aluno2/48" class="topic-avatar" alt="Avatar">
+                                    <img src="https://picsum.photos/seed/aluno2/48" class="topic-avatar" alt="Avatar" onerror="this.onerror=null;this.src=window.DEFAULT_AVATAR;">
                                     <div class="topic-info">
                                         <a href="#" class="topic-title">Como aplicar o padrão Singleton em um projeto real?</a>
                                         <p class="topic-meta">por <strong>Outro Aluno</strong> em <strong>Padrões de Projeto</strong></p>
@@ -232,7 +320,7 @@
                     <div class="dashboard-card topic-card">
                         <div class="post-item is-op">
                             <div class="post-author">
-                                <img src="https://picsum.photos/seed/aluno1/64" alt="Avatar">
+                                <img src="https://picsum.photos/seed/aluno1/64" alt="Avatar" onerror="this.onerror=null;this.src=window.DEFAULT_AVATAR;">
                                 <div class="author-info">
                                     <div class="author-name-line">
                                         <strong>Aluno Exemplo</strong>
@@ -244,7 +332,7 @@
                         </div>
                         <div class="post-item is-instructor">
                             <div class="post-author">
-                                <img src="https://picsum.photos/seed/professor/64" alt="Avatar">
+                                <img src="https://picsum.photos/seed/professor/64" alt="Avatar" onerror="this.onerror=null;this.src=window.DEFAULT_AVATAR;">
                                 <div class="author-info">
                                     <div class="author-name-line">
                                         <strong>Professor</strong>
@@ -269,6 +357,8 @@
     // O SCRIPT PERMANECE O MESMO
     document.addEventListener('DOMContentLoaded', function() {
         // Elementos principais
+        // Avatar padrão (ícone genérico) para quando não houver foto
+        window.DEFAULT_AVATAR = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#99A1AA" stroke-width="1.5"><circle cx="12" cy="8" r="4" fill="#E9EEF5"/><path d="M4 20c0-4.418 3.582-6 8-6s8 1.582 8 6" fill="#E9EEF5"/></svg>');
         const topicListView = document.getElementById('topic-list-view');
         const topicDetailView = document.getElementById('topic-detail-view');
         const pageTitle = document.getElementById('page-title');
@@ -442,7 +532,7 @@
                 topicElement.className = 'topic-item';
                 topicElement.innerHTML = `
                     <div class="topic-main">
-                        <img src="https://picsum.photos/seed/${topic.userId}/48" class="topic-avatar" alt="Avatar">
+                        <img src="${topic.avatarUrl || DEFAULT_AVATAR}" class="topic-avatar" alt="Avatar" onerror="this.onerror=null;this.src=window.DEFAULT_AVATAR;">
                         <div class="topic-info">
                             <a href="#" class="topic-title">${topic.title}</a>
                             <p class="topic-meta">por <strong>${topic.userName}</strong> em <strong>${topic.category}</strong></p>
@@ -505,46 +595,81 @@
             
             detailContainer.innerHTML = `
                 <div class="topic-detail-header">
-                    <h2>${topic.title}</h2>
-                    <span class="topic-category">${topic.category}</span>
-                </div>
-                <div class="topic-detail-content">
-                    <p>${topic.content}</p>
-                </div>
-                <div class="topic-detail-meta">
-                    <div class="topic-author">
-                        <img src="https://picsum.photos/seed/${topic.user_id}/48" alt="Avatar" class="author-avatar">
-                        <span class="author-name">${topic.userName}</span>
+                    <div class="topic-header-nav">
+                        <a href="#" class="button button-secondary" id="back-to-forum-from-detail-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m15 18-6-6 6-6"/>
+                            </svg>
+                            Voltar ao Fórum
+                        </a>
                     </div>
-                    <span class="topic-time">${formatTime(topic.created_at)}</span>
                 </div>
-                <div class="replies-section">
-                    <h3>Respostas (${replies.length})</h3>
-                    <div class="replies-list">
-                        ${replies.map(reply => `
-                            <div class="reply-item">
-                                <div class="reply-author">
-                                    <img src="https://picsum.photos/seed/${reply.user_id}/32" alt="Avatar" class="author-avatar">
-                                    <span class="author-name">${reply.userName}</span>
+
+                <div class="dashboard-card topic-card">
+                    <div class="post-item is-op">
+                        <div class="post-author">
+                            <img src="${topic.avatarUrl || DEFAULT_AVATAR}" alt="Avatar" class="author-avatar" onerror="this.onerror=null;this.src=window.DEFAULT_AVATAR;">
+                            <div class="author-info">
+                                <div class="author-name-line">
+                                    <strong>${topic.userName}</strong>
                                 </div>
-                                <div class="reply-content">
-                                    <p>${reply.content}</p>
-                                </div>
-                                <div class="reply-time">${formatTime(reply.created_at)}</div>
+                                <span>${formatTime(topic.created_at)}</span>
                             </div>
-                        `).join('')}
+                        </div>
+                        <div class="post-body">
+                            <h2 style="margin:0 0 .5rem 0; font-size:1.35rem;">${topic.title}</h2>
+                            <span class="topic-category" style="display:inline-block; margin-bottom: .75rem;">${topic.category}</span>
+                            <div class="post-content">
+                                <p>${topic.content}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="reply-form">
-                    <h4>Responder</h4>
-                    <textarea id="reply-content" placeholder="Digite sua resposta..."></textarea>
-                    <button onclick="createReply(${topic.id})" class="button button-primary">Enviar Resposta</button>
+
+                <div class="dashboard-card topic-card">
+                    <div class="replies-section">
+                        <h3>Respostas (${replies.length})</h3>
+                        <div class="replies-list">
+                            ${replies.map(reply => `
+                                <div class="post-item">
+                                    <div class="post-author">
+                                        <img src="${reply.avatarUrl || DEFAULT_AVATAR}" alt="Avatar" class="author-avatar" onerror="this.onerror=null;this.src=window.DEFAULT_AVATAR;">
+                                        <div class="author-info">
+                                            <div class="author-name-line">
+                                                <strong>${reply.userName}</strong>
+                                            </div>
+                                            <span>${formatTime(reply.created_at)}</span>
+                                        </div>
+                                    </div>
+                                    <div class="post-body">
+                                        <div class="post-content">
+                                            <p>${reply.content}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="reply-form">
+                        <h4>Responder</h4>
+                        <textarea id="reply-content" placeholder="Digite sua resposta..."></textarea>
+                        <button onclick="createReply(${topic.id})" class="button button-primary">Enviar Resposta</button>
+                    </div>
                 </div>
             `;
             
             // Mostrar seção de detalhes
             document.getElementById('topic-list-view').classList.add('hidden');
             detailContainer.classList.remove('hidden');
+            
+            // Adicionar evento para o botão de voltar
+            const backBtn = document.getElementById('back-to-forum-from-detail-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    showTopicList();
+                });
+            }
         }
 
         // Função para criar resposta
@@ -575,19 +700,25 @@
                     })
                 });
 
-                const result = await response.json();
+                let result = null;
+                let ok = response.ok;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    // Alguns backends podem não retornar JSON, mas ainda assim salvar
+                }
 
-                if (result.success) {
-                    // Mostrar notificação de pontos
-                    showPointsNotification(result.pointsAwarded);
-                    
+                if (ok && (!result || result.success !== false)) {
+                    const points = (result && result.pointsAwarded) ? result.pointsAwarded : 0;
+                    if (points) showPointsNotification(points);
                     // Recarregar tópico
                     loadTopicDetail(topicId);
-                    
                     // Limpar formulário
-                    document.getElementById('reply-content').value = '';
+                    const area = document.getElementById('reply-content');
+                    if (area) area.value = '';
                 } else {
-                    alert('Erro ao criar resposta: ' + result.message);
+                    const message = (result && result.message) ? result.message : 'Erro ao criar resposta. Tente novamente.';
+                    alert(message);
                 }
             } catch (error) {
                 console.error('Erro ao criar resposta:', error);
@@ -640,30 +771,41 @@
                     })
                 });
 
-                const result = await response.json();
+                let result = null;
+                let ok = response.ok;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    // Pode ter criado mesmo sem JSON
+                }
 
-                if (result.success) {
-                    // Mostrar notificação de pontos
-                    showPointsNotification(result.pointsAwarded);
-                    
+                if (ok && (!result || result.success !== false)) {
+                    const points = (result && result.pointsAwarded) ? result.pointsAwarded : 0;
+                    if (points) showPointsNotification(points);
                     // Recarregar lista de tópicos
                     loadTopics();
                     showTopicList();
-                    
                     // Limpar formulário
-                    document.getElementById('topic-title').value = '';
-                    document.getElementById('topic-content').value = '';
-                    document.getElementById('topic-category').value = '';
-                    
+                    const t = document.getElementById('topic-title');
+                    const c = document.getElementById('topic-content');
+                    const g = document.getElementById('topic-category');
+                    if (t) t.value = '';
+                    if (c) c.value = '';
+                    if (g) g.value = '';
                     showSuccessMessage('Tópico criado com sucesso!');
                 } else {
-                    alert('Erro ao criar tópico: ' + result.message);
+                    const message = (result && result.message) ? result.message : 'Erro ao criar tópico. Tente novamente.';
+                    alert(message);
                 }
             } catch (error) {
                 console.error('Erro ao criar tópico:', error);
                 alert('Erro ao criar tópico. Tente novamente.');
             }
         }
+
+        // Tornar funções acessíveis para handlers inline (onclick)
+        window.createReply = createReply;
+        window.createNewTopic = createNewTopic;
 
         // Adicionar tópico à lista
         function addTopicToList(topic) {
