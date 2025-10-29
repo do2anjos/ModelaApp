@@ -199,7 +199,7 @@
             // Abrir popup por âncora :target
             window.location.hash = 'loginsucesso';
           } else {
-            messages.textContent = data.error || 'Falha no login.';
+            messages.textContent = (data && (data.message || data.error)) || 'Falha no login.';
             messages.style.color = 'red';
           }
         } catch (err) {

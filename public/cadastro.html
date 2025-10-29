@@ -248,7 +248,7 @@
             // Abrir popup baseado em âncora :target
             window.location.hash = 'sucesso';
           } else {
-            messages.textContent = data.error || 'Erro ao cadastrar usuário.';
+            messages.textContent = (data && (data.message || data.error)) || 'Erro ao cadastrar usuário.';
             messages.style.color = 'red';
           }
         } catch (err) {
