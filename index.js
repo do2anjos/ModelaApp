@@ -107,6 +107,13 @@ if (useTurso) {
         if (err) console.error('Erro ao conectar com SQLite:', err.message);
         else console.log('✅ Conectado ao SQLite em:', dbPath);
     });
+
+    // Melhora a estabilidade em gravações concorrentes e na primeira escrita
+    db.serialize(() => {
+        db.run('PRAGMA journal_mode = WAL');
+        db.run('PRAGMA synchronous = NORMAL');
+        db.run('PRAGMA busy_timeout = 5000');
+    });
 }
 
 // Cache simples em memória (TTL de 30 segundos)
