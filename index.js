@@ -20,12 +20,19 @@ try {
     const rateLimit = require('express-rate-limit');
     const authLimiter = rateLimit({
         windowMs: 60 * 1000, // 1 minuto
-        max: 60,             // 60 req/min por IP
+        max: 100,            // 100 req/min por IP (mais generoso para picos)
         standardHeaders: true,
-        legacyHeaders: false
+        legacyHeaders: false,
+        skip: (req) => {
+            // Pular rate limit em desenvolvimento local
+            return req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1';
+        }
     });
     app.use(['/api/cadastro', '/api/login', '/api/redefinir'], authLimiter);
-} catch (_) {}
+    console.log('✅ Rate limiting ativado para endpoints de autenticação');
+} catch (err) {
+    console.warn('⚠️ Rate limiting não disponível, continuando sem limitação');
+}
 
 // Logging de requisições
 try {
@@ -43,9 +50,11 @@ try {
     app.use(morgan(':method :url :status :res[content-length] - :response-time ms :reqid :client'));
 } catch (_) {}
 
-// Otimização: compressão gzip para reduzir tamanho das respostas
-const compression = require('compression');
-app.use(compression());
+// Otimização: compressão gzip para reduzir tamanho das respostas (opcional)
+try {
+    const compression = require('compression');
+    app.use(compression());
+} catch (_) {}
 
 app.use(bodyParser.json());
 
@@ -148,6 +157,9 @@ if (useTurso) {
         db.run('PRAGMA temp_store = MEMORY');
         db.run('PRAGMA cache_size = 10000');
         db.run('PRAGMA locking_mode = NORMAL');
+        // Configurações específicas para produção/remoto
+        db.run('PRAGMA mmap_size = 268435456'); // 256MB
+        db.run('PRAGMA page_size = 4096');
     });
 }
 
@@ -198,9 +210,13 @@ function runAsync(sql, params = []) {
         });
     });
 }
-// Fila leve para serializar INSERTs de usuários no SQLite local
+// Fila leve para serializar INSERTs de usuários (só no SQLite local)
 let lastUsersInsert = Promise.resolve();
 function serializeUsersInsert(operationFn) {
+    // Só serializa se for SQLite local, Turso já é concorrente
+    if (useTurso) {
+        return operationFn();
+    }
     const next = lastUsersInsert.then(operationFn, operationFn);
     // Garante que erros não quebrem a cadeia futura
     lastUsersInsert = next.catch(() => {});
@@ -428,16 +444,9 @@ app.post('/api/cadastro', async (req, res) => {
                 }
             );
         }), { 
-            retries: 10, // Ainda mais tentativas para INSERT
-            baseDelayMs: 500, // Delay inicial ainda maior
-            factor: 1.2, // Crescimento mais suave
-            onRetry: (err, attempt) => {
-                console.warn(`🔁 Retry INSERT usuário (tentativa ${attempt}/${10})`, err?.code, err?.message);
-                // Se for SQLITE_BUSY, aumenta o delay
-                if (err?.code === 'SQLITE_BUSY') {
-                    console.warn(`⏳ SQLite ocupado, aguardando mais tempo...`);
-                }
-            }
+            retries: useTurso ? 3 : 7, // Menos retries no Turso (já é concorrente)
+            baseDelayMs: useTurso ? 100 : 300,
+            onRetry: (err, attempt) => console.warn(`🔁 Retry INSERT usuário (tentativa ${attempt}/${useTurso ? 3 : 7})`, err?.code, err?.message) 
         }));
 
         console.log('✅ Cadastro concluído', { userId: result.lastID, email, matricula });
@@ -447,38 +456,23 @@ app.post('/api/cadastro', async (req, res) => {
             userId: result.lastID,
             username: username
         });
-        } catch (error) {
-            if (error && error.code === 'SQLITE_CONSTRAINT') {
-                const msg = String(error.message || '').toLowerCase();
-                if (msg.includes('users.email')) {
-                    console.warn('⚠️ Violação UNIQUE em email', { email: req.body?.email });
-                    return res.status(409).json({ success: false, message: 'Email já cadastrado' });
-                }
-                if (msg.includes('users.matricula')) {
-                    console.warn('⚠️ Violação UNIQUE em matrícula', { matricula: req.body?.matricula });
-                    return res.status(409).json({ success: false, message: 'Matrícula já cadastrada' });
-                }
-                console.warn('⚠️ Violação UNIQUE genérica', { detail: error.message });
-                return res.status(409).json({ success: false, message: 'Email ou matrícula já cadastrados' });
+    } catch (error) {
+        if (error && error.code === 'SQLITE_CONSTRAINT') {
+            const msg = String(error.message || '').toLowerCase();
+            if (msg.includes('users.email')) {
+                console.warn('⚠️ Violação UNIQUE em email', { email: req.body?.email });
+                return res.status(409).json({ success: false, message: 'Email já cadastrado' });
             }
-            
-            // Tratamento específico para SQLITE_BUSY e SQLITE_LOCKED
-            if (error && (error.code === 'SQLITE_BUSY' || error.code === 'SQLITE_LOCKED')) {
-                console.warn('⚠️ Banco ocupado, tente novamente', { code: error.code, message: error.message });
-                return res.status(503).json({ 
-                    success: false, 
-                    message: 'Sistema temporariamente ocupado. Tente novamente em alguns segundos.',
-                    retryAfter: 2
-                });
+            if (msg.includes('users.matricula')) {
+                console.warn('⚠️ Violação UNIQUE em matrícula', { matricula: req.body?.matricula });
+                return res.status(409).json({ success: false, message: 'Matrícula já cadastrada' });
             }
-            
-            console.error('❌ Erro no cadastro:', { code: error?.code, message: error?.message, stack: error?.stack });
-            res.status(500).json({ 
-                success: false, 
-                message: 'Erro interno do servidor. Tente novamente.',
-                error: process.env.NODE_ENV === 'development' ? error?.message : undefined
-            });
+            console.warn('⚠️ Violação UNIQUE genérica', { detail: error.message });
+            return res.status(409).json({ success: false, message: 'Email ou matrícula já cadastrados' });
         }
+        console.error('❌ Erro no cadastro:', { code: error?.code, message: error?.message });
+        res.status(500).json({ success: false, message: 'Erro interno do servidor: ' + (error?.message || 'desconhecido') });
+    }
 });
 
 // Endpoint de login
