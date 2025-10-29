@@ -725,82 +725,64 @@ app.post('/api/user/:userId/score', async (req, res) => {
 });
 
 // Endpoint 2: Registrar Tentativa de Exercício
-app.post('/api/user/:userId/exercise-attempt', (req, res) => {
-    const userId = req.params.userId;
-    const { lessonId, lessonTitle, score, totalQuestions, percentage } = req.body;
+app.post('/api/user/:userId/exercise-attempt', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { lessonId, lessonTitle, score, totalQuestions, percentage } = req.body;
 
-    if (!lessonId || !lessonTitle || score === undefined || !totalQuestions || percentage === undefined) {
-        return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
-    }
-
-    // Verificar se já existe tentativa para esta aula
-    db.get(
-        'SELECT id FROM exercise_attempts WHERE user_id = ? AND lesson_id = ?',
-        [userId, lessonId],
-        (err, row) => {
-            if (err) {
-                console.error('Erro ao verificar tentativa:', err);
-                return res.status(500).json({ success: false, message: 'Erro ao verificar tentativa' });
-            }
-
-            const isFirstAttempt = !row;
-            let pointsAwarded = 0;
-
-            // Pontua proporcionalmente apenas na primeira tentativa
-            if (isFirstAttempt) {
-                // Calcula pontos proporcionais ao percentual de acertos
-                // Máximo de 10 pontos por exercício
-                pointsAwarded = Math.round((percentage / 100) * 10);
-            }
-
-            // Registrar tentativa
-            db.run(
-                'INSERT INTO exercise_attempts (user_id, lesson_id, lesson_title, score, total_questions, percentage, is_first_attempt) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [userId, lessonId, lessonTitle, score, totalQuestions, percentage, isFirstAttempt],
-                function(err) {
-                    if (err) {
-                        console.error('Erro ao registrar tentativa:', err);
-                        return res.status(500).json({ success: false, message: 'Erro ao registrar tentativa' });
-                    }
-
-                    // CORREÇÃO: Adicionar pontos apenas se for primeira tentativa e 100% E não existir pontuação anterior
-                    if (pointsAwarded > 0) {
-                        db.get(
-                            'SELECT id FROM user_scores WHERE user_id = ? AND score_type = ? AND source_id = ?',
-                            [userId, 'exercise', lessonId.toString()],
-                            (err, existingScore) => {
-                                if (err) {
-                                    console.error('Erro ao verificar pontuação de exercício:', err);
-                                    return;
-                                }
-                                
-                                if (!existingScore) {
-                                    db.run(
-                                        'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
-                                        [userId, 'exercise', lessonId.toString(), pointsAwarded],
-                                        (err) => {
-                                            if (err) console.error('Erro ao adicionar pontos:', err);
-                                            else console.log(`✅ Pontos de exercício adicionados: ${pointsAwarded} para aula ${lessonId}`);
-                                        }
-                                    );
-                                } else {
-                                    console.log(`⚠️ Pontuação de exercício já existe para aula ${lessonId}`);
-                                }
-                            }
-                        );
-                    }
-
-                    res.json({
-                        success: true,
-                        isFirstAttempt,
-                        pointsAwarded,
-                        percentage,
-                        message: isFirstAttempt ? 'Tentativa registrada' : 'Tentativa adicional registrada'
-                    });
-                }
-            );
+        if (!lessonId || !lessonTitle || score === undefined || !totalQuestions || percentage === undefined) {
+            return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
         }
-    );
+
+        // Verificar se já existe tentativa para esta aula
+        const existingAttempt = await getAsync(
+            'SELECT id FROM exercise_attempts WHERE user_id = ? AND lesson_id = ?',
+            [userId, lessonId]
+        );
+
+        const isFirstAttempt = !existingAttempt;
+        let pointsAwarded = 0;
+
+        // Pontua proporcionalmente apenas na primeira tentativa
+        if (isFirstAttempt) {
+            pointsAwarded = Math.round((percentage / 100) * 10);
+        }
+
+        // Registrar tentativa
+        await runAsync(
+            'INSERT INTO exercise_attempts (user_id, lesson_id, lesson_title, score, total_questions, percentage, is_first_attempt) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [userId, lessonId, lessonTitle, score, totalQuestions, percentage, isFirstAttempt]
+        );
+
+        // Adicionar pontos se for primeira tentativa
+        if (pointsAwarded > 0) {
+            const existingScore = await getAsync(
+                'SELECT id FROM user_scores WHERE user_id = ? AND score_type = ? AND source_id = ?',
+                [userId, 'exercise', lessonId.toString()]
+            );
+
+            if (!existingScore) {
+                await runAsync(
+                    'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
+                    [userId, 'exercise', lessonId.toString(), pointsAwarded]
+                );
+                console.log(`✅ Pontos de exercício adicionados: ${pointsAwarded} para aula ${lessonId}`);
+            } else {
+                console.log(`⚠️ Pontuação de exercício já existe para aula ${lessonId}`);
+            }
+        }
+
+        res.json({
+            success: true,
+            isFirstAttempt,
+            pointsAwarded,
+            percentage,
+            message: isFirstAttempt ? 'Tentativa registrada' : 'Tentativa adicional registrada'
+        });
+    } catch (error) {
+        console.error('Erro ao registrar tentativa:', error);
+        res.status(500).json({ success: false, message: 'Erro ao registrar tentativa' });
+    }
 });
 
 // Endpoint: Forçar Criação da Tabela Exercise States
