@@ -14,23 +14,72 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configuração do banco de dados
-const dbDir = path.join(__dirname, 'backend', 'db');
-if (!fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir, { recursive: true });
+// Configuração do banco de dados (SQLite local ou Turso remoto)
+const useTurso = !!process.env.TURSO_DATABASE_URL;
+let db; // adapter com .run/.get/.all
+
+if (useTurso) {
+    const { createClient } = require('@libsql/client');
+
+    const turso = createClient({
+        url: process.env.TURSO_DATABASE_URL,
+        authToken: process.env.TURSO_AUTH_TOKEN
+    });
+
+    // Adapter para compatibilizar com a API callback do sqlite3
+    db = {
+        run(sql, params, cb) {
+            // Se params é uma função, então é db.run(sql, callback)
+            if (typeof params === 'function') {
+                cb = params;
+                params = [];
+            }
+            turso.execute({ sql, args: params || [] })
+                .then((res) => {
+                    const ctx = {
+                        lastID: Number(res.lastInsertRowid || 0),
+                        changes: res.rowsAffected || 0
+                    };
+                    cb && cb.call(ctx, null);
+                })
+                .catch((err) => cb && cb(err));
+        },
+        get(sql, params, cb) {
+            if (typeof params === 'function') {
+                cb = params;
+                params = [];
+            }
+            turso.execute({ sql, args: params || [] })
+                .then((res) => cb && cb(null, res.rows[0]))
+                .catch((err) => cb && cb(err));
+        },
+        all(sql, params, cb) {
+            if (typeof params === 'function') {
+                cb = params;
+                params = [];
+            }
+            turso.execute({ sql, args: params || [] })
+                .then((res) => cb && cb(null, res.rows))
+                .catch((err) => cb && cb(err));
+        }
+    };
+
+    console.log('✅ Conectado ao Turso:', process.env.TURSO_DATABASE_URL);
+} else {
+    // SQLite local (dev)
+    const dbDir = path.join(__dirname, 'backend', 'db');
+    if (!fs.existsSync(dbDir)) {
+        fs.mkdirSync(dbDir, { recursive: true });
+    }
+    const dbPath = path.join(dbDir, 'modela_users.db');
+    db = new sqlite3.Database(dbPath, (err) => {
+        if (err) console.error('Erro ao conectar com SQLite:', err.message);
+        else console.log('✅ Conectado ao SQLite em:', dbPath);
+    });
 }
 
-const dbPath = path.join(dbDir, 'modela_users.db');
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Erro ao conectar com SQLite:', err.message);
-    } else {
-        console.log('Conectado ao SQLite em:', dbPath);
-    }
-});
-
 // Criar tabelas
-db.serialize(() => {
+{
     // Tabela de usuários
     db.run(`CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -160,7 +209,7 @@ db.serialize(() => {
     db.run(`CREATE INDEX IF NOT EXISTS idx_exercise_attempts_user ON exercise_attempts(user_id)`);
     db.run(`CREATE INDEX IF NOT EXISTS idx_forum_topics_user ON forum_topics(user_id)`);
     db.run(`CREATE INDEX IF NOT EXISTS idx_forum_replies_topic ON forum_replies(topic_id)`);
-});
+}
 
 // Função para gerar username
 function generateUsername(nome) {
@@ -1209,7 +1258,11 @@ app.get('/api/forum/topic/:topicId', (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
-    console.log(`Conectado ao SQLite em: ${dbPath}`);
-    console.log('Sistema de ranking e pontuação ativo!');
+    console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+    if (useTurso) {
+        console.log('💾 Banco de dados: Turso (remoto)');
+    } else {
+        console.log(`💾 Banco de dados: SQLite local em backend/db/modela_users.db`);
+    }
+    console.log('✨ Sistema de ranking e pontuação ativo!');
 });
