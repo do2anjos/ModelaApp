@@ -679,7 +679,7 @@
                                             <h4 style="margin: 0 0 0.5rem 0; color: var(--primary);">📋 Você vai precisar de:</h4>
                                             <ul style="margin: 0; padding-left: 1.5rem;">
                                                 <li>3 minutos do seu tempo</li>
-                                            </ul>
+                                        </ul>
                                         </div>
 
                                         <div style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem;">
@@ -689,7 +689,7 @@
                                                 <li>Desenhe um <strong>retângulo</strong> (uma caixa) grande no meio da sua página</li>
                                                 <li>Escreva o nome do sistema no topo: <strong>"Sistema do Caixa Eletrônico"</strong></li>
                                                 <li style="color: var(--primary); font-weight: 500;">💡 Tudo o que estiver DENTRO desta caixa são as funções do sistema. Tudo o que estiver FORA são os usuários.</li>
-                                            </ul>
+                                        </ul>
                                         </div>
 
                                         <div style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem;">
@@ -698,7 +698,7 @@
                                             <ul style="margin: 0; padding-left: 1.5rem;">
                                                 <li>À <strong>esquerda da caixa</strong>, desenhe um <strong>boneco-palito</strong> (stick figure)</li>
                                                 <li>Escreva o nome dele abaixo: <strong>"Cliente"</strong></li>
-                                            </ul>
+                                        </ul>
                                         </div>
 
                                         <div style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem;">
@@ -713,7 +713,7 @@
                                                         <li>"<strong>Fazer Transferência</strong>"</li>
                                                     </ul>
                                                 </li>
-                                            </ul>
+                                        </ul>
                                         </div>
 
                                         <div style="border-left: 4px solid var(--primary); padding-left: 1rem; margin-bottom: 1.5rem;">
@@ -840,11 +840,11 @@
                                     🔄 Testar Conexão
                                 </button>
                                 <span id="editor-status" class="status-indicator">Pronto</span>
-                                                        </div>
+                            </div>
                             <div class="uml-editor-container">
                                 <iframe id="uml-editor-iframe" src="https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=uml;general&grid=1&nav=1&shadow=0&splash=0" width="100%" height="600"></iframe>
-                                </div>
-                                
+                            </div>
+                            
                             <div id="saved-work-preview" class="saved-work-preview hidden">
                                 <h4>Seu trabalho salvo:</h4>
                                 <img id="diagram-thumbnail" alt="Pré-visualização do diagrama" />
@@ -864,12 +864,12 @@
                                 <label for="diagram-file-input" class="file-upload-label" id="file-upload-label" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; cursor: pointer;">
                                     <div style="position: relative;">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                            <polyline points="14 2 14 8 20 8"></polyline>
-                                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                                            <polyline points="10 9 9 9 8 9"></polyline>
-                                        </svg>
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
                                         <div id="upload-progress" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
                                             <div style="width: 40px; height: 40px; border: 3px solid var(--muted); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
                                         </div>
@@ -1509,6 +1509,20 @@
         // CORREÇÃO: Move updateUserProgress para escopo global para evitar erro de referência
         window.updateUserProgress = function(lessonTitle, updates) {
             if (!userProgress[lessonTitle]) userProgress[lessonTitle] = {};
+
+            // Blindagem: impedir marcar como concluída sem ter passado por todas as etapas
+            if (updates && updates.completed === true) {
+                const current = userProgress[lessonTitle];
+                const hasAllStages = !!(current && current.videoCompleted && current.exerciseCompleted && (current.practicalSubmitted || current.practicalCompleted));
+                if (!hasAllStages) {
+                    console.warn('⚠️ Conclusão ignorada: etapas incompletas para', lessonTitle);
+                    // Evita promover conclusão prematura
+                    const safe = { ...updates };
+                    delete safe.completed;
+                    delete safe.fullyCompleted;
+                    updates = safe;
+                }
+            }
             Object.assign(userProgress[lessonTitle], updates);
             
             // Sincroniza com o backend
@@ -1524,6 +1538,8 @@
                     if (mapping) {
                         console.log('🎯 Verificando conclusão de módulo após conclusão de aula');
                         checkModuleCompletion(user.id, mapping.moduleId);
+                        // Pontuação proporcional: +5 por aula concluída (uma vez)
+                        awardLessonPoints(user.id, mapping.lessonId).catch(err => console.error('Erro ao pontuar aula:', err));
                     }
                 }
             }
@@ -1571,6 +1587,36 @@
             }
         }
 
+        // Pontuação proporcional por aula concluída (5 pontos por aula, sem duplicar)
+        async function awardLessonPoints(userId, lessonId) {
+            try {
+                const checkResp = await fetch(`/api/user/${userId}/score/lesson/${lessonId}`);
+                const checkData = await checkResp.json();
+                if (checkData && checkData.success && checkData.exists) {
+                    console.log(`ℹ️ Pontos da aula ${lessonId} já atribuídos (${checkData.points} pts)`);
+                    return;
+                }
+                const addResp = await fetch(`/api/user/${userId}/score`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        scoreType: 'lesson',
+                        sourceId: String(lessonId),
+                        points: 5
+                    })
+                });
+                const addData = await addResp.json();
+                if (addResp.ok) {
+                    showPointsNotification(5);
+                    console.log(`✅ Aula ${lessonId} concluída: +5 pts`);
+                } else {
+                    console.error('❌ Erro ao atribuir pontos da aula:', addData);
+                }
+            } catch (e) {
+                console.error('❌ Falha em awardLessonPoints:', e);
+            }
+        }
+
         // Função para mostrar notificação de pontos
         function showPointsNotification(points) {
             const notification = document.createElement('div');
@@ -1595,17 +1641,17 @@
                     return;
                 }
                 
-                // Verificar se todas as 10 aulas foram completadas
-                const allCompleted = data.lessons.every(lesson => 
-                    lesson.video_completed && 
-                    lesson.exercise_completed && 
-                    lesson.practical_completed
+                // Cálculo robusto: conta aulas completas e compara com o total esperado
+                const completedLessons = (data.lessons || []).filter(lesson =>
+                    lesson.video_completed && lesson.exercise_completed && lesson.practical_completed
                 );
-                
-                console.log(`📊 Módulo ${moduleId}: ${allCompleted ? 'COMPLETO' : 'INCOMPLETO'} (${data.lessons.length} aulas)`);
-                
-                if (allCompleted) {
-                    // CORREÇÃO: Adicionar pontos do módulo (o backend já verifica duplicação)
+                const completedCount = completedLessons.length;
+                const expectedTotal = moduleId === 1 ? 10 : (data.lessons ? data.lessons.length : 0);
+
+                console.log(`📊 Módulo ${moduleId}: ${completedCount}/${expectedTotal} aulas completas`);
+
+                if (expectedTotal > 0 && completedCount === expectedTotal) {
+                    // Bônus somente quando 100% do módulo concluído
                     const scoreResponse = await fetch(`/api/user/${userId}/score`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1615,9 +1661,9 @@
                             points: 50
                         })
                     });
-                    
+
                     const scoreResult = await scoreResponse.json();
-                    
+
                     if (scoreResponse.ok) {
                         if (scoreResult.alreadyExists) {
                             console.log('⚠️ Pontos do módulo já foram adicionados anteriormente');
@@ -1629,7 +1675,7 @@
                         console.error('❌ Erro ao adicionar pontos do módulo:', scoreResult);
                     }
                 } else {
-                    console.log('⏳ Módulo ainda não está completo');
+                    console.log('⏳ Módulo ainda não está completo para bônus (aguardando 100%)');
                 }
             } catch (error) {
                 console.error('❌ Erro ao verificar conclusão do módulo:', error);
@@ -2512,7 +2558,7 @@
                     
                     // Registra progresso quando visualiza o material
                     if (currentLessonTitle) {
-                        updateUserProgress(currentLessonTitle, { modelDownloaded: true });
+                updateUserProgress(currentLessonTitle, { modelDownloaded: true });
                         console.log('📥 Material visualizado');
                     }
                 } else {
