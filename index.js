@@ -10,6 +10,11 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
+
+// Otimização: compressão gzip para reduzir tamanho das respostas
+const compression = require('compression');
+app.use(compression());
+
 app.use(bodyParser.json());
 
 // Headers de segurança (relaxar CSP para permitir scripts inline e iframes de serviços externos)
@@ -23,10 +28,21 @@ app.use((req, res, next) => {
         "connect-src 'self'; " +
         "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://docs.google.com https://embed.diagrams.net"
     );
+    
+    // Headers de cache para melhor performance
+    if (req.url.match(/\.(jpg|jpeg|png|gif|css|js|ico|woff|woff2|ttf|eot)$/)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 ano
+    }
+    
     next();
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Cache de arquivos estáticos com max-age
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '1y', // Cache por 1 ano para arquivos estáticos
+    etag: true,
+    lastModified: true
+}));
 
 // Configuração do banco de dados (SQLite local ou Turso remoto)
 const useTurso = !!process.env.TURSO_DATABASE_URL;
@@ -93,27 +109,61 @@ if (useTurso) {
     });
 }
 
-// Helpers de Promises para o driver (Turso/SQLite)
+// Cache simples em memória (TTL de 30 segundos)
+const simpleCache = new Map();
+const CACHE_TTL = 30000; // 30 segundos
+
+function getCacheKey(sql, params) {
+    return `${sql}:${JSON.stringify(params)}`;
+}
+
+// Helpers de Promises para o driver (Turso/SQLite) COM CACHE
 function runAsync(sql, params = []) {
     return new Promise((resolve, reject) => {
         db.run(sql, params, function(err) {
             if (err) return reject(err);
+            // Invalida cache quando há mudanças
+            simpleCache.clear();
             resolve({ lastID: this.lastID, changes: this.changes });
         });
     });
 }
-function allAsync(sql, params = []) {
+function allAsync(sql, params = [], useCache = true) {
+    if (useCache) {
+        const cacheKey = getCacheKey(sql, params);
+        const cached = simpleCache.get(cacheKey);
+        if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+            return Promise.resolve(cached.data);
+        }
+    }
+    
     return new Promise((resolve, reject) => {
         db.all(sql, params, (err, rows) => {
             if (err) return reject(err);
+            if (useCache && sql.trim().toUpperCase().startsWith('SELECT')) {
+                const cacheKey = getCacheKey(sql, params);
+                simpleCache.set(cacheKey, { data: rows, timestamp: Date.now() });
+            }
             resolve(rows);
         });
     });
 }
-function getAsync(sql, params = []) {
+function getAsync(sql, params = [], useCache = true) {
+    if (useCache) {
+        const cacheKey = getCacheKey(sql, params);
+        const cached = simpleCache.get(cacheKey);
+        if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+            return Promise.resolve(cached.data);
+        }
+    }
+    
     return new Promise((resolve, reject) => {
         db.get(sql, params, (err, row) => {
             if (err) return reject(err);
+            if (useCache && sql.trim().toUpperCase().startsWith('SELECT')) {
+                const cacheKey = getCacheKey(sql, params);
+                simpleCache.set(cacheKey, { data: row, timestamp: Date.now() });
+            }
             resolve(row);
         });
     });
