@@ -1044,87 +1044,86 @@ app.delete('/api/user/:userId/exercise-state/:lessonId', (req, res) => {
 });
 
 // Endpoint 3: Buscar Pontuação Total do Usuário
-app.get('/api/user/:userId/total-score', (req, res) => {
-    const userId = req.params.userId;
+app.get('/api/user/:userId/total-score', async (req, res) => {
+    try {
+        const userId = req.params.userId;
 
-    db.all(
-        'SELECT score_type, SUM(points) as total FROM user_scores WHERE user_id = ? GROUP BY score_type',
-        [userId],
-        (err, rows) => {
-            if (err) {
-                console.error('Erro ao buscar pontuação:', err);
-                return res.status(500).json({ success: false, message: 'Erro ao buscar pontuação' });
+        const rows = await allAsync(
+            'SELECT score_type, SUM(points) as total FROM user_scores WHERE user_id = ? GROUP BY score_type',
+            [userId]
+        );
+
+        let totalPoints = 0;
+        const breakdown = { exercises: 0, modules: 0, forum: 0 };
+
+        rows.forEach(row => {
+            totalPoints += row.total;
+            if (row.score_type === 'exercise') breakdown.exercises = row.total;
+            else if (row.score_type === 'module') breakdown.modules = row.total;
+            else if (row.score_type === 'forum_topic' || row.score_type === 'forum_reply') {
+                breakdown.forum += row.total;
             }
+        });
 
-            let totalPoints = 0;
-            const breakdown = { exercises: 0, modules: 0, forum: 0 };
-
-            rows.forEach(row => {
-                totalPoints += row.total;
-                if (row.score_type === 'exercise') breakdown.exercises = row.total;
-                else if (row.score_type === 'module') breakdown.modules = row.total;
-                else if (row.score_type === 'forum_topic' || row.score_type === 'forum_reply') {
-                    breakdown.forum += row.total;
-                }
-            });
-
-            res.json({
-                success: true,
-                totalPoints,
-                breakdown
-            });
-        }
-    );
+        res.json({
+            success: true,
+            totalPoints,
+            breakdown
+        });
+    } catch (error) {
+        console.error('Erro ao buscar pontuação:', error);
+        res.status(500).json({ success: false, message: 'Erro ao buscar pontuação' });
+    }
 });
 
 // Endpoint 4: Ranking Geral
-app.get('/api/ranking', (req, res) => {
-    const limit = parseInt(req.query.limit) || 10;
+app.get('/api/ranking', async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 10;
 
-    db.all(`
-        SELECT 
-            u.id as userId,
-            u.nome,
-            u.username,
-            COALESCE(SUM(us.points), 0) as totalPoints
-        FROM users u
-        LEFT JOIN user_scores us ON u.id = us.user_id
-        GROUP BY u.id, u.nome, u.username
-        ORDER BY totalPoints DESC, u.id ASC
-        LIMIT ?
-    `, [limit], (err, rows) => {
-        if (err) {
-            console.error('Erro ao buscar ranking:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao buscar ranking' });
-        }
+        const rows = await allAsync(`
+            SELECT 
+                u.id as userId,
+                u.nome,
+                u.username,
+                COALESCE(SUM(us.points), 0) as totalPoints
+            FROM users u
+            LEFT JOIN user_scores us ON u.id = us.user_id
+            GROUP BY u.id, u.nome, u.username
+            ORDER BY totalPoints DESC, u.id ASC
+            LIMIT ?
+        `, [limit]);
 
         res.json(rows);
-    });
+    } catch (error) {
+        console.error('Erro ao buscar ranking:', error);
+        res.status(500).json({ success: false, message: 'Erro ao buscar ranking' });
+    }
 });
 
 // Endpoint 5: Ranking do Fórum
-app.get('/api/ranking/forum', (req, res) => {
-    db.all(`
-        SELECT 
-            u.id as userId,
-            u.nome,
-            u.username,
-            COUNT(DISTINCT ft.id) as topicsCount,
-            COUNT(DISTINCT fr.id) as repliesCount
-        FROM users u
-        LEFT JOIN forum_topics ft ON u.id = ft.user_id
-        LEFT JOIN forum_replies fr ON u.id = fr.user_id
-        GROUP BY u.id, u.nome, u.username
-        HAVING topicsCount > 0 OR repliesCount > 0
-        ORDER BY topicsCount DESC, repliesCount DESC, u.nome ASC
-    `, (err, rows) => {
-        if (err) {
-            console.error('Erro ao buscar ranking do fórum:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao buscar ranking do fórum' });
-        }
+app.get('/api/ranking/forum', async (req, res) => {
+    try {
+        const rows = await allAsync(`
+            SELECT 
+                u.id as userId,
+                u.nome,
+                u.username,
+                COUNT(DISTINCT ft.id) as topicsCount,
+                COUNT(DISTINCT fr.id) as repliesCount
+            FROM users u
+            LEFT JOIN forum_topics ft ON u.id = ft.user_id
+            LEFT JOIN forum_replies fr ON u.id = fr.user_id
+            GROUP BY u.id, u.nome, u.username
+            HAVING topicsCount > 0 OR repliesCount > 0
+            ORDER BY topicsCount DESC, repliesCount DESC, u.nome ASC
+        `);
 
         res.json(rows);
-    });
+    } catch (error) {
+        console.error('Erro ao buscar ranking do fórum:', error);
+        res.status(500).json({ success: false, message: 'Erro ao buscar ranking do fórum' });
+    }
 });
 
 // ==========================================================================
@@ -1200,61 +1199,58 @@ app.post('/api/forum/reply', (req, res) => {
 });
 
 // Endpoint 8: Listar Tópicos
-app.get('/api/forum/topics', (req, res) => {
-    db.all(`
-        SELECT 
-            ft.id,
-            ft.user_id,
-            u.nome as userName,
-            ft.title,
-            ft.content,
-            ft.category,
-            ft.created_at,
-            COUNT(fr.id) as repliesCount
-        FROM forum_topics ft
-        JOIN users u ON ft.user_id = u.id
-        LEFT JOIN forum_replies fr ON ft.id = fr.topic_id
-        GROUP BY ft.id
-        ORDER BY ft.created_at DESC
-    `, (err, rows) => {
-        if (err) {
-            console.error('Erro ao buscar tópicos:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao buscar tópicos' });
-        }
+app.get('/api/forum/topics', async (req, res) => {
+    try {
+        const rows = await allAsync(`
+            SELECT 
+                ft.id,
+                ft.user_id,
+                u.nome as userName,
+                ft.title,
+                ft.content,
+                ft.category,
+                ft.created_at,
+                COUNT(fr.id) as repliesCount
+            FROM forum_topics ft
+            JOIN users u ON ft.user_id = u.id
+            LEFT JOIN forum_replies fr ON ft.id = fr.topic_id
+            GROUP BY ft.id
+            ORDER BY ft.created_at DESC
+        `);
 
         res.json(rows);
-    });
+    } catch (error) {
+        console.error('Erro ao buscar tópicos:', error);
+        res.status(500).json({ success: false, message: 'Erro ao buscar tópicos' });
+    }
 });
 
 // Endpoint 9: Buscar Tópico com Respostas
-app.get('/api/forum/topic/:topicId', (req, res) => {
-    const topicId = req.params.topicId;
+app.get('/api/forum/topic/:topicId', async (req, res) => {
+    try {
+        const topicId = req.params.topicId;
 
-    // Buscar tópico
-    db.get(`
-        SELECT 
-            ft.id,
-            ft.user_id,
-            u.nome as userName,
-            ft.title,
-            ft.content,
-            ft.category,
-            ft.created_at
-        FROM forum_topics ft
-        JOIN users u ON ft.user_id = u.id
-        WHERE ft.id = ?
-    `, [topicId], (err, topic) => {
-        if (err) {
-            console.error('Erro ao buscar tópico:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao buscar tópico' });
-        }
+        // Buscar tópico
+        const topic = await getAsync(`
+            SELECT 
+                ft.id,
+                ft.user_id,
+                u.nome as userName,
+                ft.title,
+                ft.content,
+                ft.category,
+                ft.created_at
+            FROM forum_topics ft
+            JOIN users u ON ft.user_id = u.id
+            WHERE ft.id = ?
+        `, [topicId]);
 
         if (!topic) {
             return res.status(404).json({ success: false, message: 'Tópico não encontrado' });
         }
 
         // Buscar respostas
-        db.all(`
+        const replies = await allAsync(`
             SELECT 
                 fr.id,
                 fr.user_id,
@@ -1265,19 +1261,17 @@ app.get('/api/forum/topic/:topicId', (req, res) => {
             JOIN users u ON fr.user_id = u.id
             WHERE fr.topic_id = ?
             ORDER BY fr.created_at ASC
-        `, [topicId], (err, replies) => {
-            if (err) {
-                console.error('Erro ao buscar respostas:', err);
-                return res.status(500).json({ success: false, message: 'Erro ao buscar respostas' });
-            }
+        `, [topicId]);
 
-            res.json({
-                success: true,
-                topic,
-                replies
-            });
+        res.json({
+            success: true,
+            topic,
+            replies
         });
-    });
+    } catch (error) {
+        console.error('Erro ao buscar tópico:', error);
+        res.status(500).json({ success: false, message: 'Erro ao buscar tópico' });
+    }
 });
 
 // Inicializar schema e iniciar servidor somente após pronto
