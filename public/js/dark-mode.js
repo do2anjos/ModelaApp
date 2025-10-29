@@ -3,10 +3,12 @@
 class DarkModeManager {
     constructor() {
         this.theme = localStorage.getItem('theme') || 'system';
+        console.log('🎬 DarkModeManager initialized with theme:', this.theme);
         this.init();
     }
 
     init() {
+        console.log('⚙️ Initializing DarkModeManager...');
         // Sincronizar com o tema já aplicado pelos scripts inline
         this.syncTheme();
         this.setupEventListeners();
@@ -48,20 +50,27 @@ class DarkModeManager {
 
         if (this.theme === 'dark' || (this.theme === 'system' && prefersDark)) {
             document.documentElement.setAttribute('data-theme', 'dark');
+            console.log('🌙 Dark mode applied, theme:', this.theme);
             this.updateLogo('dark');
         } else {
             document.documentElement.setAttribute('data-theme', 'light');
+            console.log('☀️ Light mode applied, theme:', this.theme);
             this.updateLogo('light');
         }
 
+        console.log('🎨 Current data-theme attribute:', document.documentElement.getAttribute('data-theme'));
         this.updateToggle();
     }
 
     setupEventListeners() {
         // Listener para mudanças na preferência do sistema
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            console.log('🔔 System preference changed, prefersDark:', e.matches);
             if (this.theme === 'system') {
+                console.log('📢 Theme is system, reapplying...');
                 this.applyTheme();
+            } else {
+                console.log('📌 Theme is fixed to:', this.theme, '- no change');
             }
         });
     }
@@ -100,14 +109,17 @@ class DarkModeManager {
     toggleDarkMode(enable) {
         // Não permitir mudança de tema em páginas de autenticação
         if (this.isAuthPage()) {
-            console.log('⚠️ Dark mode toggle blocked on auth page');
+            console.log('⚠️ Auth page - theme change blocked');
             return;
         }
 
+        console.log('🔄 toggleDarkMode called with enable:', enable);
+        
         const newTheme = enable ? 'dark' : 'light';
         console.log('🎯 Toggle dark mode:', enable, '→', newTheme);
         
         this.theme = newTheme;
+        console.log('💾 Saving theme to localStorage:', this.theme);
         localStorage.setItem('theme', newTheme);
         document.documentElement.setAttribute('data-theme', newTheme);
         this.updateLogo(newTheme);
@@ -162,6 +174,7 @@ class DarkModeManager {
             console.log('🔄 Updating toggle. IsDark:', isDark);
             
             darkModeToggle.checked = isDark;
+            console.log('🎛️ Toggle updated - checked:', isDark, 'theme:', this.theme);
 
             const parent = darkModeToggle.closest('.preference-item');
             if (parent) {
