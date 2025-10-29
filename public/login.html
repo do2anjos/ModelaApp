@@ -196,19 +196,27 @@
         if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
 
         try {
+          const reqId = 'login-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+          console.log('[LOGIN] ▶️ submit', { reqId, email });
+          console.time(`[LOGIN] tempo ${reqId}`);
+
+          const headers = { 'Content-Type': 'application/json', 'X-Request-Id': reqId };
+
           const resp = await (window.apiFetch ? window.apiFetch('/api/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify({ email, senha }),
             cache: 'no-store'
           }) : fetch('/api/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify({ email, senha }),
             cache: 'no-store'
           }));
           let data = {};
           try { data = await resp.json(); } catch (_) {}
+          console.timeEnd(`[LOGIN] tempo ${reqId}`);
+          console.log('[LOGIN] ◀️ resposta', { reqId, status: resp.status, ok: resp.ok, msg: data?.message });
           if (resp.ok) {
             try { localStorage.setItem('modela_user', JSON.stringify(data.user)); } catch(_) {}
             window.location.hash = 'loginsucesso';
@@ -217,6 +225,7 @@
             messages.style.color = 'red';
           }
         } catch (err) {
+          console.error('[LOGIN] ❌ erro', err);
           messages.textContent = 'Erro ao conectar com o servidor.';
           messages.style.color = 'red';
         } finally {

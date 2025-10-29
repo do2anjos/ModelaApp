@@ -247,19 +247,28 @@
         if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
 
         try {
+          // Request correlation ID
+          const reqId = 'cad-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+          console.log('[CADASTRO] ▶️ submit', { reqId, email, matricula });
+          console.time(`[CADASTRO] tempo ${reqId}`);
+
+          const headers = { 'Content-Type': 'application/json', 'X-Request-Id': reqId };
+
           const resp = await (window.apiFetch ? window.apiFetch('/api/cadastro', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify({ nome, email, matricula, telefone, senha }),
             cache: 'no-store'
           }) : fetch('/api/cadastro', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify({ nome, email, matricula, telefone, senha }),
             cache: 'no-store'
           }));
           let data = {};
           try { data = await resp.json(); } catch (_) {}
+          console.timeEnd(`[CADASTRO] tempo ${reqId}`);
+          console.log('[CADASTRO] ◀️ resposta', { reqId, status: resp.status, ok: resp.ok, msg: data?.message });
           if (resp.ok) {
             messages.textContent = (data && (data.message || (data.success && 'Cadastro realizado com sucesso!'))) || 'Cadastro realizado com sucesso!';
             messages.style.color = 'green';
@@ -271,6 +280,7 @@
             messages.style.color = 'red';
           }
         } catch (err) {
+          console.error('[CADASTRO] ❌ erro', err);
           messages.textContent = 'Erro ao conectar com o servidor.';
           messages.style.color = 'red';
         } finally {

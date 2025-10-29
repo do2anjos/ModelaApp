@@ -72,6 +72,7 @@
     <script src="/js/dark-mode.js"></script>
     <script src="/js/daltonism-mode.js"></script>
     <script src="/js/usability.js"></script>
+    <script src="/js/api.js"></script>
 
     <script>
     // Popup CSS (reaproveita estilo do login/cadastro)
@@ -125,12 +126,25 @@
         }
 
         try {
-          const resp = await fetch('/api/redefinir',{
-            method:'POST', headers:{'Content-Type':'application/json'},
+          const reqId = 'reset-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+          console.log('[REDEFINIR] ▶️ submit', { reqId, email });
+          console.time(`[REDEFINIR] tempo ${reqId}`);
+
+          const headers = { 'Content-Type': 'application/json', 'X-Request-Id': reqId };
+
+          const resp = await (window.apiFetch ? window.apiFetch('/api/redefinir', {
+            method:'POST', headers,
             body: JSON.stringify({ email, novaSenha }),
             cache: 'no-store'
-          });
-          const data = await resp.json();
+          }) : fetch('/api/redefinir',{
+            method:'POST', headers,
+            body: JSON.stringify({ email, novaSenha }),
+            cache: 'no-store'
+          }));
+          let data = {};
+          try { data = await resp.json(); } catch(_) {}
+          console.timeEnd(`[REDEFINIR] tempo ${reqId}`);
+          console.log('[REDEFINIR] ◀️ resposta', { reqId, status: resp.status, ok: resp.ok, msg: data?.message });
           if (resp.ok) {
             messages.textContent = data.message || 'Senha redefinida com sucesso!';
             messages.style.color = 'green';
@@ -144,6 +158,7 @@
             messages.style.color = 'red';
           }
         } catch(err){
+          console.error('[REDEFINIR] ❌ erro', err);
           messages.textContent = 'Erro ao conectar com o servidor.';
           messages.style.color = 'red';
         }
