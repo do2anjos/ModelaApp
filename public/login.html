@@ -166,10 +166,14 @@
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('loginForm');
       const messages = document.getElementById('loginMessages');
+      const btn = document.getElementById('loginButton');
       if (!form) return;
 
       form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+
         messages.textContent = '';
         messages.style.color = '';
 
@@ -179,24 +183,27 @@
         if (!email || !senha) {
           messages.textContent = 'Informe email e senha.';
           messages.style.color = 'red';
-          return;
+          return false;
         }
         if (!email.endsWith('@uea.edu.br')) {
           messages.textContent = 'O email deve ser institucional (@uea.edu.br).';
           messages.style.color = 'red';
-          return;
+          return false;
         }
 
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
+
         try {
-            const resp = await fetch('/api/login', {
+          const resp = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, senha })
+            body: JSON.stringify({ email, senha }),
+            cache: 'no-store'
           });
-          const data = await resp.json();
+          let data = {};
+          try { data = await resp.json(); } catch (_) {}
           if (resp.ok) {
             try { localStorage.setItem('modela_user', JSON.stringify(data.user)); } catch(_) {}
-            // Abrir popup por âncora :target
             window.location.hash = 'loginsucesso';
           } else {
             messages.textContent = (data && (data.message || data.error)) || 'Falha no login.';
@@ -205,8 +212,12 @@
         } catch (err) {
           messages.textContent = 'Erro ao conectar com o servidor.';
           messages.style.color = 'red';
+        } finally {
+          if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
         }
-      });
+
+        return false;
+      }, true);
     });
     </script>
 </body>

@@ -100,6 +100,8 @@
 
       form.addEventListener('submit', async function(e){
         e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
         messages.textContent = '';
         messages.style.color = '';
         const email = (document.getElementById('email')||{}).value?.trim()||'';
@@ -130,7 +132,8 @@
         try {
           const resp = await fetch('/api/redefinir',{
             method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({ email, novaSenha })
+            body: JSON.stringify({ email, novaSenha }),
+            cache: 'no-store'
           });
           const data = await resp.json();
           if (resp.ok) {
@@ -142,7 +145,7 @@
             container.style.display = 'block';
             window.location.hash = 'resetSucesso';
           } else {
-            messages.textContent = data.error || 'Erro ao redefinir senha.';
+            messages.textContent = (data && (data.message || data.error)) || 'Erro ao redefinir senha.';
             messages.style.color = 'red';
           }
         } catch(err){
