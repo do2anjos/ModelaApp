@@ -9,7 +9,14 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+// CORS amplo para front em outros domínios
+app.use(cors({ origin: true }));
+
+// Logging de requisições
+try {
+    const morgan = require('morgan');
+    app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+} catch (_) {}
 
 // Otimização: compressão gzip para reduzir tamanho das respostas
 const compression = require('compression');
@@ -112,7 +119,7 @@ if (useTurso) {
     db.serialize(() => {
         db.run('PRAGMA journal_mode = WAL');
         db.run('PRAGMA synchronous = NORMAL');
-        db.run('PRAGMA busy_timeout = 5000');
+        db.run('PRAGMA busy_timeout = 15000');
     });
 }
 
@@ -1250,6 +1257,11 @@ app.get('/api/forum/topic/:topicId', async (req, res) => {
         console.error('Erro ao buscar tópico:', error);
         res.status(500).json({ success: false, message: 'Erro ao buscar tópico' });
     }
+});
+
+// Health/readiness
+app.get('/health', (req, res) => {
+    res.json({ ok: true, db: useTurso ? 'turso' : 'sqlite', time: Date.now() });
 });
 
 // Inicializar schema e iniciar servidor somente após pronto

@@ -142,6 +142,7 @@
     <script src="/js/dark-mode.js"></script>
     <script src="/js/daltonism-mode.js"></script>
     <script src="/js/usability.js"></script>
+    <script src="/js/api.js"></script>
     
     <!-- Script para corrigir problema de zoom -->
     <script>
@@ -195,13 +196,17 @@
         if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
 
         try {
-          const base = (typeof window !== 'undefined' && window.API_BASE_URL) ? String(window.API_BASE_URL).replace(/\/$/, '') : '';
-          const resp = await fetch(`${base}/api/login`, {
+          const resp = await (window.apiFetch ? window.apiFetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, senha }),
             cache: 'no-store'
-          });
+          }) : fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, senha }),
+            cache: 'no-store'
+          }));
           let data = {};
           try { data = await resp.json(); } catch (_) {}
           if (resp.ok) {
