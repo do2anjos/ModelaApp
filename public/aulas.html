@@ -1530,6 +1530,7 @@
             
             // CORREÇÃO: Verificar conclusão de módulo APENAS quando uma aula é realmente concluída
             // e não a cada atualização de progresso
+            // NOTA: A pontuação agora é feita APENAS no botão "Próxima Aula"
             if (updates.completed === true || updates.fullyCompleted === true) {
                 const userData = localStorage.getItem('modela_user');
                 if (userData) {
@@ -1538,8 +1539,6 @@
                     if (mapping) {
                         console.log('🎯 Verificando conclusão de módulo após conclusão de aula');
                         checkModuleCompletion(user.id, mapping.moduleId);
-                        // Pontuação proporcional: +5 por aula concluída (uma vez)
-                        awardLessonPoints(user.id, mapping.lessonId).catch(err => console.error('Erro ao pontuar aula:', err));
                     }
                 }
             }
@@ -1588,14 +1587,15 @@
         }
 
         // Pontuação proporcional por aula concluída (5 pontos por aula, sem duplicar)
-        async function awardLessonPoints(userId, lessonId) {
+        async function awardLessonPoints(userId, lessonId, lessonTitle) {
             try {
-                const checkResp = await fetch(`/api/user/${userId}/score/lesson/${lessonId}`);
-                const checkData = await checkResp.json();
-                if (checkData && checkData.success && checkData.exists) {
-                    console.log(`ℹ️ Pontos da aula ${lessonId} já atribuídos (${checkData.points} pts)`);
-                    return;
-                }
+                console.log('💰 ========================================');
+                console.log('💰 TENTANDO PONTUAR AULA CONCLUÍDA');
+                console.log('💰 userId:', userId);
+                console.log('💰 lessonId:', lessonId);
+                console.log('💰 lessonTitle:', lessonTitle);
+                console.log('💰 ========================================');
+                
                 const addResp = await fetch(`/api/user/${userId}/score`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1606,22 +1606,38 @@
                     })
                 });
                 const addData = await addResp.json();
+                
+                console.log('📡 Resposta do backend:', addData);
+                
                 if (addResp.ok) {
-                    showPointsNotification(5);
-                    console.log(`✅ Aula ${lessonId} concluída: +5 pts`);
+                    if (addData.alreadyExists) {
+                        console.log(`⚠️ Pontos da aula ${lessonId} já foram atribuídos anteriormente`);
+                    } else {
+                        showPointsNotification(5);
+                        console.log(`✅ ========================================`);
+                        console.log(`✅ AULA ${lessonId} CONCLUÍDA: +5 PONTOS!`);
+                        console.log(`✅ ========================================`);
+                    }
+                    return addData;
                 } else {
                     console.error('❌ Erro ao atribuir pontos da aula:', addData);
+                    return null;
                 }
             } catch (e) {
                 console.error('❌ Falha em awardLessonPoints:', e);
+                return null;
             }
         }
 
         // Função para mostrar notificação de pontos
-        function showPointsNotification(points) {
+        function showPointsNotification(points, message) {
             const notification = document.createElement('div');
             notification.className = 'points-notification';
-            notification.innerHTML = `+${points} pontos! 🎉`;
+            
+            // Usa mensagem customizada ou padrão
+            const displayMessage = message || `+${points} pontos!`;
+            notification.innerHTML = `${displayMessage} 🎉`;
+            
             document.body.appendChild(notification);
             
             setTimeout(() => notification.remove(), 3000);
@@ -2008,9 +2024,10 @@
         }
 
         function handleVideoCompleted(lessonTitle) {
-            console.log('✅ Vídeo completado:', lessonTitle);
+            console.log('✅ Vídeo completado (90%):', lessonTitle);
+            console.log('⚠️ NOTA: A aula só será marcada como "concluída" ao clicar em "Próxima Aula"');
             
-            // Salva progresso no banco de dados
+            // CORREÇÃO: Marca APENAS videoCompleted, NÃO marca como "completed"
             updateUserProgress(lessonTitle, {
                 videoCompleted: true,
                 videoProgress: 100
@@ -2461,8 +2478,8 @@
             }
         });
 
-        // Evento de clique no botão de próxima aula
-        nextLessonBtn.addEventListener('click', function(event) {
+        // Handler centralizado do botão "Próxima Aula"
+        async function onNextLessonClick(event) {
             event.preventDefault();
             const activeLessonLink = document.querySelector('.lesson-list a.active');
             if (!activeLessonLink) return;
@@ -2477,6 +2494,17 @@
             if (currentLessonTitle) {
                 console.log('🎯 FLUXO CORRETO: Marcando aula como concluída automaticamente:', currentLessonTitle);
                 console.log('📊 Estado atual antes da atualização:', userProgress[currentLessonTitle]);
+                
+                // CORREÇÃO: Pontuar ANTES de marcar como concluída
+                const userData = localStorage.getItem('modela_user');
+                if (userData) {
+                    const user = JSON.parse(userData);
+                    const mapping = LESSON_MAPPING[currentLessonTitle];
+                    if (mapping) {
+                        console.log('💰 Pontuando aula antes de marcar como concluída...');
+                        await awardLessonPoints(user.id, mapping.lessonId, currentLessonTitle);
+                    }
+                }
                 
                 // FLUXO CORRETO: Marca como concluída automaticamente ao clicar em "Próxima Aula"
                 updateUserProgress(currentLessonTitle, { 
@@ -2534,7 +2562,10 @@
             } else {
                 alert('Não há mais aulas neste tópico.');
             }
-        });
+        }
+
+        // Evento de clique no botão de próxima aula
+        nextLessonBtn.addEventListener('click', onNextLessonClick);
 
         // Evento: Toggle Viewer do Google Docs
         if (toggleDocsViewerBtn && docsViewer) {
@@ -2974,55 +3005,9 @@
 
             if (feedbackNextLessonBtn && nextLessonBtn) {
                 feedbackNextLessonBtn.addEventListener('click', function() {
-                    console.log('🔘 Botão de próxima aula no feedback clicado (fallback/normal)');
-
-                    // Executa a mesma lógica do botão original diretamente
-                    const activeLessonLink = document.querySelector('.lesson-list a.active');
-                    if (!activeLessonLink) {
-                        console.error('❌ Nenhuma aula ativa encontrada');
-                        return;
-                    }
-
-                    const currentListItem = activeLessonLink.parentElement;
-                    const nextListItem = currentListItem.nextElementSibling;
-                    
-                    // Marca a aula atual como concluída automaticamente antes de navegar
-                    const titleSpan = activeLessonLink.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
-                    const currentLessonTitle = titleSpan ? titleSpan.textContent.trim() : '';
-                    
-                    if (currentLessonTitle) {
-                        console.log('🎯 Marcando aula como concluída automaticamente:', currentLessonTitle);
-                        updateUserProgress(currentLessonTitle, { 
-                            completed: true,
-                            fullyCompleted: true,
-                            completedAt: new Date().toISOString()
-                        });
-                        
-                        // Atualiza o ícone da aula atual para "completed"
-                        const activeIcon = activeLessonLink.querySelector('.lesson-icon');
-                        if (activeIcon) {
-                            activeIcon.className = 'lesson-icon completed';
-                        }
-
-                        if (typeof window.updateButtonStates === 'function') {
-                            window.updateButtonStates(currentLessonTitle);
-                        }
-                    }
-
-                    if (nextListItem) {
-                        const nextLessonLink = nextListItem.querySelector('a');
-                        console.log('🔗 Carregando próxima aula:', nextLessonLink);
-                        loadLesson(nextLessonLink);
-
-                        setTimeout(() => {
-                            if (nextLessonBtn && !nextLessonBtn.classList.contains('hidden')) {
-                                nextLessonBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                console.log('📜 Scroll automático para botão "Próxima Aula" no cabeçalho');
-                            }
-                        }, 500);
-                    } else {
-                        alert('Não há mais aulas neste tópico.');
-                    }
+                    console.log('🔘 Botão de próxima aula (feedback) → acionando header next-lesson-btn');
+                    // Centraliza a lógica no handler do botão do cabeçalho
+                    nextLessonBtn.click();
                 });
 
                 console.log('✅ Evento de clique adicionado ao botão de feedback');
