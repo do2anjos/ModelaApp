@@ -984,6 +984,7 @@
     </div>
 
 <!-- Scripts para gerenciar dark mode, daltonism mode e usabilidade -->
+<script src="/js/api.js"></script>
 <script src="/js/auth.js"></script>
 <script src="/js/dark-mode.js"></script>
 <script src="/js/daltonism-mode.js"></script>
@@ -1395,7 +1396,16 @@
                 const user = JSON.parse(userData);
                 
                 // Busca progresso de todas as aulas do módulo 1
-                const response = await fetch(`/api/user/${user.id}/module/1/progress`);
+                const reqId = 'aulas-progress-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+                console.log('[AULAS] ▶️ progress', { reqId, userId: user.id });
+                console.time(`[AULAS] tempo ${reqId}`);
+                const response = await (window.apiFetch ? window.apiFetch(`/api/user/${user.id}/module/1/progress`, {
+                    headers: { 'X-Request-Id': reqId }
+                }) : fetch(`/api/user/${user.id}/module/1/progress`, {
+                    headers: { 'X-Request-Id': reqId }
+                }));
+                console.timeEnd(`[AULAS] tempo ${reqId}`);
+                console.log('[AULAS] ◀️ progress response', { reqId, status: response.status, ok: response.ok });
                 const data = await response.json();
                 
                 if (data.success && data.lessons) {
@@ -1599,7 +1609,10 @@
                     completed: progress.completed || false
                 };
                 
-                fetch(`/api/user/${user.id}/progress`, {
+                const reqId = 'aulas-save-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+                console.log('[AULAS] ▶️ save progress', { reqId, userId: user.id, lessonTitle });
+                console.time(`[AULAS] tempo ${reqId}`);
+                (window.apiFetch ? window.apiFetch(`/api/user/${user.id}/progress`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -1626,15 +1639,28 @@
                 console.log('💰 lessonTitle:', lessonTitle);
                 console.log('💰 ========================================');
                 
-                const addResp = await fetch(`/api/user/${userId}/score`, {
+                const reqId = 'aulas-score-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+                console.log('[AULAS] ▶️ score', { reqId, userId, lessonId, lessonTitle });
+                console.time(`[AULAS] tempo ${reqId}`);
+                const addResp = await (window.apiFetch ? window.apiFetch(`/api/user/${userId}/score`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
                     body: JSON.stringify({
                         scoreType: 'lesson',
                         sourceId: String(lessonId),
                         points: 5
                     })
-                });
+                }) : fetch(`/api/user/${userId}/score`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
+                    body: JSON.stringify({
+                        scoreType: 'lesson',
+                        sourceId: String(lessonId),
+                        points: 5
+                    })
+                }));
+                console.timeEnd(`[AULAS] tempo ${reqId}`);
+                console.log('[AULAS] ◀️ score response', { reqId, status: addResp.status, ok: addResp.ok });
                 const addData = await addResp.json();
                 
                 console.log('📡 Resposta do backend:', addData);
@@ -1679,7 +1705,16 @@
                 console.log(`🔍 Verificando conclusão do módulo ${moduleId} para usuário ${userId}`);
                 
                 // Buscar progresso do módulo
-                const response = await fetch(`/api/user/${userId}/module/${moduleId}/progress`);
+                const reqId = 'aulas-module-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+                console.log('[AULAS] ▶️ module progress', { reqId, userId, moduleId });
+                console.time(`[AULAS] tempo ${reqId}`);
+                const response = await (window.apiFetch ? window.apiFetch(`/api/user/${userId}/module/${moduleId}/progress`, {
+                    headers: { 'X-Request-Id': reqId }
+                }) : fetch(`/api/user/${userId}/module/${moduleId}/progress`, {
+                    headers: { 'X-Request-Id': reqId }
+                }));
+                console.timeEnd(`[AULAS] tempo ${reqId}`);
+                console.log('[AULAS] ◀️ module progress response', { reqId, status: response.status, ok: response.ok });
                 const data = await response.json();
                 
                 if (!data.success) {
@@ -1698,15 +1733,28 @@
 
                 if (expectedTotal > 0 && completedCount === expectedTotal) {
                     // Bônus somente quando 100% do módulo concluído
-                    const scoreResponse = await fetch(`/api/user/${userId}/score`, {
+                    const reqId = 'aulas-module-score-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+                    console.log('[AULAS] ▶️ module score', { reqId, userId, moduleId });
+                    console.time(`[AULAS] tempo ${reqId}`);
+                    const scoreResponse = await (window.apiFetch ? window.apiFetch(`/api/user/${userId}/score`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
                         body: JSON.stringify({
                             scoreType: 'module',
                             sourceId: moduleId.toString(),
                             points: 50
                         })
-                    });
+                    }) : fetch(`/api/user/${userId}/score`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
+                        body: JSON.stringify({
+                            scoreType: 'module',
+                            sourceId: moduleId.toString(),
+                            points: 50
+                        })
+                    }));
+                    console.timeEnd(`[AULAS] tempo ${reqId}`);
+                    console.log('[AULAS] ◀️ module score response', { reqId, status: scoreResponse.status, ok: scoreResponse.ok });
 
                     const scoreResult = await scoreResponse.json();
 
@@ -3595,9 +3643,12 @@
             const mapping = LESSON_MAPPING[exerciseState.lessonTitle];
             if (!mapping) return;
             
-            const response = await fetch(`/api/user/${user.id}/exercise-state`, {
+            const reqId = 'aulas-exercise-state-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+            console.log('[AULAS] ▶️ exercise state', { reqId, userId: user.id, lessonTitle: exerciseState.lessonTitle });
+            console.time(`[AULAS] tempo ${reqId}`);
+            const response = await (window.apiFetch ? window.apiFetch(`/api/user/${user.id}/exercise-state`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
                 body: JSON.stringify({
                     lessonId: mapping.lessonId,
                     lessonTitle: exerciseState.lessonTitle,
@@ -3612,7 +3663,26 @@
                         lessonTitle: exerciseState.lessonTitle
                     }
                 })
-            });
+            }) : fetch(`/api/user/${user.id}/exercise-state`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
+                body: JSON.stringify({
+                    lessonId: mapping.lessonId,
+                    lessonTitle: exerciseState.lessonTitle,
+                    isCompleted: exerciseState.isCompleted,
+                    score: exerciseState.score,
+                    totalQuestions: exerciseState.totalQuestions,
+                    percentage: exerciseState.percentage,
+                    pointsAwarded: exerciseState.pointsAwarded,
+                    isFirstAttempt: exerciseState.isFirstAttempt,
+                    feedbackData: {
+                        timestamp: Date.now(),
+                        lessonTitle: exerciseState.lessonTitle
+                    }
+                })
+            }));
+            console.timeEnd(`[AULAS] tempo ${reqId}`);
+            console.log('[AULAS] ◀️ exercise state response', { reqId, status: response.status, ok: response.ok });
             
             const result = await response.json();
             if (result.success) {
@@ -3622,14 +3692,26 @@
             // IMPORTANTE: Também atualiza o progresso da aula no banco
             if (exerciseState.isCompleted && exerciseState.feedbackData && exerciseState.feedbackData.allCorrect) {
                 console.log('🔄 Atualizando progresso da aula no banco de dados');
-                const progressResponse = await fetch(`/api/user/${user.id}/lesson-progress`, {
+                const reqId2 = 'aulas-lesson-progress-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+                console.log('[AULAS] ▶️ lesson progress', { reqId: reqId2, userId: user.id, lessonTitle: exerciseState.lessonTitle });
+                console.time(`[AULAS] tempo ${reqId2}`);
+                const progressResponse = await (window.apiFetch ? window.apiFetch(`/api/user/${user.id}/lesson-progress`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId2 },
                     body: JSON.stringify({
                         lessonTitle: exerciseState.lessonTitle,
                         exerciseCompleted: true
                     })
-                });
+                }) : fetch(`/api/user/${user.id}/lesson-progress`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId2 },
+                    body: JSON.stringify({
+                        lessonTitle: exerciseState.lessonTitle,
+                        exerciseCompleted: true
+                    })
+                }));
+                console.timeEnd(`[AULAS] tempo ${reqId2}`);
+                console.log('[AULAS] ◀️ lesson progress response', { reqId: reqId2, status: progressResponse.status, ok: progressResponse.ok });
                 
                 const progressResult = await progressResponse.json();
                 if (progressResult.success) {
@@ -3661,7 +3743,16 @@
                 return null;
             }
             
-            const response = await fetch(`/api/user/${user.id}/exercise-state/${mapping.lessonId}`);
+            const reqId = 'aulas-load-state-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+            console.log('[AULAS] ▶️ load state', { reqId, userId: user.id, lessonId: mapping.lessonId, lessonTitle });
+            console.time(`[AULAS] tempo ${reqId}`);
+            const response = await (window.apiFetch ? window.apiFetch(`/api/user/${user.id}/exercise-state/${mapping.lessonId}`, {
+                headers: { 'X-Request-Id': reqId }
+            }) : fetch(`/api/user/${user.id}/exercise-state/${mapping.lessonId}`, {
+                headers: { 'X-Request-Id': reqId }
+            }));
+            console.timeEnd(`[AULAS] tempo ${reqId}`);
+            console.log('[AULAS] ◀️ load state response', { reqId, status: response.status, ok: response.ok });
             const result = await response.json();
             
             if (result.success && result.state) {
@@ -3689,9 +3780,18 @@
                 return;
             }
             
-            const response = await fetch(`/api/user/${user.id}/exercise-state/${mapping.lessonId}`, {
-                method: 'DELETE'
-            });
+            const reqId = 'aulas-clear-state-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+            console.log('[AULAS] ▶️ clear state', { reqId, userId: user.id, lessonId: mapping.lessonId, lessonTitle });
+            console.time(`[AULAS] tempo ${reqId}`);
+            const response = await (window.apiFetch ? window.apiFetch(`/api/user/${user.id}/exercise-state/${mapping.lessonId}`, {
+                method: 'DELETE',
+                headers: { 'X-Request-Id': reqId }
+            }) : fetch(`/api/user/${user.id}/exercise-state/${mapping.lessonId}`, {
+                method: 'DELETE',
+                headers: { 'X-Request-Id': reqId }
+            }));
+            console.timeEnd(`[AULAS] tempo ${reqId}`);
+            console.log('[AULAS] ◀️ clear state response', { reqId, status: response.status, ok: response.ok });
             
             const result = await response.json();
             if (result.success) {
