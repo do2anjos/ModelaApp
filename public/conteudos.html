@@ -441,11 +441,12 @@
         
         /* Marcador de posição */
         .position-marker {
-            position: absolute;
-            right: -140px;
-            top: 50%;
-            transform: translateY(-50%);
             text-align: center;
+            margin: 1rem auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         .pulse {
@@ -453,7 +454,6 @@
             height: 20px;
             background: var(--primary);
             border-radius: 50%;
-            margin: 0 auto 0.5rem;
             position: relative;
         }
         
@@ -570,12 +570,6 @@
             
             .layer-icon {
                 display: none;
-            }
-            
-            .position-marker {
-                position: static;
-                transform: none;
-                margin-top: 1rem;
             }
             
             .layer-number {
@@ -703,6 +697,12 @@
                     
                     <div class="system-connector base"></div>
                     
+                    <!-- Marcador de posição -->
+                    <div class="position-marker">
+                        <div class="pulse"></div>
+                        <span>VOCÊ ESTÁ AQUI</span>
+                    </div>
+                    
                     <!-- Módulo 1: UML (Ativo) -->
                     <div class="module-layer active level-1">
                         <div class="layer-card">
@@ -753,12 +753,6 @@
                                 </a>
                             </div>
                             <div class="layer-icon">🎯</div>
-                        </div>
-                        
-                        <!-- Marcador de posição -->
-                        <div class="position-marker">
-                            <div class="pulse"></div>
-                            <span>VOCÊ ESTÁ AQUI</span>
                         </div>
                     </div>
                     
