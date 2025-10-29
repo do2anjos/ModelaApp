@@ -685,50 +685,43 @@ app.put('/api/user/:userId', async (req, res) => {
 // ==========================================================================
 
 // Endpoint 1: Adicionar Pontos (COM VERIFICAÇÃO DE DUPLICAÇÃO)
-app.post('/api/user/:userId/score', (req, res) => {
-    const userId = req.params.userId;
-    const { scoreType, sourceId, points } = req.body;
+app.post('/api/user/:userId/score', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { scoreType, sourceId, points } = req.body;
 
-    if (!scoreType || !sourceId || !points) {
-        return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
-    }
-
-    // CORREÇÃO: Verifica se já existe pontuação para evitar duplicação
-    db.get(
-        'SELECT id FROM user_scores WHERE user_id = ? AND score_type = ? AND source_id = ?',
-        [userId, scoreType, sourceId],
-        function(err, existingScore) {
-            if (err) {
-                console.error('Erro ao verificar pontuação existente:', err);
-                return res.status(500).json({ success: false, message: 'Erro ao verificar pontuação' });
-            }
-
-            if (existingScore) {
-                console.log(`⚠️ Pontuação já existe para user_id=${userId}, score_type=${scoreType}, source_id=${sourceId}`);
-                return res.json({ 
-                    success: true, 
-                    message: 'Pontuação já registrada anteriormente', 
-                    pointsAdded: 0,
-                    alreadyExists: true 
-                });
-            }
-
-            // Adiciona pontos apenas se não existir
-            db.run(
-                'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
-                [userId, scoreType, sourceId, points],
-                function(err) {
-                    if (err) {
-                        console.error('Erro ao adicionar pontos:', err);
-                        return res.status(500).json({ success: false, message: 'Erro ao adicionar pontos' });
-                    }
-
-                    console.log(`✅ Pontos adicionados: user_id=${userId}, score_type=${scoreType}, source_id=${sourceId}, points=${points}`);
-                    res.json({ success: true, message: 'Pontos adicionados com sucesso', pointsAdded: points });
-                }
-            );
+        if (!scoreType || !sourceId || !points) {
+            return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
         }
-    );
+
+        // Verifica se já existe pontuação para evitar duplicação
+        const existingScore = await getAsync(
+            'SELECT id FROM user_scores WHERE user_id = ? AND score_type = ? AND source_id = ?',
+            [userId, scoreType, sourceId]
+        );
+
+        if (existingScore) {
+            console.log(`⚠️ Pontuação já existe para user_id=${userId}, score_type=${scoreType}, source_id=${sourceId}`);
+            return res.json({ 
+                success: true, 
+                message: 'Pontuação já registrada anteriormente', 
+                pointsAdded: 0,
+                alreadyExists: true 
+            });
+        }
+
+        // Adiciona pontos apenas se não existir
+        await runAsync(
+            'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
+            [userId, scoreType, sourceId, points]
+        );
+
+        console.log(`✅ Pontos adicionados: user_id=${userId}, score_type=${scoreType}, source_id=${sourceId}, points=${points}`);
+        res.json({ success: true, message: 'Pontos adicionados com sucesso', pointsAdded: points });
+    } catch (error) {
+        console.error('Erro ao adicionar pontos:', error);
+        res.status(500).json({ success: false, message: 'Erro ao adicionar pontos' });
+    }
 });
 
 // Endpoint 2: Registrar Tentativa de Exercício
