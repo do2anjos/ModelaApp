@@ -15,7 +15,17 @@ app.use(cors({ origin: true }));
 // Logging de requisições
 try {
     const morgan = require('morgan');
-    app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+    morgan.token('reqid', (req) => (req.headers['x-request-id'] || '-'));
+    morgan.token('client', (req) => {
+        try {
+            if (req.method === 'POST' && req.url.startsWith('/api/cadastro')) {
+                const { email, matricula } = req.body || {};
+                return `email=${email || ''} matricula=${matricula || ''}`;
+            }
+        } catch(_) {}
+        return '';
+    });
+    app.use(morgan(':method :url :status :res[content-length] - :response-time ms :reqid :client'));
 } catch (_) {}
 
 // Otimização: compressão gzip para reduzir tamanho das respostas
@@ -341,6 +351,7 @@ function generateUsername(nome) {
 app.post('/api/cadastro', async (req, res) => {
     try {
         const { nome, email, matricula, telefone, senha } = req.body;
+        console.log('➡️  POST /api/cadastro - received', { email, matricula });
         
         if (!nome || !email || !matricula || !senha) {
             return res.status(400).json({ 
@@ -358,7 +369,8 @@ app.post('/api/cadastro', async (req, res) => {
         }), { onRetry: (err, attempt) => console.warn(`🔁 Retry SELECT email (tentativa ${attempt})`, err?.message) }).catch(() => null);
 
         if (emailExists) {
-            return res.status(400).json({ success: false, message: 'Email já cadastrado' });
+            console.warn('⚠️  Cadastro bloqueado: email já cadastrado', { email });
+            return res.status(409).json({ success: false, message: 'Email já cadastrado' });
         }
 
         // Verificar se matrícula já existe (com retry)
@@ -370,7 +382,8 @@ app.post('/api/cadastro', async (req, res) => {
         }), { onRetry: (err, attempt) => console.warn(`🔁 Retry SELECT matrícula (tentativa ${attempt})`, err?.message) }).catch(() => null);
 
         if (matriculaExists) {
-            return res.status(400).json({ success: false, message: 'Matrícula já cadastrada' });
+            console.warn('⚠️  Cadastro bloqueado: matrícula já cadastrada', { matricula });
+            return res.status(409).json({ success: false, message: 'Matrícula já cadastrada' });
         }
 
         // Gerar hash da senha e username
@@ -389,6 +402,7 @@ app.post('/api/cadastro', async (req, res) => {
             );
         }), { onRetry: (err, attempt) => console.warn(`🔁 Retry INSERT usuário (tentativa ${attempt})`, err?.message) });
 
+        console.log('✅ Cadastro concluído', { userId: result.lastID, email, matricula });
         res.json({ 
             success: true, 
             message: 'Usuário cadastrado com sucesso!',
@@ -397,10 +411,19 @@ app.post('/api/cadastro', async (req, res) => {
         });
     } catch (error) {
         if (error && error.code === 'SQLITE_CONSTRAINT') {
-            console.warn('⚠️ Violação de unicidade no cadastro:', error?.message);
+            const msg = String(error.message || '').toLowerCase();
+            if (msg.includes('users.email')) {
+                console.warn('⚠️ Violação UNIQUE em email', { email: req.body?.email });
+                return res.status(409).json({ success: false, message: 'Email já cadastrado' });
+            }
+            if (msg.includes('users.matricula')) {
+                console.warn('⚠️ Violação UNIQUE em matrícula', { matricula: req.body?.matricula });
+                return res.status(409).json({ success: false, message: 'Matrícula já cadastrada' });
+            }
+            console.warn('⚠️ Violação UNIQUE genérica', { detail: error.message });
             return res.status(409).json({ success: false, message: 'Email ou matrícula já cadastrados' });
         }
-        console.error('Erro no cadastro:', error);
+        console.error('❌ Erro no cadastro:', { code: error?.code, message: error?.message });
         res.status(500).json({ success: false, message: 'Erro interno do servidor: ' + (error?.message || 'desconhecido') });
     }
 });
