@@ -63,52 +63,82 @@
             border: 2px dashed var(--border);
         }
 
-        /* Pódio em formato de escadinha */
-        .podium-container {
+        /* Pódio no formato solicitado */
+        .container.podium {
             display: flex;
-            justify-content: center;
             align-items: flex-end;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            position: relative;
+            justify-content: center;
+            gap: 1rem;
             padding: 2rem 0;
         }
 
-        /* Base da escadinha */
-        .podium-container::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            height: 20px;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                var(--muted) 20%, 
-                var(--muted) 80%, 
-                transparent 100%
-            );
-            border-radius: 10px;
-            z-index: 1;
-        }
-
-        .podium-card {
-            position: relative;
-            padding: 1.5rem 1rem;
-            border-radius: var(--radius) var(--radius) 0 0;
-            width: 100%;
-            max-width: 180px;
-            min-height: 200px;
-            background: var(--card);
-            box-shadow: var(--shadow-medium);
-            transition: all 0.3s ease;
+        .podium__item {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            z-index: 2;
+            align-items: center;
+            width: 180px;
+            text-align: center;
         }
+
+        .podium__city {
+            font-weight: 600;
+            margin: 0 0 .5rem 0;
+            color: var(--foreground);
+        }
+
+        .podium__rank {
+            width: 100%;
+            border-radius: var(--radius) var(--radius) 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1f2937; /* contraste do número */
+            font-weight: 700;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .podium__rank.first {
+            height: 260px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border: 3px solid #ffd700;
+        }
+        .podium__rank.second,
+        .podium__rank.third {
+            height: 200px;
+        }
+        .podium__rank.second {
+            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+            border: 3px solid #c0c0c0;
+        }
+        .podium__rank.third {
+            background: linear-gradient(135deg, #cd7f32 0%, #daa520 100%);
+            border: 3px solid #cd7f32;
+        }
+
+        .podium__score {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: var(--muted-foreground);
+        }
+
+        @media (max-width: 768px) {
+            .podium__item { width: 120px; }
+            .podium__rank.first { height: 180px; }
+            .podium__rank.second,
+            .podium__rank.third { height: 150px; }
+        }
+        @media (max-width: 480px) {
+            .podium__item { width: 100px; }
+            .podium__rank.first { height: 150px; }
+            .podium__rank.second,
+            .podium__rank.third { height: 130px; }
+        }
+
+        /* (Removida base da escadinha anterior) */
+
+        /* (Removidos estilos antigos de .podium-card — estrutura substituída por .podium__*) */
 
         .podium-card:hover {
             transform: translateY(-5px);
@@ -116,95 +146,15 @@
         }
 
         /* 1º lugar - mais alto (centro) */
-        .podium-card.rank-1 {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            min-height: 250px;
-            order: 2; /* Centro */
-            border: 3px solid #ffd700;
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
-        }
-
-        .podium-card.rank-1::before {
-            content: '🥇';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2rem;
-            background: white;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+        /* (Removidos enfeites específicos do card anterior) */
 
         /* 2º lugar - médio (esquerda) */
-        .podium-card.rank-2 {
-            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
-            min-height: 220px;
-            order: 1; /* Esquerda */
-            border: 3px solid #c0c0c0;
-            box-shadow: 0 6px 20px rgba(192, 192, 192, 0.3);
-        }
-
-        .podium-card.rank-2::before {
-            content: '🥈';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2rem;
-            background: white;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+        /* (Removidos enfeites específicos do card anterior) */
 
         /* 3º lugar - mais baixo (direita) */
-        .podium-card.rank-3 {
-            background: linear-gradient(135deg, #cd7f32 0%, #daa520 100%);
-            min-height: 190px;
-            order: 3; /* Direita */
-            border: 3px solid #cd7f32;
-            box-shadow: 0 4px 15px rgba(205, 127, 50, 0.3);
-        }
+        /* (Removidos enfeites específicos do card anterior) */
 
-        .podium-card.rank-3::before {
-            content: '🥉';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2rem;
-            background: white;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        /* Conectores entre os degraus */
-        .podium-card::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            height: 10px;
-            background: inherit;
-            border-radius: 0 0 5px 5px;
-        }
+        /* (Removidos conectores antigos de degraus) */
 
         /* Degraus da escadinha */
         .podium-card.rank-1::after {
@@ -289,29 +239,19 @@
         /* Responsividade do pódio */
         @media (max-width: 768px) {
             .podium-container {
-                flex-direction: row;
-                align-items: flex-end;
-                gap: 0.3rem;
+                gap: 0.5rem;
                 padding: 1rem 0;
             }
             
             .podium-card {
-                max-width: 120px;
+                flex: 0 0 120px;
                 min-height: 150px;
                 padding: 1rem 0.5rem;
             }
             
-            .podium-card.rank-1 {
-                min-height: 180px;
-            }
-            
-            .podium-card.rank-2 {
-                min-height: 160px;
-            }
-            
-            .podium-card.rank-3 {
-                min-height: 140px;
-            }
+            .podium-card.rank-1 { min-height: 180px; }
+            .podium-card.rank-2 { min-height: 150px; }
+            .podium-card.rank-3 { min-height: 150px; }
             
             .podium-card::before {
                 width: 30px;
@@ -323,26 +263,18 @@
 
         @media (max-width: 480px) {
             .podium-container {
-                gap: 0.2rem;
+                gap: 0.35rem;
             }
             
             .podium-card {
-                max-width: 100px;
+                flex: 0 0 100px;
                 min-height: 120px;
                 padding: 0.8rem 0.3rem;
             }
             
-            .podium-card.rank-1 {
-                min-height: 150px;
-            }
-            
-            .podium-card.rank-2 {
-                min-height: 130px;
-            }
-            
-            .podium-card.rank-3 {
-                min-height: 110px;
-            }
+            .podium-card.rank-1 { min-height: 150px; }
+            .podium-card.rank-2 { min-height: 130px; }
+            .podium-card.rank-3 { min-height: 130px; }
             
             .podium-card::before {
                 width: 25px;
@@ -561,38 +493,34 @@
                 return;
             }
             
-            // Criar cards do pódio na ordem visual correta: 2º, 1º, 3º
-            // Para que o CSS order funcione corretamente
-            const positions = [
-                { rank: 2, user: top3[1] || null }, // 2º lugar (esquerda) - order: 1
-                { rank: 1, user: top3[0] || null }, // 1º lugar (centro) - order: 2  
-                { rank: 3, user: top3[2] || null }  // 3º lugar (direita) - order: 3
-            ];
-            
-            positions.forEach(({ rank, user }) => {
-                const card = document.createElement('div');
-                card.className = `podium-card rank-${rank}`;
-                
-                if (user) {
-                    const initials = getInitials(user.nome);
-                    const points = user.totalPoints || 0;
-                    
-                    card.innerHTML = `
-                        <div class="podium-avatar" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem; margin: 0.5rem auto;">${initials}</div>
-                        <h4 class="podium-name">${user.nome}</h4>
-                        <span class="podium-score">${points} pts</span>
-                    `;
-                } else {
-                    // Card vazio se não houver usuário para essa posição
-                    card.innerHTML = `
-                        <div class="podium-avatar" style="width: 80px; height: 80px; border-radius: 50%; background: var(--muted); display: flex; align-items: center; justify-content: center; color: var(--muted-foreground); font-weight: 600; font-size: 1.2rem; margin: 0.5rem auto;">-</div>
-                        <h4 class="podium-name">Vago</h4>
-                        <span class="podium-score">0 pts</span>
-                    `;
-                }
-                
-                container.appendChild(card);
-            });
+            // Construir a estrutura: 2º, 1º, 3º
+            const second = top3[1] || null;
+            const first = top3[0] || null;
+            const third = top3[2] || null;
+
+            const getCity = (user) => user ? user.nome : 'Vago';
+            const getPoints = (user) => user && (user.totalPoints || 0);
+            const podiumHTML = `
+                <div class="container podium">
+                  <div class="podium__item">
+                    <p class="podium__city">${getCity(second)}</p>
+                    <div class="podium__rank second">2</div>
+                    <span class="podium__score">${getPoints(second) ?? 0} pts</span>
+                  </div>
+                  <div class="podium__item">
+                    <p class="podium__city">${getCity(first)}</p>
+                    <div class="podium__rank first">1</div>
+                    <span class="podium__score">${getPoints(first) ?? 0} pts</span>
+                  </div>
+                  <div class="podium__item">
+                    <p class="podium__city">${getCity(third)}</p>
+                    <div class="podium__rank third">3</div>
+                    <span class="podium__score">${getPoints(third) ?? 0} pts</span>
+                  </div>
+                </div>
+            `;
+
+            container.innerHTML = podiumHTML;
         }
 
         // Função para atualizar lista de ranking
