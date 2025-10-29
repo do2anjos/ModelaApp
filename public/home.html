@@ -250,7 +250,7 @@
 
                 <div class="dashboard-card stat-card">
                     <h4>Exercícios Feitos</h4>
-                    <p>0 de 0</p>
+                    <p>0</p>
                 </div>
                 <div class="dashboard-card stat-card">
                     <h4>Módulos Concluídos</h4>
@@ -301,20 +301,36 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // 1-3. Atualiza cards de estatísticas (seleção robusta por ordem)
       const statCards = document.querySelectorAll('.dashboard-card.stat-card');
+      
+      // Card 1: Exercícios Feitos - Usa valor calculado do dashboard (soma de todos os score das tentativas)
       if (statCards[0]) {
         const p = statCards[0].querySelector('p');
-        if (p) p.textContent = `${data.exercises.completed}`;
+        if (p) {
+          // O backend já calcula a soma de todos os exercícios (score) da tabela exercise_attempts
+          const totalExercises = data.exercises?.completed || 0;
+          p.textContent = `${totalExercises}`;
+          console.log(`📊 Total de exercícios concluídos (do dashboard): ${totalExercises}`);
+          console.log(`📋 Dados completos do dashboard:`, {
+            exercises: data.exercises,
+            modules: data.modules,
+            certificates: data.certificates
+          });
+        }
       }
+      
+      // Card 2: Módulos Concluídos
       if (statCards[1]) {
         const p = statCards[1].querySelector('p');
         if (p) p.textContent = `${data.modules.completed}`;
       }
+      
+      // Card 3: Certificados
       if (statCards[2]) {
         const p = statCards[2].querySelector('p');
         if (p) p.textContent = `${data.certificates.available}`;
       }
       
-      // 4. Atualiza Card "Continuar Aprendendo"
+      // 4. Atualiza Card "Continuar Aprendendo" - Busca próxima aula não concluída
       const continueCard = document.querySelector('.dashboard-card.continue-learning');
       if (continueCard) {
         const titleEl = continueCard.querySelector('.learning-info h3');
@@ -322,26 +338,108 @@ document.addEventListener('DOMContentLoaded', function() {
         const progressEl = continueCard.querySelector('.progress-percentage');
         const progressBarEl = continueCard.querySelector('.progress-fill');
         const lessonsCompletedEl = continueCard.querySelector('.lessons-completed');
+        const continueBtn = continueCard.querySelector('.btn-continue');
         
-        if (data.currentModule) {
-          // Usa dados do backend (inclui última aula acessada)
-          if (titleEl) titleEl.textContent = data.currentModule.title;
-          if (subtitleEl) subtitleEl.textContent = data.currentModule.currentLesson;
-          if (progressEl) progressEl.textContent = `${data.currentModule.progress}%`;
-          if (progressBarEl) progressBarEl.style.width = `${data.currentModule.progress}%`;
-          if (lessonsCompletedEl) {
-            const completedLessons = data.currentModule.completedLessons || 0;
-            const totalLessons = data.currentModule.totalLessons || 10;
-            lessonsCompletedEl.textContent = `${completedLessons} de ${totalLessons} aulas completas`;
-          }
-        } else {
-          // Novo usuário
-          if (titleEl) titleEl.textContent = 'Modelagem com UML';
-          if (subtitleEl) subtitleEl.textContent = 'Aula 01: Introdução à UML';
-          if (progressEl) progressEl.textContent = '0%';
-          if (progressBarEl) progressBarEl.style.width = '0%';
-          if (lessonsCompletedEl) lessonsCompletedEl.textContent = '0 de 10 aulas completas';
-        }
+        // Mapeamento das aulas em ordem (declarado antes do fetch para estar acessível no catch)
+        const lessonsOrder = [
+          'Introdução à UML - Unified Modeling Language',
+          'O que é um Diagrama de Classes',
+          'Diagrama de casos de uso',
+          'Diagrama de sequência',
+          'Diagrama de atividades',
+          'Diagrama de componentes',
+          'Diagrama de implantação',
+          'Diagrama de estados',
+          'Diagrama de pacotes',
+          'Boas práticas em UML'
+        ];
+        
+        // Busca progresso das aulas para encontrar a próxima não concluída
+        fetch(`/api/user/${user.id}/progress`)
+          .then(r => {
+            if (!r.ok) {
+              throw new Error(`HTTP error! status: ${r.status}`);
+            }
+            return r.json();
+          })
+          .then(progressData => {
+            console.log('📚 Progresso das aulas:', progressData);
+            
+            // Encontra a próxima aula não concluída
+            let nextLesson = null;
+            let completedCount = 0;
+            
+            console.log('🔍 Verificando progresso das aulas...');
+            for (const lessonTitle of lessonsOrder) {
+              const lessonProgress = progressData.lessons?.find(l => l.lesson_title === lessonTitle);
+              const isCompleted = lessonProgress && lessonProgress.completed;
+              console.log(`📚 ${lessonTitle}: ${isCompleted ? '✅ Concluída' : '⏳ Pendente'}`);
+              
+              if (!isCompleted) {
+                nextLesson = lessonTitle;
+                break;
+              }
+              completedCount++;
+            }
+            
+            // Se todas as aulas estão concluídas, mostra a última
+            if (!nextLesson && lessonsOrder.length > 0) {
+              nextLesson = lessonsOrder[lessonsOrder.length - 1];
+              completedCount = lessonsOrder.length;
+              console.log('🎓 Todas as aulas concluídas, mostrando última:', nextLesson);
+            }
+            
+            // Atualiza o card com a próxima aula
+            if (nextLesson) {
+              if (titleEl) titleEl.textContent = 'Modelagem com UML';
+              if (subtitleEl) subtitleEl.textContent = nextLesson;
+              
+              // Calcula progresso baseado nas aulas concluídas
+              const totalLessons = lessonsOrder.length;
+              const progress = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+              
+              console.log('📊 Cálculo do progresso:', {
+                completedCount,
+                totalLessons,
+                progress: `${progress}%`
+              });
+              
+              if (progressEl) progressEl.textContent = `${progress}%`;
+              if (progressBarEl) progressBarEl.style.width = `${progress}%`;
+              if (lessonsCompletedEl) {
+                lessonsCompletedEl.textContent = `${completedCount} de ${totalLessons} aulas completas`;
+              }
+              
+              // Atualiza o link do botão para ir direto para a aula
+              if (continueBtn) {
+                continueBtn.href = `/aulas.html#${encodeURIComponent(nextLesson)}`;
+              }
+              
+              console.log('🎯 Próxima aula a continuar:', nextLesson);
+            } else {
+              // Fallback para novo usuário
+              if (titleEl) titleEl.textContent = 'Modelagem com UML';
+              if (subtitleEl) subtitleEl.textContent = 'Aula 01: Introdução à UML';
+              if (progressEl) progressEl.textContent = '0%';
+              if (progressBarEl) progressBarEl.style.width = '0%';
+              if (lessonsCompletedEl) lessonsCompletedEl.textContent = `0 de ${lessonsOrder.length} aulas completas`;
+              if (continueBtn) continueBtn.href = '/aulas.html';
+              
+              console.log('🆕 Usuário novo - valores padrão aplicados');
+            }
+          })
+          .catch(err => {
+            console.error('❌ Erro ao carregar progresso das aulas:', err);
+            // Fallback em caso de erro
+            if (titleEl) titleEl.textContent = 'Modelagem com UML';
+            if (subtitleEl) subtitleEl.textContent = 'Aula 01: Introdução à UML';
+            if (progressEl) progressEl.textContent = '0%';
+            if (progressBarEl) progressBarEl.style.width = '0%';
+            if (lessonsCompletedEl) lessonsCompletedEl.textContent = `0 de ${lessonsOrder.length} aulas completas`;
+            if (continueBtn) continueBtn.href = '/aulas.html';
+            
+            console.log('⚠️ Erro no carregamento - valores padrão aplicados');
+          });
       }
     })
     .catch(err => {

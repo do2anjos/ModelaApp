@@ -356,80 +356,113 @@ app.get('/api/user/:userId/dashboard', (req, res) => {
             total: 1
         };
 
-        // Calcular exercícios completos
-        progressRows.forEach(row => {
-            if (row.exercise_completed) {
-                exercises.completed++;
+        // Calcular exercícios completos - Soma do total de questões das aulas com 100% de acerto
+        db.all(`
+            SELECT COALESCE(SUM(total_questions), 0) AS exercises_completed
+            FROM exercise_attempts
+            WHERE user_id = ? AND (percentage = 100 OR score = total_questions)
+        `, [userId], (err, exerciseRows) => {
+            if (err) {
+                console.error('❌ Erro ao calcular exercícios:', err);
+                exercises.completed = 0;
+            } else {
+                // COALESCE garante que retorna 0 se não houver registros (NULL)
+                exercises.completed = exerciseRows[0]?.exercises_completed || 0;
+                console.log(`📊 Total de exercícios concluídos (soma de questões 100%): ${exercises.completed}`);
             }
-        });
-
-        // Calcular módulos completos (todos os exercícios do módulo)
-        const moduleProgress = {};
-        progressRows.forEach(row => {
-            if (!moduleProgress[row.module_id]) {
-                moduleProgress[row.module_id] = { total: 0, completed: 0 };
-            }
-            moduleProgress[row.module_id].total++;
-            if (row.exercise_completed) {
-                moduleProgress[row.module_id].completed++;
-            }
-        });
-
-        // Verificar módulos completos
-        Object.keys(moduleProgress).forEach(moduleId => {
-            const progress = moduleProgress[moduleId];
-            if (progress.completed === progress.total && progress.total > 0) {
-                modules.completed++;
-            }
-        });
-
-        // Certificado disponível se todos os módulos completos
-        if (modules.completed === modules.total) {
-            certificates.available = 1;
-        }
-
-        // Buscar progresso do módulo atual
-        const currentModule = {
-            id: 1,
-            title: 'Modelagem com UML',
-            progress: 0,
-            currentLesson: 'Aula 01: Introdução à UML',
-            nextLesson: 'Aula 02: Diagrama de Classes'
-        };
-
-        // Calcular progresso do módulo 1
-        if (moduleProgress[1]) {
-            const progress = moduleProgress[1];
-            currentModule.progress = Math.round((progress.completed / progress.total) * 100);
-        }
-
-        // Buscar última aula acessada (mais recente por started_at)
-        let lastAccessedLesson = null;
-        if (progressRows.length > 0) {
-            const sortedRows = progressRows.sort((a, b) => new Date(b.started_at || 0) - new Date(a.started_at || 0));
-            const lastRow = sortedRows[0];
             
-            // Mapear lesson_id para título da aula
-            const lessonTitles = {
-                1: 'Aula 01: Introdução à UML',
-                2: 'Aula 02: O que é um Diagrama de Classes',
-                3: 'Aula 03: Diagrama de Casos de Uso',
-                4: 'Aula 04: Diagrama de Sequência'
+            // Continua com o cálculo de módulos...
+            continueModuleCalculation();
+        });
+        
+        function continueModuleCalculation() {
+            // Calcular módulos completos (todos os exercícios do módulo)
+            const moduleProgress = {};
+            progressRows.forEach(row => {
+                if (!moduleProgress[row.module_id]) {
+                    moduleProgress[row.module_id] = { total: 0, completed: 0 };
+                }
+                moduleProgress[row.module_id].total++;
+                // SQLite retorna 1/0 como number, então verificamos explicitamente
+                const isCompleted = row.exercise_completed === 1 || row.exercise_completed === true;
+                if (isCompleted) {
+                    moduleProgress[row.module_id].completed++;
+                }
+            });
+
+            // Verificar módulos completos
+            // Mapeamento de total de aulas por módulo
+            const moduleTotals = {
+                1: 10, // Modelagem com UML tem 10 aulas
+                2: 0,  // Outros módulos (será atualizado quando houver mais aulas)
+                3: 0,
+                4: 0
             };
             
-            lastAccessedLesson = lessonTitles[lastRow.lesson_id] || 'Aula 01: Introdução à UML';
-        }
+            Object.keys(moduleProgress).forEach(moduleId => {
+                const progress = moduleProgress[moduleId];
+                const expectedTotal = moduleTotals[parseInt(moduleId)] || 0;
+                
+                // Módulo só está completo se todas as aulas esperadas estiverem concluídas
+                // E se o número de concluídas for igual ao total esperado
+                if (expectedTotal > 0 && 
+                    progress.completed === expectedTotal && 
+                    progress.total >= expectedTotal) {
+                    modules.completed++;
+                    console.log(`✅ Módulo ${moduleId} completo: ${progress.completed}/${expectedTotal} aulas concluídas`);
+                } else {
+                    console.log(`⏳ Módulo ${moduleId} incompleto: ${progress.completed}/${expectedTotal} aulas concluídas`);
+                }
+            });
 
-        res.json({
-            success: true,
-            exercises,
-            modules,
-            certificates,
-            currentModule: lastAccessedLesson ? {
-                ...currentModule,
-                currentLesson: lastAccessedLesson
-            } : currentModule
-        });
+            // Certificado disponível se todos os módulos completos
+            if (modules.completed === modules.total) {
+                certificates.available = 1;
+            }
+
+            // Buscar progresso do módulo atual
+            const currentModule = {
+                id: 1,
+                title: 'Modelagem com UML',
+                progress: 0,
+                currentLesson: 'Aula 01: Introdução à UML',
+                nextLesson: 'Aula 02: Diagrama de Classes'
+            };
+
+            // Calcular progresso do módulo 1
+            if (moduleProgress[1]) {
+                const progress = moduleProgress[1];
+                currentModule.progress = Math.round((progress.completed / progress.total) * 100);
+            }
+
+            // Buscar última aula acessada (mais recente por started_at)
+            let lastAccessedLesson = null;
+            if (progressRows.length > 0) {
+                const sortedRows = progressRows.sort((a, b) => new Date(b.started_at || 0) - new Date(a.started_at || 0));
+                const lastRow = sortedRows[0];
+                
+                // Mapear lesson_id para título da aula
+                const lessonTitles = {
+                    1: 'Aula 01: Introdução à UML',
+                    2: 'Aula 02: O que é um Diagrama de Classes',
+                    3: 'Aula 03: Diagrama de Casos de Uso',
+                    4: 'Aula 04: Diagrama de Sequência'
+                };
+                
+                lastAccessedLesson = lessonTitles[lastRow.lesson_id] || 'Aula 01: Introdução à UML';
+            }
+
+            res.json({
+                success: true,
+                exercises,
+                modules,
+                certificates,
+                currentModule: lastAccessedLesson ? {
+                    ...currentModule,
+                    currentLesson: lastAccessedLesson
+                } : currentModule
+            });
+        }
     });
 });
 
@@ -507,6 +540,28 @@ app.post('/api/user/:userId/progress', (req, res) => {
 
         console.log('✅ Progresso salvo com sucesso');
         res.json({ success: true, message: 'Progresso salvo com sucesso' });
+    });
+});
+
+// Endpoint para buscar progresso de todas as aulas do usuário
+app.get('/api/user/:userId/progress', (req, res) => {
+    const userId = req.params.userId;
+
+    db.all(`
+        SELECT lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, completed, module_id
+        FROM user_progress 
+        WHERE user_id = ?
+        ORDER BY module_id, lesson_id
+    `, [userId], (err, rows) => {
+        if (err) {
+            console.error('❌ Erro ao buscar progresso:', err);
+            return res.status(500).json({ success: false, message: 'Erro ao buscar progresso' });
+        }
+
+        res.json({
+            success: true,
+            lessons: rows
+        });
     });
 });
 

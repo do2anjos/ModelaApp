@@ -992,6 +992,35 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // --- NAVEGAÇÃO POR HASH ---
+        // Verifica se há hash na URL para navegar diretamente para uma aula
+        (function() {
+            try {
+                const hash = window.location.hash;
+                if (hash) {
+                    const lessonTitle = decodeURIComponent(hash.substring(1)); // Remove # e decodifica
+                    console.log('🔗 Navegação por hash detectada:', lessonTitle);
+                    
+                    // Aguarda um pouco para garantir que o DOM esteja carregado
+                    setTimeout(() => {
+                        const lessonLink = Array.from(document.querySelectorAll('.lesson-list a')).find(link => {
+                            const titleSpan = link.querySelector('span:not(.lesson-duration):not(.lesson-icon)');
+                            return titleSpan && titleSpan.textContent.trim() === lessonTitle;
+                        });
+                        
+                        if (lessonLink) {
+                            console.log('✅ Aula encontrada, navegando para:', lessonTitle);
+                            loadLesson(lessonLink);
+                        } else {
+                            console.warn('⚠️ Aula não encontrada:', lessonTitle);
+                        }
+                    }, 500);
+                }
+            } catch(e) {
+                console.error('❌ Erro na navegação por hash:', e);
+            }
+        })();
+
         // --- INICIALIZAÇÃO DA LOGO ---
         // Aulas.html sempre usa logo branca (Modela+p.png) nativamente
         (function() {
