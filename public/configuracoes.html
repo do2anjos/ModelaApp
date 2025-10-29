@@ -309,9 +309,19 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Configurar toggle switches
-            const toggleSwitches = document.querySelectorAll('.toggle-switch input');
-            toggleSwitches.forEach(toggle => {
+            // Aguardar inicialização do darkModeManager
+            function waitForDarkModeManager() {
+                if (window.darkModeManager) {
+                    initializeToggles();
+                } else {
+                    setTimeout(waitForDarkModeManager, 100);
+                }
+            }
+            
+            function initializeToggles() {
+                // Configurar toggle switches
+                const toggleSwitches = document.querySelectorAll('.toggle-switch input');
+                toggleSwitches.forEach(toggle => {
                 // Configurar estado inicial
                 const parent = toggle.closest('.preference-item');
                 if (toggle.checked) {
@@ -328,7 +338,11 @@
 
                     // Se for o toggle do modo escuro, usar o darkModeManager global
                     if (this.id === 'modo-escuro') {
-                        window.darkModeManager.toggleDarkMode(this.checked);
+                        if (window.darkModeManager) {
+                            window.darkModeManager.toggleDarkMode(this.checked);
+                        } else {
+                            console.error('DarkModeManager não está disponível');
+                        }
                     }
                 });
             });
@@ -472,6 +486,10 @@
 
             // Inicializar o toggle
             updateDarkModeToggle();
+            }
+            
+            // Iniciar o processo
+            waitForDarkModeManager();
         });
     </script>
 </body>
