@@ -394,23 +394,21 @@ app.post('/api/redefinir', async (req, res) => {
 });
 
 // Endpoint para buscar dados do dashboard
-app.get('/api/user/:userId/dashboard', (req, res) => {
-    const userId = req.params.userId;
-    
-    // Buscar progresso do usuário
-    db.all(`
-        SELECT module_id, lesson_id, video_completed, exercise_completed, practical_completed 
-        FROM user_progress 
-        WHERE user_id = ?
-    `, [userId], (err, progressRows) => {
-        if (err) {
-            return res.status(500).json({ success: false, message: 'Erro ao buscar progresso' });
-        }
+app.get('/api/user/:userId/dashboard', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        
+        // Buscar progresso do usuário
+        const progressRows = await allAsync(`
+            SELECT module_id, lesson_id, video_completed, exercise_completed, practical_completed 
+            FROM user_progress 
+            WHERE user_id = ?
+        `, [userId]);
 
         // Calcular estatísticas
         const exercises = {
             completed: 0,
-            total: 40 // Total de exercícios em todos os módulos
+            total: 40
         };
         
         const modules = {
@@ -423,191 +421,162 @@ app.get('/api/user/:userId/dashboard', (req, res) => {
             total: 1
         };
 
-        // Calcular exercícios completos - Soma do total de questões das aulas com 100% de acerto
-        db.all(`
+        // Calcular exercícios completos
+        const exerciseRows = await allAsync(`
             SELECT COALESCE(SUM(total_questions), 0) AS exercises_completed
             FROM exercise_attempts
             WHERE user_id = ? AND (percentage = 100 OR score = total_questions)
-        `, [userId], (err, exerciseRows) => {
-            if (err) {
-                console.error('❌ Erro ao calcular exercícios:', err);
-                exercises.completed = 0;
-            } else {
-                // COALESCE garante que retorna 0 se não houver registros (NULL)
-                exercises.completed = exerciseRows[0]?.exercises_completed || 0;
-                console.log(`📊 Total de exercícios concluídos (soma de questões 100%): ${exercises.completed}`);
-            }
-            
-            // Continua com o cálculo de módulos...
-            continueModuleCalculation();
-        });
+        `, [userId]).catch(() => []);
+
+        exercises.completed = exerciseRows[0]?.exercises_completed || 0;
+        console.log(`📊 Total de exercícios concluídos: ${exercises.completed}`);
         
-        function continueModuleCalculation() {
-            // Calcular módulos completos (todos os exercícios do módulo)
-            const moduleProgress = {};
-            progressRows.forEach(row => {
-                if (!moduleProgress[row.module_id]) {
-                    moduleProgress[row.module_id] = { total: 0, completed: 0 };
-                }
-                moduleProgress[row.module_id].total++;
-                // SQLite retorna 1/0 como number, então verificamos explicitamente
-                const isCompleted = row.exercise_completed === 1 || row.exercise_completed === true;
-                if (isCompleted) {
-                    moduleProgress[row.module_id].completed++;
-                }
-            });
+        // Calcular módulos completos
+        const moduleProgress = {};
+        progressRows.forEach(row => {
+            if (!moduleProgress[row.module_id]) {
+                moduleProgress[row.module_id] = { total: 0, completed: 0 };
+            }
+            moduleProgress[row.module_id].total++;
+            const isCompleted = row.exercise_completed === 1 || row.exercise_completed === true;
+            if (isCompleted) {
+                moduleProgress[row.module_id].completed++;
+            }
+        });
 
-            // Verificar módulos completos
-            // Mapeamento de total de aulas por módulo
-            const moduleTotals = {
-                1: 10, // Modelagem com UML tem 10 aulas
-                2: 0,  // Outros módulos (será atualizado quando houver mais aulas)
-                3: 0,
-                4: 0
+        const moduleTotals = { 1: 10, 2: 0, 3: 0, 4: 0 };
+        
+        Object.keys(moduleProgress).forEach(moduleId => {
+            const progress = moduleProgress[moduleId];
+            const expectedTotal = moduleTotals[parseInt(moduleId)] || 0;
+            
+            if (expectedTotal > 0 && 
+                progress.completed === expectedTotal && 
+                progress.total >= expectedTotal) {
+                modules.completed++;
+                console.log(`✅ Módulo ${moduleId} completo: ${progress.completed}/${expectedTotal}`);
+            }
+        });
+
+        if (modules.completed === modules.total) {
+            certificates.available = 1;
+        }
+
+        const currentModule = {
+            id: 1,
+            title: 'Modelagem com UML',
+            progress: 0,
+            currentLesson: 'Aula 01: Introdução à UML',
+            nextLesson: 'Aula 02: Diagrama de Classes'
+        };
+
+        if (moduleProgress[1]) {
+            const progress = moduleProgress[1];
+            currentModule.progress = Math.round((progress.completed / progress.total) * 100);
+        }
+
+        let lastAccessedLesson = null;
+        if (progressRows.length > 0) {
+            const sortedRows = progressRows.sort((a, b) => new Date(b.started_at || 0) - new Date(a.started_at || 0));
+            const lastRow = sortedRows[0];
+            
+            const lessonTitles = {
+                1: 'Aula 01: Introdução à UML',
+                2: 'Aula 02: O que é um Diagrama de Classes',
+                3: 'Aula 03: Diagrama de Casos de Uso',
+                4: 'Aula 04: Diagrama de Sequência'
             };
             
-            Object.keys(moduleProgress).forEach(moduleId => {
-                const progress = moduleProgress[moduleId];
-                const expectedTotal = moduleTotals[parseInt(moduleId)] || 0;
-                
-                // Módulo só está completo se todas as aulas esperadas estiverem concluídas
-                // E se o número de concluídas for igual ao total esperado
-                if (expectedTotal > 0 && 
-                    progress.completed === expectedTotal && 
-                    progress.total >= expectedTotal) {
-                    modules.completed++;
-                    console.log(`✅ Módulo ${moduleId} completo: ${progress.completed}/${expectedTotal} aulas concluídas`);
-                } else {
-                    console.log(`⏳ Módulo ${moduleId} incompleto: ${progress.completed}/${expectedTotal} aulas concluídas`);
-                }
-            });
-
-            // Certificado disponível se todos os módulos completos
-            if (modules.completed === modules.total) {
-                certificates.available = 1;
-            }
-
-            // Buscar progresso do módulo atual
-            const currentModule = {
-                id: 1,
-                title: 'Modelagem com UML',
-                progress: 0,
-                currentLesson: 'Aula 01: Introdução à UML',
-                nextLesson: 'Aula 02: Diagrama de Classes'
-            };
-
-            // Calcular progresso do módulo 1
-            if (moduleProgress[1]) {
-                const progress = moduleProgress[1];
-                currentModule.progress = Math.round((progress.completed / progress.total) * 100);
-            }
-
-            // Buscar última aula acessada (mais recente por started_at)
-            let lastAccessedLesson = null;
-            if (progressRows.length > 0) {
-                const sortedRows = progressRows.sort((a, b) => new Date(b.started_at || 0) - new Date(a.started_at || 0));
-                const lastRow = sortedRows[0];
-                
-                // Mapear lesson_id para título da aula
-                const lessonTitles = {
-                    1: 'Aula 01: Introdução à UML',
-                    2: 'Aula 02: O que é um Diagrama de Classes',
-                    3: 'Aula 03: Diagrama de Casos de Uso',
-                    4: 'Aula 04: Diagrama de Sequência'
-                };
-                
-                lastAccessedLesson = lessonTitles[lastRow.lesson_id] || 'Aula 01: Introdução à UML';
-            }
-
-            res.json({
-                success: true,
-                exercises,
-                modules,
-                certificates,
-                currentModule: lastAccessedLesson ? {
-                    ...currentModule,
-                    currentLesson: lastAccessedLesson
-                } : currentModule
-            });
+            lastAccessedLesson = lessonTitles[lastRow.lesson_id] || 'Aula 01: Introdução à UML';
         }
-    });
+
+        res.json({
+            success: true,
+            exercises,
+            modules,
+            certificates,
+            currentModule: lastAccessedLesson ? {
+                ...currentModule,
+                currentLesson: lastAccessedLesson
+            } : currentModule
+        });
+    } catch (error) {
+        console.error('❌ Erro ao buscar dashboard:', error);
+        res.status(500).json({ success: false, message: 'Erro ao buscar dashboard' });
+    }
 });
 
 // Endpoint para atualizar progresso de uma aula específica
-app.post('/api/user/:userId/lesson-progress', (req, res) => {
-    const userId = req.params.userId;
-    const { lessonTitle, ...updates } = req.body;
+app.post('/api/user/:userId/lesson-progress', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { lessonTitle, ...updates } = req.body;
 
-    if (!lessonTitle) {
-        return res.status(400).json({ success: false, message: 'Título da aula não fornecido' });
-    }
-
-    const fields = [];
-    const params = [];
-
-    // Constrói a query dinamicamente
-    if (updates.exerciseCompleted !== undefined) {
-        fields.push('exercise_completed = ?');
-        params.push(updates.exerciseCompleted);
-    }
-    if (updates.practicalCompleted !== undefined) {
-        fields.push('practical_completed = ?');
-        params.push(updates.practicalCompleted);
-    }
-    if (updates.completed !== undefined) {
-        fields.push('completed = ?');
-        params.push(updates.completed);
-        // Atualiza a data de conclusão apenas se a aula estiver sendo marcada como completa
-        if (updates.completed) {
-            fields.push('completed_at = CURRENT_TIMESTAMP');
+        if (!lessonTitle) {
+            return res.status(400).json({ success: false, message: 'Título da aula não fornecido' });
         }
-    }
-    
-    // Não adiciona updated_at pois a coluna não existe na tabela user_progress
 
-    if (fields.length === 0) { // Verifica se há campos para atualizar
-        return res.json({ success: true, message: 'Nenhum campo de progresso para atualizar' });
-    }
+        const fields = [];
+        const params = [];
 
-    const sql = `UPDATE user_progress SET ${fields.join(', ')} WHERE user_id = ? AND lesson_title = ?`;
-    params.push(userId, lessonTitle);
-
-    db.run(sql, params, function(err) {
-        if (err) {
-            console.error('❌ Erro ao atualizar progresso da aula:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao atualizar progresso da aula' });
+        // Constrói a query dinamicamente
+        if (updates.exerciseCompleted !== undefined) {
+            fields.push('exercise_completed = ?');
+            params.push(updates.exerciseCompleted);
         }
-        console.log(`✅ Progresso da aula "${lessonTitle}" atualizado para usuário ${userId}:`, this.changes, 'registros');
+        if (updates.practicalCompleted !== undefined) {
+            fields.push('practical_completed = ?');
+            params.push(updates.practicalCompleted);
+        }
+        if (updates.completed !== undefined) {
+            fields.push('completed = ?');
+            params.push(updates.completed);
+            if (updates.completed) {
+                fields.push('completed_at = CURRENT_TIMESTAMP');
+            }
+        }
+
+        if (fields.length === 0) {
+            return res.json({ success: true, message: 'Nenhum campo de progresso para atualizar' });
+        }
+
+        const sql = `UPDATE user_progress SET ${fields.join(', ')} WHERE user_id = ? AND lesson_title = ?`;
+        params.push(userId, lessonTitle);
+
+        const result = await runAsync(sql, params);
+        console.log(`✅ Progresso da aula "${lessonTitle}" atualizado para usuário ${userId}:`, result.changes, 'registros');
         res.json({ success: true, message: 'Progresso da aula atualizado com sucesso' });
-    });
+    } catch (error) {
+        console.error('❌ Erro ao atualizar progresso da aula:', error);
+        res.status(500).json({ success: false, message: 'Erro ao atualizar progresso da aula' });
+    }
 });
 
 // Endpoint para salvar progresso
-app.post('/api/user/:userId/progress', (req, res) => {
-    const userId = req.params.userId;
-    const { moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted, completed } = req.body;
+app.post('/api/user/:userId/progress', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted, completed } = req.body;
 
-    console.log('📝 Salvando progresso:', { userId, moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted, completed });
+        console.log('📝 Salvando progresso:', { userId, moduleId, lessonId, lessonTitle, videoCompleted, exerciseCompleted, practicalCompleted, completed });
 
-    if (!moduleId || !lessonId || !lessonTitle) {
-        console.log('❌ Dados obrigatórios não fornecidos');
-        return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
-    }
-
-    // CORREÇÃO: Inserir ou atualizar progresso com todos os campos necessários
-    db.run(`
-        INSERT OR REPLACE INTO user_progress 
-        (user_id, module_id, lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, completed, completed_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, CASE WHEN ? = 1 THEN CURRENT_TIMESTAMP ELSE NULL END)
-    `, [userId, moduleId, lessonId, lessonTitle, videoCompleted || false, exerciseCompleted || false, practicalCompleted || false, completed || false, completed || false], function(err) {
-        if (err) {
-            console.error('❌ Erro ao salvar progresso:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao salvar progresso', error: err.message });
+        if (!moduleId || !lessonId || !lessonTitle) {
+            console.log('❌ Dados obrigatórios não fornecidos');
+            return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
         }
+
+        await runAsync(`
+            INSERT OR REPLACE INTO user_progress 
+            (user_id, module_id, lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, completed, completed_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, CASE WHEN ? = 1 THEN CURRENT_TIMESTAMP ELSE NULL END)
+        `, [userId, moduleId, lessonId, lessonTitle, videoCompleted || false, exerciseCompleted || false, practicalCompleted || false, completed || false, completed || false]);
 
         console.log('✅ Progresso salvo com sucesso');
         res.json({ success: true, message: 'Progresso salvo com sucesso' });
-    });
+    } catch (error) {
+        console.error('❌ Erro ao salvar progresso:', error);
+        res.status(500).json({ success: false, message: 'Erro ao salvar progresso', error: error.message });
+    }
 });
 
 // Endpoint para buscar progresso de todas as aulas do usuário
@@ -828,18 +797,14 @@ app.get('/api/force-create-exercise-states-table', (req, res) => {
 });
 
 // Endpoint: Verificar/Criar Tabela Exercise States
-app.get('/api/check-exercise-states-table', (req, res) => {
-    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='exercise_states'", (err, row) => {
-        if (err) {
-            console.error('❌ Erro ao verificar tabela:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao verificar tabela', error: err.message });
-        }
+app.get('/api/check-exercise-states-table', async (req, res) => {
+    try {
+        const row = await getAsync("SELECT name FROM sqlite_master WHERE type='table' AND name='exercise_states'");
         
         if (!row) {
             console.log('📋 Tabela exercise_states não existe, criando...');
             
-            // Criar tabela se não existir
-            db.run(`CREATE TABLE IF NOT EXISTS exercise_states (
+            await runAsync(`CREATE TABLE IF NOT EXISTS exercise_states (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 lesson_id INTEGER NOT NULL,
@@ -850,115 +815,63 @@ app.get('/api/check-exercise-states-table', (req, res) => {
                 percentage INTEGER NOT NULL,
                 points_awarded INTEGER DEFAULT 0,
                 is_first_attempt BOOLEAN DEFAULT 1,
-                feedback_data TEXT,            -- JSON com dados do feedback
+                feedback_data TEXT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users (id),
                 UNIQUE(user_id, lesson_id)
-            )`, (err) => {
-                if (err) {
-                    console.error('❌ Erro ao criar tabela:', err);
-                    return res.status(500).json({ success: false, message: 'Erro ao criar tabela', error: err.message });
-                }
-                
-                console.log('✅ Tabela exercise_states criada com sucesso');
-                res.json({ success: true, message: 'Tabela exercise_states criada com sucesso', created: true });
-            });
+            )`);
+            
+            console.log('✅ Tabela exercise_states criada com sucesso');
+            res.json({ success: true, message: 'Tabela exercise_states criada com sucesso', created: true });
         } else {
             console.log('✅ Tabela exercise_states já existe');
             res.json({ success: true, message: 'Tabela exercise_states já existe', created: false });
         }
-    });
+    } catch (error) {
+        console.error('❌ Erro ao verificar tabela:', error);
+        res.status(500).json({ success: false, message: 'Erro ao verificar tabela', error: error.message });
+    }
 });
 
 // Endpoint: Salvar Estado do Exercício (para persistir feedback)
-app.post('/api/user/:userId/exercise-state', (req, res) => {
-    const userId = req.params.userId;
-    const { lessonId, lessonTitle, isCompleted, score, totalQuestions, percentage, pointsAwarded, isFirstAttempt, feedbackData } = req.body;
+app.post('/api/user/:userId/exercise-state', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { lessonId, lessonTitle, isCompleted, score, totalQuestions, percentage, pointsAwarded, isFirstAttempt, feedbackData } = req.body;
 
-    if (!lessonId || !lessonTitle || score === undefined || !totalQuestions || percentage === undefined) {
-        return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
-    }
-
-    console.log('💾 Salvando estado do exercício:', { userId, lessonId, lessonTitle, isCompleted, score, totalQuestions, percentage });
-
-    // Primeiro verifica se a tabela existe
-    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='exercise_states'", (err, row) => {
-        if (err) {
-            console.error('❌ Erro ao verificar tabela:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao verificar tabela', error: err.message });
+        if (!lessonId || !lessonTitle || score === undefined || !totalQuestions || percentage === undefined) {
+            return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
         }
-        
-        if (!row) {
-            console.log('📋 Tabela exercise_states não existe, criando...');
-            
-            // Criar tabela se não existir
-            db.run(`CREATE TABLE IF NOT EXISTS exercise_states (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                lesson_id INTEGER NOT NULL,
-                lesson_title TEXT NOT NULL,
-                is_completed BOOLEAN DEFAULT 0,
-                score INTEGER NOT NULL,
-                total_questions INTEGER NOT NULL,
-                percentage INTEGER NOT NULL,
-                points_awarded INTEGER DEFAULT 0,
-                is_first_attempt BOOLEAN DEFAULT 1,
-                feedback_data TEXT,            -- JSON com dados do feedback
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users (id),
-                UNIQUE(user_id, lesson_id)
-            )`, (err) => {
-                if (err) {
-                    console.error('❌ Erro ao criar tabela:', err);
-                    return res.status(500).json({ success: false, message: 'Erro ao criar tabela', error: err.message });
-                }
-                
-                console.log('✅ Tabela exercise_states criada com sucesso');
-                // Após criar a tabela, tenta inserir novamente
-                insertExerciseState();
-            });
-        } else {
-            console.log('✅ Tabela exercise_states já existe');
-            // Tabela existe, pode inserir
-            insertExerciseState();
-        }
-    });
 
-    function insertExerciseState() {
-        // Inserir ou atualizar estado do exercício
-        db.run(`
+        console.log('💾 Salvando estado do exercício:', { userId, lessonId, lessonTitle, isCompleted, score, totalQuestions, percentage });
+
+        await runAsync(`
             INSERT OR REPLACE INTO exercise_states 
             (user_id, lesson_id, lesson_title, is_completed, score, total_questions, percentage, points_awarded, is_first_attempt, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-        `, [userId, lessonId, lessonTitle, isCompleted || false, score, totalQuestions, percentage, pointsAwarded || 0, isFirstAttempt || false], function(err) {
-            if (err) {
-                console.error('❌ Erro ao salvar estado do exercício:', err);
-                return res.status(500).json({ success: false, message: 'Erro ao salvar estado do exercício', error: err.message });
-            }
+        `, [userId, lessonId, lessonTitle, isCompleted || false, score, totalQuestions, percentage, pointsAwarded || 0, isFirstAttempt || false]);
 
-            console.log('✅ Estado do exercício salvo com sucesso');
-            res.json({ success: true, message: 'Estado do exercício salvo com sucesso' });
-        });
+        console.log('✅ Estado do exercício salvo com sucesso');
+        res.json({ success: true, message: 'Estado do exercício salvo com sucesso' });
+    } catch (error) {
+        console.error('❌ Erro ao salvar estado do exercício:', error);
+        res.status(500).json({ success: false, message: 'Erro ao salvar estado do exercício', error: error.message });
     }
 });
 
 // Endpoint: Carregar Estado do Exercício
-app.get('/api/user/:userId/exercise-state/:lessonId', (req, res) => {
-    const userId = req.params.userId;
-    const lessonId = req.params.lessonId;
+app.get('/api/user/:userId/exercise-state/:lessonId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const lessonId = req.params.lessonId;
 
-    console.log('📂 Carregando estado do exercício:', { userId, lessonId });
+        console.log('📂 Carregando estado do exercício:', { userId, lessonId });
 
-    db.get(`
-        SELECT * FROM exercise_states 
-        WHERE user_id = ? AND lesson_id = ?
-    `, [userId, lessonId], (err, row) => {
-        if (err) {
-            console.error('❌ Erro ao carregar estado do exercício:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao carregar estado do exercício', error: err.message });
-        }
+        const row = await getAsync(`
+            SELECT * FROM exercise_states 
+            WHERE user_id = ? AND lesson_id = ?
+        `, [userId, lessonId]);
 
         if (!row) {
             console.log('❌ Nenhum estado encontrado para esta aula');
@@ -967,7 +880,6 @@ app.get('/api/user/:userId/exercise-state/:lessonId', (req, res) => {
 
         console.log('✅ Estado do exercício carregado:', row);
         
-        // Parse do feedback_data se existir
         let feedbackData = {};
         if (row.feedback_data) {
             try {
@@ -994,28 +906,31 @@ app.get('/api/user/:userId/exercise-state/:lessonId', (req, res) => {
                 updatedAt: row.updated_at
             }
         });
-    });
+    } catch (error) {
+        console.error('❌ Erro ao carregar estado do exercício:', error);
+        res.status(500).json({ success: false, message: 'Erro ao carregar estado do exercício', error: error.message });
+    }
 });
 
 // Endpoint: Limpar Estado do Exercício
-app.delete('/api/user/:userId/exercise-state/:lessonId', (req, res) => {
-    const userId = req.params.userId;
-    const lessonId = req.params.lessonId;
+app.delete('/api/user/:userId/exercise-state/:lessonId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const lessonId = req.params.lessonId;
 
-    console.log('🗑️ Limpando estado do exercício:', { userId, lessonId });
+        console.log('🗑️ Limpando estado do exercício:', { userId, lessonId });
 
-    db.run(`
-        DELETE FROM exercise_states 
-        WHERE user_id = ? AND lesson_id = ?
-    `, [userId, lessonId], function(err) {
-        if (err) {
-            console.error('❌ Erro ao limpar estado do exercício:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao limpar estado do exercício', error: err.message });
-        }
+        await runAsync(`
+            DELETE FROM exercise_states 
+            WHERE user_id = ? AND lesson_id = ?
+        `, [userId, lessonId]);
 
         console.log('✅ Estado do exercício limpo com sucesso');
         res.json({ success: true, message: 'Estado do exercício limpo com sucesso' });
-    });
+    } catch (error) {
+        console.error('❌ Erro ao limpar estado do exercício:', error);
+        res.status(500).json({ success: false, message: 'Erro ao limpar estado do exercício', error: error.message });
+    }
 });
 
 // Endpoint 3: Buscar Pontuação Total do Usuário
@@ -1106,71 +1021,63 @@ app.get('/api/ranking/forum', async (req, res) => {
 // ==========================================================================
 
 // Endpoint 6: Criar Tópico
-app.post('/api/forum/topic', (req, res) => {
-    const { userId, title, content, category } = req.body;
+app.post('/api/forum/topic', async (req, res) => {
+    try {
+        const { userId, title, content, category } = req.body;
 
-    if (!userId || !title || !content) {
-        return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
-    }
-
-    db.run(
-        'INSERT INTO forum_topics (user_id, title, content, category) VALUES (?, ?, ?, ?)',
-        [userId, title, content, category],
-        function(err) {
-            if (err) {
-                console.error('Erro ao criar tópico:', err);
-                return res.status(500).json({ success: false, message: 'Erro ao criar tópico' });
-            }
-
-            const topicId = this.lastID;
-            const pointsAwarded = 5;
-
-            // Adicionar pontos por criar tópico
-            db.run(
-                'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
-                [userId, 'forum_topic', topicId.toString(), pointsAwarded],
-                (err) => {
-                    if (err) console.error('Erro ao adicionar pontos:', err);
-                }
-            );
-
-            res.json({ success: true, topicId, pointsAwarded });
+        if (!userId || !title || !content) {
+            return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
         }
-    );
+
+        const result = await runAsync(
+            'INSERT INTO forum_topics (user_id, title, content, category) VALUES (?, ?, ?, ?)',
+            [userId, title, content, category]
+        );
+
+        const topicId = result.lastID;
+        const pointsAwarded = 5;
+
+        // Adicionar pontos por criar tópico
+        await runAsync(
+            'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
+            [userId, 'forum_topic', topicId.toString(), pointsAwarded]
+        ).catch(err => console.error('Erro ao adicionar pontos:', err));
+
+        res.json({ success: true, topicId, pointsAwarded });
+    } catch (error) {
+        console.error('Erro ao criar tópico:', error);
+        res.status(500).json({ success: false, message: 'Erro ao criar tópico' });
+    }
 });
 
 // Endpoint 7: Criar Resposta
-app.post('/api/forum/reply', (req, res) => {
-    const { userId, topicId, content } = req.body;
+app.post('/api/forum/reply', async (req, res) => {
+    try {
+        const { userId, topicId, content } = req.body;
 
-    if (!userId || !topicId || !content) {
-        return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
-    }
-
-    db.run(
-        'INSERT INTO forum_replies (topic_id, user_id, content) VALUES (?, ?, ?)',
-        [topicId, userId, content],
-        function(err) {
-            if (err) {
-                console.error('Erro ao criar resposta:', err);
-                return res.status(500).json({ success: false, message: 'Erro ao criar resposta' });
-            }
-
-            const replyId = this.lastID;
-            const pointsAwarded = 2;
-
-            // Adicionar pontos por responder
-            db.run(
-                'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
-                [userId, 'forum_reply', replyId.toString(), pointsAwarded],
-                (err) => {
-                    if (err) console.error('Erro ao adicionar pontos:', err);
-                }
-            );
-
-            res.json({ success: true, replyId, pointsAwarded });
+        if (!userId || !topicId || !content) {
+            return res.status(400).json({ success: false, message: 'Dados obrigatórios não fornecidos' });
         }
-    );
+
+        const result = await runAsync(
+            'INSERT INTO forum_replies (topic_id, user_id, content) VALUES (?, ?, ?)',
+            [topicId, userId, content]
+        );
+
+        const replyId = result.lastID;
+        const pointsAwarded = 2;
+
+        // Adicionar pontos por responder
+        await runAsync(
+            'INSERT INTO user_scores (user_id, score_type, source_id, points) VALUES (?, ?, ?, ?)',
+            [userId, 'forum_reply', replyId.toString(), pointsAwarded]
+        ).catch(err => console.error('Erro ao adicionar pontos:', err));
+
+        res.json({ success: true, replyId, pointsAwarded });
+    } catch (error) {
+        console.error('Erro ao criar resposta:', error);
+        res.status(500).json({ success: false, message: 'Erro ao criar resposta' });
+    }
 });
 
 // Endpoint 8: Listar Tópicos
