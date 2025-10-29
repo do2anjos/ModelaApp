@@ -7,9 +7,26 @@ class DarkModeManager {
     }
 
     init() {
-        this.applyTheme();
+        // Sincronizar com o tema já aplicado pelos scripts inline
+        this.syncTheme();
         this.setupEventListeners();
         this.setupMenuToggle(); // Adicionar toggle do menu em todas as páginas
+    }
+    
+    // Sincronizar com tema atual sem sobrescrever
+    syncTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        console.log('🔄 Syncing theme. Current:', currentTheme, 'Stored:', this.theme);
+        
+        // Se já há um tema aplicado pelos scripts inline, respeitar
+        if (currentTheme) {
+            // Apenas atualizar logo e toggles
+            this.updateLogo(currentTheme);
+            this.updateToggle();
+        } else {
+            // Se não há tema aplicado, aplicar agora
+            this.applyTheme();
+        }
     }
 
     // Verificar se a página atual é de autenticação (deve ficar sempre clara)
@@ -83,17 +100,23 @@ class DarkModeManager {
     toggleDarkMode(enable) {
         // Não permitir mudança de tema em páginas de autenticação
         if (this.isAuthPage()) {
+            console.log('⚠️ Dark mode toggle blocked on auth page');
             return;
         }
 
-        if (enable) {
-            this.theme = 'dark';
-        } else {
-            this.theme = 'light';
+        const newTheme = enable ? 'dark' : 'light';
+        console.log('🎯 Toggle dark mode:', enable, '→', newTheme);
+        
+        this.theme = newTheme;
+        localStorage.setItem('theme', newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+        this.updateLogo(newTheme);
+        this.updateToggle();
+        
+        // Mostrar notificação
+        if (typeof this.showNotification === 'function') {
+            this.showNotification(`Modo ${newTheme === 'dark' ? 'escuro' : 'claro'} ativado`, 'success');
         }
-
-        localStorage.setItem('theme', this.theme);
-        this.applyTheme();
     }
 
     updateLogo(theme) {
@@ -136,6 +159,8 @@ class DarkModeManager {
         const darkModeToggle = document.getElementById('modo-escuro');
         if (darkModeToggle) {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            console.log('🔄 Updating toggle. IsDark:', isDark);
+            
             darkModeToggle.checked = isDark;
 
             const parent = darkModeToggle.closest('.preference-item');
@@ -152,14 +177,19 @@ class DarkModeManager {
     switchTheme() {
         // Não permitir mudança de tema em páginas de autenticação
         if (this.isAuthPage()) {
+            console.log('⚠️ Theme switch blocked on auth page');
             return;
         }
 
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        console.log('🔄 Switching theme:', currentTheme, '→', newTheme);
+        
         this.theme = newTheme;
         localStorage.setItem('theme', newTheme);
-        this.applyTheme();
+        document.documentElement.setAttribute('data-theme', newTheme);
+        this.updateLogo(newTheme);
+        this.updateToggle();
 
         // Mostrar notificação se a função existir
         if (typeof this.showNotification === 'function') {
