@@ -2,8 +2,8 @@
 (function() {
   'use strict';
 
-  const DEFAULT_TIMEOUT_MS = 8000;
-  const MAX_RETRIES = 2;
+  const DEFAULT_TIMEOUT_MS = 15000; // Aumentado para 15s
+  const MAX_RETRIES = 3; // Aumentado para 3
 
   function getBaseUrl() {
     try {
@@ -32,10 +32,11 @@
     while (attempt <= MAX_RETRIES) {
       try {
         const resp = await fetchWithTimeout(url, options, options.timeoutMs || DEFAULT_TIMEOUT_MS);
-        // Repetir em 502/503/504
-        if ([502, 503, 504].includes(resp.status) && attempt < MAX_RETRIES) {
+        // Repetir em 502/503/504/429 (rate limit)
+        if ([502, 503, 504, 429].includes(resp.status) && attempt < MAX_RETRIES) {
           attempt += 1;
-          await new Promise(r => setTimeout(r, 200 * attempt));
+          const delay = resp.status === 429 ? 1000 * attempt : 200 * attempt; // Delay maior para rate limit
+          await new Promise(r => setTimeout(r, delay));
           continue;
         }
         return resp;

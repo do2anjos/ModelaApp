@@ -113,7 +113,10 @@ if (useTurso) {
                     };
                     cb && cb.call(ctx, null);
                 })
-                .catch((err) => cb && cb(err));
+                .catch((err) => {
+                    console.error('❌ Turso run error:', err);
+                    cb && cb(err);
+                });
         },
         get(sql, params, cb) {
             if (typeof params === 'function') {
@@ -122,7 +125,10 @@ if (useTurso) {
             }
             turso.execute({ sql, args: params || [] })
                 .then((res) => cb && cb(null, res.rows[0]))
-                .catch((err) => cb && cb(err));
+                .catch((err) => {
+                    console.error('❌ Turso get error:', err);
+                    cb && cb(err);
+                });
         },
         all(sql, params, cb) {
             if (typeof params === 'function') {
@@ -131,7 +137,10 @@ if (useTurso) {
             }
             turso.execute({ sql, args: params || [] })
                 .then((res) => cb && cb(null, res.rows))
-                .catch((err) => cb && cb(err));
+                .catch((err) => {
+                    console.error('❌ Turso all error:', err);
+                    cb && cb(err);
+                });
         }
     };
 
@@ -174,9 +183,9 @@ function getCacheKey(sql, params) {
 // Utilitário: retry com backoff simples para operações que podem falhar com SQLITE_BUSY
 async function withRetry(operationFn, options = {}) {
     const {
-        retries = 5, // Aumentado de 3 para 5
-        baseDelayMs = 200, // Aumentado de 150 para 200
-        factor = 1.5, // Reduzido de 2 para 1.5 (crescimento mais suave)
+        retries = useTurso ? 3 : 5, // Menos retries no Turso
+        baseDelayMs = useTurso ? 100 : 200, // Delay menor no Turso
+        factor = 1.5,
         onRetry
     } = options;
 
@@ -188,13 +197,18 @@ async function withRetry(operationFn, options = {}) {
         } catch (err) {
             const isBusy = err && (err.code === 'SQLITE_BUSY' || /busy/i.test(err.message || ''));
             const isLocked = err && (err.code === 'SQLITE_LOCKED' || /locked/i.test(err.message || ''));
-            if ((!isBusy && !isLocked) || attempt >= retries) {
+            const isNetworkError = err && (err.code === 'ENOTFOUND' || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT');
+            
+            // No Turso, também retry em erros de rede
+            const shouldRetry = useTurso ? (isBusy || isLocked || isNetworkError) : (isBusy || isLocked);
+            
+            if (!shouldRetry || attempt >= retries) {
                 throw err;
             }
             attempt += 1;
             onRetry && onRetry(err, attempt, delay);
             await new Promise(r => setTimeout(r, delay));
-            delay = Math.min(delay * factor, 2000); // Aumentado de 1000 para 2000
+            delay = Math.min(delay * factor, useTurso ? 1000 : 2000);
         }
     }
 }
@@ -1329,9 +1343,37 @@ app.get('/api/forum/topic/:topicId', async (req, res) => {
     }
 });
 
-// Health/readiness
-app.get('/health', (req, res) => {
-    res.json({ ok: true, db: useTurso ? 'turso' : 'sqlite', time: Date.now() });
+// Health/readiness com verificação de DB
+app.get('/health', async (req, res) => {
+    try {
+        // Teste simples de conectividade com o banco
+        await getAsync('SELECT 1 as test', [], false);
+        res.json({ 
+            ok: true, 
+            db: useTurso ? 'turso' : 'sqlite', 
+            time: Date.now(),
+            status: 'healthy'
+        });
+    } catch (error) {
+        console.error('❌ Health check failed:', error);
+        res.status(503).json({ 
+            ok: false, 
+            db: useTurso ? 'turso' : 'sqlite', 
+            time: Date.now(),
+            status: 'unhealthy',
+            error: error.message
+        });
+    }
+});
+
+// Endpoint de readiness para load balancers
+app.get('/ready', async (req, res) => {
+    try {
+        await getAsync('SELECT 1 as test', [], false);
+        res.json({ ready: true, timestamp: Date.now() });
+    } catch (error) {
+        res.status(503).json({ ready: false, error: error.message });
+    }
 });
 
 // Inicializar schema e iniciar servidor somente após pronto
