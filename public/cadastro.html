@@ -199,10 +199,15 @@
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('cadastroForm');
       const messages = document.getElementById('cadastroMessages');
+      const btn = document.getElementById('cadastroButton');
       if (!form) return;
 
       form.addEventListener('submit', async function(e) {
+        // Blindagem contra refresh de submit padrão e múltiplos handlers
         e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+
         messages.textContent = '';
         messages.style.color = '';
 
@@ -216,46 +221,55 @@
         if (!nome || !email || !matricula || !senha) {
           messages.textContent = 'Preencha todos os campos obrigatórios.';
           messages.style.color = 'red';
-          return;
+          return false;
         }
         if (!email.endsWith('@uea.edu.br')) {
           messages.textContent = 'O email deve ser institucional (@uea.edu.br).';
           messages.style.color = 'red';
-          return;
+          return false;
         }
         if (senha.length < 6) {
           messages.textContent = 'A senha deve ter pelo menos 6 caracteres.';
           messages.style.color = 'red';
-          return;
+          return false;
         }
         if (senha !== confirmar) {
           messages.textContent = 'As senhas não coincidem.';
           messages.style.color = 'red';
-          return;
+          return false;
         }
+
+        // Evita duplo clique
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.7'; }
 
         try {
           const resp = await fetch('/api/cadastro', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome, email, matricula, telefone, senha })
+            body: JSON.stringify({ nome, email, matricula, telefone, senha }),
+            cache: 'no-store'
           });
-          const data = await resp.json();
+          let data = {};
+          try { data = await resp.json(); } catch (_) {}
           if (resp.ok) {
-            messages.textContent = data.message || 'Cadastro realizado com sucesso!';
+            messages.textContent = (data && (data.message || (data.success && 'Cadastro realizado com sucesso!'))) || 'Cadastro realizado com sucesso!';
             messages.style.color = 'green';
             form.reset();
             // Abrir popup baseado em âncora :target
             window.location.hash = 'sucesso';
           } else {
-            messages.textContent = (data && (data.message || data.error)) || 'Erro ao cadastrar usuário.';
+            messages.textContent = (data && (data.message || data.error)) || `Erro ao cadastrar usuário (HTTP ${resp.status}).`;
             messages.style.color = 'red';
           }
         } catch (err) {
           messages.textContent = 'Erro ao conectar com o servidor.';
           messages.style.color = 'red';
+        } finally {
+          if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
         }
-      });
+
+        return false; // reforça não navegar
+      }, true); // captura
     });
     </script>
 </body>
