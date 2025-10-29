@@ -62,7 +62,7 @@
           const scoreDiv = document.createElement('p');
           scoreDiv.className = 'user-score';
           scoreDiv.innerHTML = `<strong>${data.totalPoints}</strong> pontos`;
-          scoreDiv.style.cssText = 'margin: 0.5rem 0; padding: 0.5rem; background: var(--muted); border-radius: 4px; text-align: center; font-size: 0.9rem;';
+          scoreDiv.style.cssText = 'margin: 0.5rem 0; padding: 0.5rem; background: var(--muted); border-radius: 4px; text-align: center; font-size: 0.9rem; color: var(--foreground);';
           dropdown.appendChild(scoreDiv);
         });
         
