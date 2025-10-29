@@ -78,10 +78,27 @@ if (useTurso) {
     });
 }
 
-// Criar tabelas
-{
+// Helpers de Promises para o driver (Turso/SQLite)
+function runAsync(sql, params = []) {
+    return new Promise((resolve, reject) => {
+        db.run(sql, params, function(err) {
+            if (err) return reject(err);
+            resolve();
+        });
+    });
+}
+function allAsync(sql, params = []) {
+    return new Promise((resolve, reject) => {
+        db.all(sql, params, (err, rows) => {
+            if (err) return reject(err);
+            resolve(rows);
+        });
+    });
+}
+
+async function initializeDatabaseSchema() {
     // Tabela de usuários
-    db.run(`CREATE TABLE IF NOT EXISTS users (
+    await runAsync(`CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
@@ -93,7 +110,7 @@ if (useTurso) {
     )`);
 
     // Tabela de progresso do usuário
-    db.run(`CREATE TABLE IF NOT EXISTS user_progress (
+    await runAsync(`CREATE TABLE IF NOT EXISTS user_progress (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         module_id INTEGER NOT NULL,
@@ -109,7 +126,7 @@ if (useTurso) {
     )`);
 
     // Tabela de pontuações do usuário
-    db.run(`CREATE TABLE IF NOT EXISTS user_scores (
+    await runAsync(`CREATE TABLE IF NOT EXISTS user_scores (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         score_type TEXT NOT NULL,  -- 'exercise', 'module', 'forum_topic', 'forum_reply'
@@ -120,7 +137,7 @@ if (useTurso) {
     )`);
 
     // Tabela de tentativas de exercícios
-    db.run(`CREATE TABLE IF NOT EXISTS exercise_attempts (
+    await runAsync(`CREATE TABLE IF NOT EXISTS exercise_attempts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         lesson_id INTEGER NOT NULL,
@@ -134,7 +151,7 @@ if (useTurso) {
     )`);
 
     // Tabela de estado dos exercícios (para persistir feedback após refresh)
-    db.run(`CREATE TABLE IF NOT EXISTS exercise_states (
+    await runAsync(`CREATE TABLE IF NOT EXISTS exercise_states (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         lesson_id INTEGER NOT NULL,
@@ -153,7 +170,7 @@ if (useTurso) {
     )`);
 
     // Tabela de tópicos do fórum
-    db.run(`CREATE TABLE IF NOT EXISTS forum_topics (
+    await runAsync(`CREATE TABLE IF NOT EXISTS forum_topics (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         title TEXT NOT NULL,
@@ -164,7 +181,7 @@ if (useTurso) {
     )`);
 
     // Tabela de respostas do fórum
-    db.run(`CREATE TABLE IF NOT EXISTS forum_replies (
+    await runAsync(`CREATE TABLE IF NOT EXISTS forum_replies (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         topic_id INTEGER NOT NULL,
         user_id INTEGER NOT NULL,
@@ -175,40 +192,26 @@ if (useTurso) {
     )`);
 
     // Índices para performance
-    db.run(`CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON user_progress(user_id)`);
-    db.run(`CREATE INDEX IF NOT EXISTS idx_user_progress_module_lesson ON user_progress(user_id, module_id, lesson_id)`);
+    await runAsync(`CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON user_progress(user_id)`);
+    await runAsync(`CREATE INDEX IF NOT EXISTS idx_user_progress_module_lesson ON user_progress(user_id, module_id, lesson_id)`);
     // Índice único para permitir INSERT OR REPLACE por (user_id, lesson_id)
-    db.run(`CREATE UNIQUE INDEX IF NOT EXISTS idx_user_progress_user_lesson_unique ON user_progress(user_id, lesson_id)`);
+    await runAsync(`CREATE UNIQUE INDEX IF NOT EXISTS idx_user_progress_user_lesson_unique ON user_progress(user_id, lesson_id)`);
 
     // Migration check: garante que colunas 'completed' e 'completed_at' existam (para bancos existentes)
-    db.all("PRAGMA table_info('user_progress')", (err, cols) => {
-        if (err) {
-            console.error('Erro ao verificar esquema de user_progress:', err);
-            return;
-        }
-
-        const colNames = (cols || []).map(c => c.name);
-
-        if (!colNames.includes('completed')) {
-            console.log('🔧 Coluna "completed" não encontrada em user_progress - adicionando...');
-            db.run('ALTER TABLE user_progress ADD COLUMN completed BOOLEAN DEFAULT 0', (err) => {
-                if (err) console.error('❌ Erro ao adicionar coluna completed:', err.message);
-                else console.log('✅ Coluna "completed" adicionada com sucesso');
-            });
-        }
-
-        if (!colNames.includes('completed_at')) {
-            console.log('🔧 Coluna "completed_at" não encontrada em user_progress - adicionando...');
-            db.run('ALTER TABLE user_progress ADD COLUMN completed_at DATETIME DEFAULT NULL', (err) => {
-                if (err) console.error('❌ Erro ao adicionar coluna completed_at:', err.message);
-                else console.log('✅ Coluna "completed_at" adicionada com sucesso');
-            });
-        }
-    });
-    db.run(`CREATE INDEX IF NOT EXISTS idx_user_scores_user ON user_scores(user_id)`);
-    db.run(`CREATE INDEX IF NOT EXISTS idx_exercise_attempts_user ON exercise_attempts(user_id)`);
-    db.run(`CREATE INDEX IF NOT EXISTS idx_forum_topics_user ON forum_topics(user_id)`);
-    db.run(`CREATE INDEX IF NOT EXISTS idx_forum_replies_topic ON forum_replies(topic_id)`);
+    const cols = await allAsync("PRAGMA table_info('user_progress')");
+    const colNames = (cols || []).map(c => c.name);
+    if (!colNames.includes('completed')) {
+        console.log('🔧 Coluna "completed" não encontrada em user_progress - adicionando...');
+        await runAsync('ALTER TABLE user_progress ADD COLUMN completed BOOLEAN DEFAULT 0');
+    }
+    if (!colNames.includes('completed_at')) {
+        console.log('🔧 Coluna "completed_at" não encontrada em user_progress - adicionando...');
+        await runAsync('ALTER TABLE user_progress ADD COLUMN completed_at DATETIME DEFAULT NULL');
+    }
+    await runAsync(`CREATE INDEX IF NOT EXISTS idx_user_scores_user ON user_scores(user_id)`);
+    await runAsync(`CREATE INDEX IF NOT EXISTS idx_exercise_attempts_user ON exercise_attempts(user_id)`);
+    await runAsync(`CREATE INDEX IF NOT EXISTS idx_forum_topics_user ON forum_topics(user_id)`);
+    await runAsync(`CREATE INDEX IF NOT EXISTS idx_forum_replies_topic ON forum_replies(topic_id)`);
 }
 
 // Função para gerar username
@@ -1256,13 +1259,20 @@ app.get('/api/forum/topic/:topicId', (req, res) => {
     });
 });
 
-// Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
-    if (useTurso) {
-        console.log('💾 Banco de dados: Turso (remoto)');
-    } else {
-        console.log(`💾 Banco de dados: SQLite local em backend/db/modela_users.db`);
-    }
-    console.log('✨ Sistema de ranking e pontuação ativo!');
-});
+// Inicializar schema e iniciar servidor somente após pronto
+initializeDatabaseSchema()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+            if (useTurso) {
+                console.log('💾 Banco de dados: Turso (remoto)');
+            } else {
+                console.log(`💾 Banco de dados: SQLite local em backend/db/modela_users.db`);
+            }
+            console.log('✨ Sistema de ranking e pontuação ativo!');
+        });
+    })
+    .catch((err) => {
+        console.error('❌ Falha ao inicializar schema do banco:', err);
+        process.exit(1);
+    });
