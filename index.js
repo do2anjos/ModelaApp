@@ -129,7 +129,10 @@ if (useTurso) {
     db.serialize(() => {
         db.run('PRAGMA journal_mode = WAL');
         db.run('PRAGMA synchronous = NORMAL');
-        db.run('PRAGMA busy_timeout = 15000');
+        db.run('PRAGMA busy_timeout = 30000'); // 30 segundos
+        db.run('PRAGMA temp_store = MEMORY');
+        db.run('PRAGMA cache_size = 10000');
+        db.run('PRAGMA locking_mode = NORMAL');
     });
 }
 
@@ -144,9 +147,9 @@ function getCacheKey(sql, params) {
 // Utilitário: retry com backoff simples para operações que podem falhar com SQLITE_BUSY
 async function withRetry(operationFn, options = {}) {
     const {
-        retries = 3,
-        baseDelayMs = 150,
-        factor = 2,
+        retries = 5, // Aumentado de 3 para 5
+        baseDelayMs = 200, // Aumentado de 150 para 200
+        factor = 1.5, // Reduzido de 2 para 1.5 (crescimento mais suave)
         onRetry
     } = options;
 
@@ -157,13 +160,14 @@ async function withRetry(operationFn, options = {}) {
             return await operationFn();
         } catch (err) {
             const isBusy = err && (err.code === 'SQLITE_BUSY' || /busy/i.test(err.message || ''));
-            if (!isBusy || attempt >= retries) {
+            const isLocked = err && (err.code === 'SQLITE_LOCKED' || /locked/i.test(err.message || ''));
+            if ((!isBusy && !isLocked) || attempt >= retries) {
                 throw err;
             }
             attempt += 1;
             onRetry && onRetry(err, attempt, delay);
             await new Promise(r => setTimeout(r, delay));
-            delay = Math.min(delay * factor, 1000);
+            delay = Math.min(delay * factor, 2000); // Aumentado de 1000 para 2000
         }
     }
 }
@@ -390,7 +394,7 @@ app.post('/api/cadastro', async (req, res) => {
         const senhaHash = await bcrypt.hash(senha, 10);
         const username = generateUsername(nome);
 
-        // Inserir usuário (com retry em SQLITE_BUSY)
+        // Inserir usuário (com retry em SQLITE_BUSY/LOCKED)
         const result = await withRetry(() => new Promise((resolve, reject) => {
             db.run(
                 'INSERT INTO users (nome, email, matricula, telefone, senha_hash, username) VALUES (?, ?, ?, ?, ?, ?)',
@@ -400,7 +404,11 @@ app.post('/api/cadastro', async (req, res) => {
                     else resolve({ lastID: this.lastID, changes: this.changes });
                 }
             );
-        }), { onRetry: (err, attempt) => console.warn(`🔁 Retry INSERT usuário (tentativa ${attempt})`, err?.message) });
+        }), { 
+            retries: 7, // Mais tentativas para INSERT
+            baseDelayMs: 300, // Delay inicial maior
+            onRetry: (err, attempt) => console.warn(`🔁 Retry INSERT usuário (tentativa ${attempt}/${7})`, err?.code, err?.message) 
+        });
 
         console.log('✅ Cadastro concluído', { userId: result.lastID, email, matricula });
         res.json({ 
