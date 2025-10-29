@@ -12,9 +12,17 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Headers de segurança (relaxar CSP para permitir scripts inline necessários)
+// Headers de segurança (relaxar CSP para permitir scripts inline e iframes de serviços externos)
 app.use((req, res, next) => {
-    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'");
+    res.setHeader('Content-Security-Policy', 
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' https://www.youtube.com https://player.vimeo.com; " +
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+        "font-src 'self' data: https://fonts.gstatic.com; " +
+        "img-src 'self' data: https:; " +
+        "connect-src 'self'; " +
+        "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://docs.google.com https://embed.diagrams.net"
+    );
     next();
 });
 
