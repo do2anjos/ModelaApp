@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https:; connect-src 'self';" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Redefinir Senha | Modela+</title>
     
@@ -70,6 +71,8 @@
         </div>
     </div>
 
+    <!-- Popup de sucesso baseado em :target -->
+    <div id="resetSucesso" class="popup" role="dialog" aria-labelledby="resetPopupTitle" aria-modal="true" style="display:none;"></div>
 
     <!-- Scripts para gerenciar dark mode, daltonism mode (páginas de autenticação ficam sempre claras) -->
     <script src="/js/dark-mode.js"></script>
@@ -137,8 +140,11 @@
           if (resp.ok) {
             messages.textContent = data.message || 'Senha redefinida com sucesso!';
             messages.style.color = 'green';
-            // Redireciona para login após 1.5s
-            setTimeout(() => { window.location.href = '/login.html'; }, 1500);
+            // Criar popup dinâmico e abrir via hash
+            const container = document.getElementById('resetSucesso');
+            container.innerHTML = '<div class="popup__content"><h2 id="resetPopupTitle">Senha redefinida com sucesso!</h2><div class="popup__text">Clique em OK para voltar ao login.</div><a href="/login.html" class="button button-primary">OK</a></div>';
+            container.style.display = 'block';
+            window.location.hash = 'resetSucesso';
           } else {
             messages.textContent = (data && (data.message || data.error)) || 'Erro ao redefinir senha.';
             messages.style.color = 'red';

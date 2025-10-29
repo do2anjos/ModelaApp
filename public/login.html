@@ -2,6 +2,7 @@
 <html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https:; connect-src 'self';" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Login | Modela+</title>
     <meta name="color-scheme" content="light">
@@ -128,6 +129,15 @@
         </div>
     </div>
 
+    <!-- Popup de sucesso baseado em :target -->
+    <div id="loginsucesso" class="popup" role="dialog" aria-labelledby="loginPopupTitle" aria-modal="true">
+        <div class="popup__content">
+            <h2 id="loginPopupTitle">Login realizado com sucesso!</h2>
+            <div class="popup__text">Clique em OK para continuar.</div>
+            <a href="/home.html" class="button button-primary">OK</a>
+        </div>
+    </div>
+
     <!-- Scripts para gerenciar dark mode, daltonism mode (páginas de autenticação ficam sempre claras) -->
     <script src="/js/dark-mode.js"></script>
     <script src="/js/daltonism-mode.js"></script>
@@ -195,8 +205,7 @@
           try { data = await resp.json(); } catch (_) {}
           if (resp.ok) {
             try { localStorage.setItem('modela_user', JSON.stringify(data.user)); } catch(_) {}
-            // Redireciona direto para home
-            window.location.href = '/home.html';
+            window.location.hash = 'loginsucesso';
           } else {
             messages.textContent = (data && (data.message || data.error)) || 'Falha no login.';
             messages.style.color = 'red';

@@ -2,6 +2,7 @@
 <html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https:; connect-src 'self';" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Cadastro | Modela+</title>
     <meta name="color-scheme" content="light">
@@ -156,6 +157,15 @@
         </div>
     </div>
 
+    <!-- Popup de sucesso baseado em :target -->
+    <div id="sucesso" class="popup" role="dialog" aria-labelledby="popupTitle" aria-modal="true">
+        <div class="popup__content">
+            <h2 id="popupTitle">Usuário cadastrado com sucesso!</h2>
+            <div class="popup__text">Clique em OK para ir ao login.</div>
+            <a href="/login.html" class="button button-primary">OK</a>
+        </div>
+    </div>
+
     <!-- Scripts para gerenciar dark mode, daltonism mode (páginas de autenticação ficam sempre claras) -->
     <script src="/js/dark-mode.js"></script>
     <script src="/js/daltonism-mode.js"></script>
@@ -246,8 +256,8 @@
             messages.textContent = (data && (data.message || (data.success && 'Cadastro realizado com sucesso!'))) || 'Cadastro realizado com sucesso!';
             messages.style.color = 'green';
             form.reset();
-            // Redireciona para login após 1.5s
-            setTimeout(() => { window.location.href = '/login.html'; }, 1500);
+            // Abrir popup baseado em âncora :target
+            window.location.hash = 'sucesso';
           } else {
             messages.textContent = (data && (data.message || data.error)) || `Erro ao cadastrar usuário (HTTP ${resp.status}).`;
             messages.style.color = 'red';
