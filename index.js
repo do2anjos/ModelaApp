@@ -611,48 +611,49 @@ app.post('/api/user/:userId/progress', (req, res) => {
 });
 
 // Endpoint para buscar progresso de todas as aulas do usuário
-app.get('/api/user/:userId/progress', (req, res) => {
-    const userId = req.params.userId;
+app.get('/api/user/:userId/progress', async (req, res) => {
+    try {
+        const userId = req.params.userId;
 
-    db.all(`
-        SELECT lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, completed, module_id
-        FROM user_progress 
-        WHERE user_id = ?
-        ORDER BY module_id, lesson_id
-    `, [userId], (err, rows) => {
-        if (err) {
-            console.error('❌ Erro ao buscar progresso:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao buscar progresso' });
-        }
+        const rows = await allAsync(`
+            SELECT lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, completed, module_id
+            FROM user_progress 
+            WHERE user_id = ?
+            ORDER BY module_id, lesson_id
+        `, [userId]);
 
         res.json({
             success: true,
             lessons: rows
         });
-    });
+    } catch (error) {
+        console.error('❌ Erro ao buscar progresso:', error);
+        res.status(500).json({ success: false, message: 'Erro ao buscar progresso' });
+    }
 });
 
 // Endpoint para buscar progresso detalhado de um módulo
-app.get('/api/user/:userId/module/:moduleId/progress', (req, res) => {
-    const userId = req.params.userId;
-    const moduleId = req.params.moduleId;
+app.get('/api/user/:userId/module/:moduleId/progress', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const moduleId = req.params.moduleId;
 
-    db.all(`
-        SELECT lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, completed
-        FROM user_progress 
-        WHERE user_id = ? AND module_id = ?
-        ORDER BY lesson_id
-    `, [userId, moduleId], (err, rows) => {
-        if (err) {
-            return res.status(500).json({ success: false, message: 'Erro ao buscar progresso do módulo' });
-        }
+        const rows = await allAsync(`
+            SELECT lesson_id, lesson_title, video_completed, exercise_completed, practical_completed, completed
+            FROM user_progress 
+            WHERE user_id = ? AND module_id = ?
+            ORDER BY lesson_id
+        `, [userId, moduleId]);
 
         res.json({
             success: true,
             moduleId: parseInt(moduleId),
             lessons: rows
         });
-    });
+    } catch (error) {
+        console.error('❌ Erro ao buscar progresso do módulo:', error);
+        res.status(500).json({ success: false, message: 'Erro ao buscar progresso do módulo' });
+    }
 });
 
 // Endpoint para atualizar dados do usuário
