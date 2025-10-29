@@ -91,6 +91,18 @@
         .course-list li:has(.locked-icon) span:first-child {
             margin-right: auto !important; /* Mesma margin-right do span do título */
         }
+
+        /* Ajustes da barra de progresso no tema escuro */
+        [data-theme="dark"] .learning-progress .progress-bar {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+        [data-theme="dark"] .learning-progress .progress-fill {
+            background: linear-gradient(90deg, #7c3aed 0%, #06b6d4 100%);
+            box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.25) inset,
+                        0 4px 18px rgba(124, 58, 237, 0.25);
+        }
     </style>
     <script>
   (function() {
@@ -223,11 +235,13 @@
                         
                         <div class="learning-progress">
                             <div class="progress-header">
-                                <span class="progress-label">Progresso do Módulo</span><span class="progress-percentage">45%</span>
-                                
+                                <span class="progress-label">Progresso do Módulo</span><span class="progress-percentage">0%</span>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 45%;"></div>
+                                <div class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <div class="progress-details" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted-foreground);">
+                                <span class="lessons-completed">0 de 10 aulas completas</span>
                             </div>
                         </div>
                         
@@ -236,7 +250,7 @@
 
                 <div class="dashboard-card stat-card">
                     <h4>Exercícios Feitos</h4>
-                    <p>0 de 40</p>
+                    <p>0 de 0</p>
                 </div>
                 <div class="dashboard-card stat-card">
                     <h4>Módulos Concluídos</h4>
@@ -285,22 +299,19 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
       console.log('📊 Dashboard data:', data);
       
-      // 1. Atualiza Exercícios Feitos
-      const exercisesCard = document.querySelector('.dashboard-card.stat-card:nth-of-type(1) p');
-      if (exercisesCard) {
-        exercisesCard.textContent = `${data.exercises.completed} de ${data.exercises.total}`;
+      // 1-3. Atualiza cards de estatísticas (seleção robusta por ordem)
+      const statCards = document.querySelectorAll('.dashboard-card.stat-card');
+      if (statCards[0]) {
+        const p = statCards[0].querySelector('p');
+        if (p) p.textContent = `${data.exercises.completed}`;
       }
-      
-      // 2. Atualiza Módulos Concluídos
-      const modulesCard = document.querySelector('.dashboard-card.stat-card:nth-of-type(2) p');
-      if (modulesCard) {
-        modulesCard.textContent = data.modules.completed;
+      if (statCards[1]) {
+        const p = statCards[1].querySelector('p');
+        if (p) p.textContent = `${data.modules.completed}`;
       }
-      
-      // 3. Atualiza Certificados
-      const certificatesCard = document.querySelector('.dashboard-card.stat-card:nth-of-type(3) p');
-      if (certificatesCard) {
-        certificatesCard.textContent = data.certificates.available;
+      if (statCards[2]) {
+        const p = statCards[2].querySelector('p');
+        if (p) p.textContent = `${data.certificates.available}`;
       }
       
       // 4. Atualiza Card "Continuar Aprendendo"
@@ -310,6 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const subtitleEl = continueCard.querySelector('.learning-info p');
         const progressEl = continueCard.querySelector('.progress-percentage');
         const progressBarEl = continueCard.querySelector('.progress-fill');
+        const lessonsCompletedEl = continueCard.querySelector('.lessons-completed');
         
         if (data.currentModule) {
           // Usa dados do backend (inclui última aula acessada)
@@ -317,12 +329,18 @@ document.addEventListener('DOMContentLoaded', function() {
           if (subtitleEl) subtitleEl.textContent = data.currentModule.currentLesson;
           if (progressEl) progressEl.textContent = `${data.currentModule.progress}%`;
           if (progressBarEl) progressBarEl.style.width = `${data.currentModule.progress}%`;
+          if (lessonsCompletedEl) {
+            const completedLessons = data.currentModule.completedLessons || 0;
+            const totalLessons = data.currentModule.totalLessons || 10;
+            lessonsCompletedEl.textContent = `${completedLessons} de ${totalLessons} aulas completas`;
+          }
         } else {
           // Novo usuário
           if (titleEl) titleEl.textContent = 'Modelagem com UML';
           if (subtitleEl) subtitleEl.textContent = 'Aula 01: Introdução à UML';
           if (progressEl) progressEl.textContent = '0%';
           if (progressBarEl) progressBarEl.style.width = '0%';
+          if (lessonsCompletedEl) lessonsCompletedEl.textContent = '0 de 10 aulas completas';
         }
       }
     })
@@ -330,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('❌ Erro ao carregar dashboard:', err);
       // Exibe valores padrão em caso de erro
       const statCards = document.querySelectorAll('.dashboard-card.stat-card p');
-      if (statCards[0]) statCards[0].textContent = '0 de 40';
+      if (statCards[0]) statCards[0].textContent = '0';
       if (statCards[1]) statCards[1].textContent = '0';
       if (statCards[2]) statCards[2].textContent = '0';
     });
