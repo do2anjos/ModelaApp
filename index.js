@@ -12,6 +12,21 @@ const PORT = process.env.PORT || 3001;
 // CORS amplo para front em outros domínios
 app.use(cors({ origin: true }));
 
+// Confiança em proxy para rate limiting em produção
+app.set('trust proxy', 1);
+
+// Rate limiting básico para endpoints sensíveis (cadastro/login)
+try {
+    const rateLimit = require('express-rate-limit');
+    const authLimiter = rateLimit({
+        windowMs: 60 * 1000, // 1 minuto
+        max: 60,             // 60 req/min por IP
+        standardHeaders: true,
+        legacyHeaders: false
+    });
+    app.use(['/api/cadastro', '/api/login', '/api/redefinir'], authLimiter);
+} catch (_) {}
+
 // Logging de requisições
 try {
     const morgan = require('morgan');
@@ -182,6 +197,14 @@ function runAsync(sql, params = []) {
             resolve({ lastID: this.lastID, changes: this.changes });
         });
     });
+}
+// Fila leve para serializar INSERTs de usuários no SQLite local
+let lastUsersInsert = Promise.resolve();
+function serializeUsersInsert(operationFn) {
+    const next = lastUsersInsert.then(operationFn, operationFn);
+    // Garante que erros não quebrem a cadeia futura
+    lastUsersInsert = next.catch(() => {});
+    return next;
 }
 function allAsync(sql, params = [], useCache = true) {
     if (useCache) {
@@ -394,8 +417,8 @@ app.post('/api/cadastro', async (req, res) => {
         const senhaHash = await bcrypt.hash(senha, 10);
         const username = generateUsername(nome);
 
-        // Inserir usuário (com retry em SQLITE_BUSY/LOCKED)
-        const result = await withRetry(() => new Promise((resolve, reject) => {
+        // Inserir usuário (serializado + retry em SQLITE_BUSY/LOCKED)
+        const result = await serializeUsersInsert(() => withRetry(() => new Promise((resolve, reject) => {
             db.run(
                 'INSERT INTO users (nome, email, matricula, telefone, senha_hash, username) VALUES (?, ?, ?, ?, ?, ?)',
                 [nome, email, matricula, telefone, senhaHash, username],
@@ -405,10 +428,10 @@ app.post('/api/cadastro', async (req, res) => {
                 }
             );
         }), { 
-            retries: 7, // Mais tentativas para INSERT
-            baseDelayMs: 300, // Delay inicial maior
+            retries: 7,
+            baseDelayMs: 300,
             onRetry: (err, attempt) => console.warn(`🔁 Retry INSERT usuário (tentativa ${attempt}/${7})`, err?.code, err?.message) 
-        });
+        }));
 
         console.log('✅ Cadastro concluído', { userId: result.lastID, email, matricula });
         res.json({ 
