@@ -834,7 +834,8 @@
 <script src="/js/auth.js"></script>
 <script src="/js/dark-mode.js"></script>
 <script src="/js/daltonism-mode.js"></script>
-<script src="/js/usability.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/usability.js"></script>
 
 <!-- Script de integração com backend -->
 <script>
@@ -845,8 +846,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const user = JSON.parse(userData);
     
     // Busca dados do dashboard
-    fetch(`/api/user/${user.id}/dashboard`)
-        .then(r => r.json())
+    const reqId = 'conteudos-dashboard-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+    console.log('[CONTEUDOS] ▶️ dashboard', { reqId, userId: user.id });
+    console.time(`[CONTEUDOS] tempo ${reqId}`);
+    (window.apiFetch ? window.apiFetch(`/api/user/${user.id}/dashboard`, {
+        headers: { 'X-Request-Id': reqId }
+    }) : fetch(`/api/user/${user.id}/dashboard`, {
+        headers: { 'X-Request-Id': reqId }
+    }))
+        .then(r => {
+            console.timeEnd(`[CONTEUDOS] tempo ${reqId}`);
+            console.log('[CONTEUDOS] ◀️ dashboard response', { reqId, status: r.status, ok: r.ok });
+            return r.json();
+        })
         .then(data => {
             console.log('📊 Dados do módulo:', data);
             
@@ -902,8 +914,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Carrega progresso detalhado para atualizar status das aulas
-            fetch(`/api/user/${user.id}/module/1/progress`)
-                .then(r => r.json())
+            const reqId2 = 'conteudos-progress-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+            console.log('[CONTEUDOS] ▶️ progress', { reqId: reqId2, userId: user.id });
+            console.time(`[CONTEUDOS] tempo ${reqId2}`);
+            (window.apiFetch ? window.apiFetch(`/api/user/${user.id}/module/1/progress`, {
+                headers: { 'X-Request-Id': reqId2 }
+            }) : fetch(`/api/user/${user.id}/module/1/progress`, {
+                headers: { 'X-Request-Id': reqId2 }
+            }))
+                .then(r => {
+                    console.timeEnd(`[CONTEUDOS] tempo ${reqId2}`);
+                    console.log('[CONTEUDOS] ◀️ progress response', { reqId: reqId2, status: r.status, ok: r.ok });
+                    return r.json();
+                })
                 .then(progressData => {
                     if (!progressData.lessons) return;
                     

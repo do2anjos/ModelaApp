@@ -348,9 +348,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }, null, 2));
             console.log('💾 ========================================');
             
-            const response = await fetch(`/api/user/${user.id}/exercise-attempt`, {
+            const reqId = 'exercise-attempt-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+            console.log('[EXERCISE] ▶️ attempt', { reqId, userId: user.id, lessonId, lessonTitle });
+            console.time(`[EXERCISE] tempo ${reqId}`);
+            const response = await (window.apiFetch ? window.apiFetch(`/api/user/${user.id}/exercise-attempt`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
                 body: JSON.stringify({
                     lessonId: mapping.lessonId,
                     lessonTitle: lessonTitle,
@@ -358,7 +361,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     totalQuestions: total,
                     percentage: percentage
                 })
-            });
+            }) : fetch(`/api/user/${user.id}/exercise-attempt`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
+                body: JSON.stringify({
+                    lessonId: mapping.lessonId,
+                    lessonTitle: lessonTitle,
+                    score: score,
+                    totalQuestions: total,
+                    percentage: percentage
+                })
+            }));
+            console.timeEnd(`[EXERCISE] tempo ${reqId}`);
+            console.log('[EXERCISE] ◀️ attempt response', { reqId, status: response.status, ok: response.ok });
             
             const result = await response.json();
             console.log('📡 Resposta do backend:', result);
