@@ -90,7 +90,7 @@ function runAsync(sql, params = []) {
     return new Promise((resolve, reject) => {
         db.run(sql, params, function(err) {
             if (err) return reject(err);
-            resolve();
+            resolve({ lastID: this.lastID, changes: this.changes });
         });
     });
 }
@@ -99,6 +99,14 @@ function allAsync(sql, params = []) {
         db.all(sql, params, (err, rows) => {
             if (err) return reject(err);
             resolve(rows);
+        });
+    });
+}
+function getAsync(sql, params = []) {
+    return new Promise((resolve, reject) => {
+        db.get(sql, params, (err, row) => {
+            if (err) return reject(err);
+            resolve(row);
         });
     });
 }
@@ -306,37 +314,36 @@ app.post('/api/login', async (req, res) => {
             });
         }
 
-        db.get('SELECT * FROM users WHERE email = ?', [email], (err, user) => {
-            if (err) {
-                return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
-            }
-            if (!user) {
-                return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
-            }
-
-            bcrypt.compare(senha, user.senha_hash, (err, isValid) => {
-                if (err) {
-                    return res.status(500).json({ success: false, message: 'Erro ao verificar senha' });
-                }
-                if (!isValid) {
-                    return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
-                }
-
-                res.json({ 
-                    success: true, 
-                    message: 'Login realizado com sucesso!',
-                    user: {
-                        id: user.id,
-                        nome: user.nome,
-                        email: user.email,
-                        username: user.username,
-                        matricula: user.matricula,
-                        telefone: user.telefone
-                    }
-                });
+        const user = await new Promise((resolve, reject) => {
+            db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
             });
+        }).catch(() => null);
+
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
+        }
+
+        const isValid = await bcrypt.compare(senha, user.senha_hash);
+        if (!isValid) {
+            return res.status(401).json({ success: false, message: 'Credenciais inválidas' });
+        }
+
+        res.json({ 
+            success: true, 
+            message: 'Login realizado com sucesso!',
+            user: {
+                id: user.id,
+                nome: user.nome,
+                email: user.email,
+                username: user.username,
+                matricula: user.matricula,
+                telefone: user.telefone
+            }
         });
     } catch (error) {
+        console.error('Erro no login:', error);
         res.status(500).json({ success: false, message: 'Erro interno do servidor' });
     }
 });
@@ -354,34 +361,34 @@ app.post('/api/redefinir', async (req, res) => {
         }
 
         // Verificar se usuário existe
-        db.get('SELECT id FROM users WHERE email = ?', [email], (err, user) => {
-            if (err) {
-                return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
-            }
-            if (!user) {
-                return res.status(404).json({ success: false, message: 'Usuário não encontrado' });
-            }
+        const user = await new Promise((resolve, reject) => {
+            db.get('SELECT id FROM users WHERE email = ?', [email], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        }).catch(() => null);
 
-            // Gerar hash da nova senha
-            bcrypt.hash(novaSenha, 10, (err, senhaHash) => {
-                if (err) {
-                    return res.status(500).json({ success: false, message: 'Erro ao processar senha' });
-                }
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Usuário não encontrado' });
+        }
 
-                // Atualizar senha
-                db.run('UPDATE users SET senha_hash = ? WHERE email = ?', [senhaHash, email], function(err) {
-                    if (err) {
-                        return res.status(500).json({ success: false, message: 'Erro ao atualizar senha' });
-                    }
+        // Gerar hash da nova senha
+        const senhaHash = await bcrypt.hash(novaSenha, 10);
 
-                    res.json({ 
-                        success: true, 
-                        message: 'Senha redefinida com sucesso!' 
-                    });
-                });
+        // Atualizar senha
+        await new Promise((resolve, reject) => {
+            db.run('UPDATE users SET senha_hash = ? WHERE email = ?', [senhaHash, email], function(err) {
+                if (err) reject(err);
+                else resolve({ lastID: this.lastID, changes: this.changes });
             });
         });
+
+        res.json({ 
+            success: true, 
+            message: 'Senha redefinida com sucesso!' 
+        });
     } catch (error) {
+        console.error('Erro ao redefinir senha:', error);
         res.status(500).json({ success: false, message: 'Erro interno do servidor' });
     }
 });
@@ -649,22 +656,27 @@ app.get('/api/user/:userId/module/:moduleId/progress', (req, res) => {
 });
 
 // Endpoint para atualizar dados do usuário
-app.put('/api/user/:userId', (req, res) => {
-    const userId = req.params.userId;
-    const { nome, username } = req.body;
+app.put('/api/user/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { nome, username } = req.body;
 
-    if (!nome || !username) {
-        return res.status(400).json({ success: false, message: 'Nome e username são obrigatórios' });
-    }
-
-    db.run('UPDATE users SET nome = ?, username = ? WHERE id = ?', [nome, username, userId], function(err) {
-        if (err) {
-            console.error('Erro ao atualizar usuário:', err);
-            return res.status(500).json({ success: false, message: 'Erro ao atualizar usuário' });
+        if (!nome || !username) {
+            return res.status(400).json({ success: false, message: 'Nome e username são obrigatórios' });
         }
 
+        await new Promise((resolve, reject) => {
+            db.run('UPDATE users SET nome = ?, username = ? WHERE id = ?', [nome, username, userId], function(err) {
+                if (err) reject(err);
+                else resolve({ lastID: this.lastID, changes: this.changes });
+            });
+        });
+
         res.json({ success: true, message: 'Usuário atualizado com sucesso' });
-    });
+    } catch (error) {
+        console.error('Erro ao atualizar usuário:', error);
+        res.status(500).json({ success: false, message: 'Erro ao atualizar usuário' });
+    }
 });
 
 // ==========================================================================
