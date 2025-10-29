@@ -428,9 +428,16 @@ app.post('/api/cadastro', async (req, res) => {
                 }
             );
         }), { 
-            retries: 7,
-            baseDelayMs: 300,
-            onRetry: (err, attempt) => console.warn(`🔁 Retry INSERT usuário (tentativa ${attempt}/${7})`, err?.code, err?.message) 
+            retries: 10, // Ainda mais tentativas para INSERT
+            baseDelayMs: 500, // Delay inicial ainda maior
+            factor: 1.2, // Crescimento mais suave
+            onRetry: (err, attempt) => {
+                console.warn(`🔁 Retry INSERT usuário (tentativa ${attempt}/${10})`, err?.code, err?.message);
+                // Se for SQLITE_BUSY, aumenta o delay
+                if (err?.code === 'SQLITE_BUSY') {
+                    console.warn(`⏳ SQLite ocupado, aguardando mais tempo...`);
+                }
+            }
         }));
 
         console.log('✅ Cadastro concluído', { userId: result.lastID, email, matricula });
@@ -440,23 +447,38 @@ app.post('/api/cadastro', async (req, res) => {
             userId: result.lastID,
             username: username
         });
-    } catch (error) {
-        if (error && error.code === 'SQLITE_CONSTRAINT') {
-            const msg = String(error.message || '').toLowerCase();
-            if (msg.includes('users.email')) {
-                console.warn('⚠️ Violação UNIQUE em email', { email: req.body?.email });
-                return res.status(409).json({ success: false, message: 'Email já cadastrado' });
+        } catch (error) {
+            if (error && error.code === 'SQLITE_CONSTRAINT') {
+                const msg = String(error.message || '').toLowerCase();
+                if (msg.includes('users.email')) {
+                    console.warn('⚠️ Violação UNIQUE em email', { email: req.body?.email });
+                    return res.status(409).json({ success: false, message: 'Email já cadastrado' });
+                }
+                if (msg.includes('users.matricula')) {
+                    console.warn('⚠️ Violação UNIQUE em matrícula', { matricula: req.body?.matricula });
+                    return res.status(409).json({ success: false, message: 'Matrícula já cadastrada' });
+                }
+                console.warn('⚠️ Violação UNIQUE genérica', { detail: error.message });
+                return res.status(409).json({ success: false, message: 'Email ou matrícula já cadastrados' });
             }
-            if (msg.includes('users.matricula')) {
-                console.warn('⚠️ Violação UNIQUE em matrícula', { matricula: req.body?.matricula });
-                return res.status(409).json({ success: false, message: 'Matrícula já cadastrada' });
+            
+            // Tratamento específico para SQLITE_BUSY e SQLITE_LOCKED
+            if (error && (error.code === 'SQLITE_BUSY' || error.code === 'SQLITE_LOCKED')) {
+                console.warn('⚠️ Banco ocupado, tente novamente', { code: error.code, message: error.message });
+                return res.status(503).json({ 
+                    success: false, 
+                    message: 'Sistema temporariamente ocupado. Tente novamente em alguns segundos.',
+                    retryAfter: 2
+                });
             }
-            console.warn('⚠️ Violação UNIQUE genérica', { detail: error.message });
-            return res.status(409).json({ success: false, message: 'Email ou matrícula já cadastrados' });
+            
+            console.error('❌ Erro no cadastro:', { code: error?.code, message: error?.message, stack: error?.stack });
+            res.status(500).json({ 
+                success: false, 
+                message: 'Erro interno do servidor. Tente novamente.',
+                error: process.env.NODE_ENV === 'development' ? error?.message : undefined
+            });
         }
-        console.error('❌ Erro no cadastro:', { code: error?.code, message: error?.message });
-        res.status(500).json({ success: false, message: 'Erro interno do servidor: ' + (error?.message || 'desconhecido') });
-    }
 });
 
 // Endpoint de login
