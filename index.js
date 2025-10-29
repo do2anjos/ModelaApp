@@ -243,53 +243,54 @@ app.post('/api/cadastro', async (req, res) => {
         }
 
         // Verificar se email já existe
-        db.get('SELECT id FROM users WHERE email = ?', [email], (err, row) => {
-            if (err) {
-                return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
-            }
-            if (row) {
-                return res.status(400).json({ success: false, message: 'Email já cadastrado' });
-            }
-
-            // Verificar se matrícula já existe
-            db.get('SELECT id FROM users WHERE matricula = ?', [matricula], (err, row) => {
-                if (err) {
-                    return res.status(500).json({ success: false, message: 'Erro interno do servidor' });
-                }
-                if (row) {
-                    return res.status(400).json({ success: false, message: 'Matrícula já cadastrada' });
-                }
-
-                // Gerar hash da senha e username
-                bcrypt.hash(senha, 10, (err, senhaHash) => {
-                    if (err) {
-                        return res.status(500).json({ success: false, message: 'Erro ao processar senha' });
-                    }
-
-                    const username = generateUsername(nome);
-
-                    // Inserir usuário
-                    db.run(
-                        'INSERT INTO users (nome, email, matricula, telefone, senha_hash, username) VALUES (?, ?, ?, ?, ?, ?)',
-                        [nome, email, matricula, telefone, senhaHash, username],
-                        function(err) {
-                            if (err) {
-                                return res.status(500).json({ success: false, message: 'Erro ao cadastrar usuário' });
-                            }
-
-                            res.json({ 
-                                success: true, 
-                                message: 'Usuário cadastrado com sucesso!',
-                                userId: this.lastID,
-                                username: username
-                            });
-                        }
-                    );
-                });
+        const emailExists = await new Promise((resolve, reject) => {
+            db.get('SELECT id FROM users WHERE email = ?', [email], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
             });
+        }).catch(() => null);
+
+        if (emailExists) {
+            return res.status(400).json({ success: false, message: 'Email já cadastrado' });
+        }
+
+        // Verificar se matrícula já existe
+        const matriculaExists = await new Promise((resolve, reject) => {
+            db.get('SELECT id FROM users WHERE matricula = ?', [matricula], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        }).catch(() => null);
+
+        if (matriculaExists) {
+            return res.status(400).json({ success: false, message: 'Matrícula já cadastrada' });
+        }
+
+        // Gerar hash da senha e username
+        const senhaHash = await bcrypt.hash(senha, 10);
+        const username = generateUsername(nome);
+
+        // Inserir usuário
+        const result = await new Promise((resolve, reject) => {
+            db.run(
+                'INSERT INTO users (nome, email, matricula, telefone, senha_hash, username) VALUES (?, ?, ?, ?, ?, ?)',
+                [nome, email, matricula, telefone, senhaHash, username],
+                function(err) {
+                    if (err) reject(err);
+                    else resolve({ lastID: this.lastID, changes: this.changes });
+                }
+            );
+        });
+
+        res.json({ 
+            success: true, 
+            message: 'Usuário cadastrado com sucesso!',
+            userId: result.lastID,
+            username: username
         });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Erro interno do servidor' });
+        console.error('Erro no cadastro:', error);
+        res.status(500).json({ success: false, message: 'Erro interno do servidor: ' + error.message });
     }
 });
 
