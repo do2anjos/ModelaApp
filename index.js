@@ -25,7 +25,7 @@ app.use((req, res, next) => {
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
         "font-src 'self' data: https://fonts.gstatic.com; " +
         "img-src 'self' data: https:; " +
-        "connect-src 'self'; " +
+        "connect-src 'self' https: http:; " +
         "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://docs.google.com https://embed.diagrams.net"
     );
     
