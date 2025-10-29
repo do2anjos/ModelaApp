@@ -20,16 +20,20 @@ try {
     const rateLimit = require('express-rate-limit');
     const authLimiter = rateLimit({
         windowMs: 60 * 1000, // 1 minuto
-        max: 100,            // 100 req/min por IP (mais generoso para picos)
+        max: 150,            // 150 req/min por IP (mais generoso para picos de 20+)
         standardHeaders: true,
         legacyHeaders: false,
         skip: (req) => {
             // Pular rate limit em desenvolvimento local
             return req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1';
+        },
+        message: {
+            success: false,
+            message: 'Muitas tentativas. Tente novamente em 1 minuto.'
         }
     });
     app.use(['/api/cadastro', '/api/login', '/api/redefinir'], authLimiter);
-    console.log('✅ Rate limiting ativado para endpoints de autenticação');
+    console.log('✅ Rate limiting ativado para endpoints de autenticação (150 req/min)');
 } catch (err) {
     console.warn('⚠️ Rate limiting não disponível, continuando sem limitação');
 }
@@ -468,7 +472,8 @@ app.post('/api/cadastro', async (req, res) => {
             success: true, 
             message: 'Usuário cadastrado com sucesso!',
             userId: result.lastID,
-            username: username
+            username: username,
+            timestamp: new Date().toISOString()
         });
     } catch (error) {
         if (error && error.code === 'SQLITE_CONSTRAINT') {
@@ -527,7 +532,8 @@ app.post('/api/login', async (req, res) => {
                 username: user.username,
                 matricula: user.matricula,
                 telefone: user.telefone
-            }
+            },
+            timestamp: new Date().toISOString()
         });
     } catch (error) {
         console.error('Erro no login:', error);
