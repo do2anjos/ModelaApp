@@ -50,7 +50,7 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 ## 🔧 **Arquitetura Técnica**
 - **Servidor Web**: Express.js para servir conteúdo estático
 - **API REST**: Backend completo com Node.js para gerenciamento de usuários e progresso
-- **Banco de Dados**: SQLite para persistência de dados locais
+- **Banco de Dados**: Turso (libSQL) em produção e SQLite local em desenvolvimento
 - **Autenticação Segura**: Sistema de login com bcrypt para hash de senhas
 - **Frontend Modular**: JavaScript organizado em classes (DarkModeManager, DaltonismManager, UsabilityManager)
 - **CSS Variables**: Sistema de design consistente com variáveis CSS (4000+ linhas)
@@ -74,7 +74,9 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 ## **Backend**
 - **Node.js** - Ambiente de execução para JavaScript no lado do servidor
 - **Express.js** - Framework minimalista para aplicações web em Node.js
-- **SQLite3** - Banco de dados relacional embutido para persistência de dados
+- **@libsql/client (Turso)** - Cliente para banco de dados remoto em produção
+- **sqlite3** - Banco local para desenvolvimento
+- **dotenv** - Carregamento de variáveis de ambiente
 - **bcrypt** - Biblioteca para hash seguro de senhas
 - **body-parser** - Middleware para parsing de requisições JSON
 - **cors** - Middleware para habilitar CORS (Cross-Origin Resource Sharing)
@@ -117,7 +119,7 @@ Siga os passos abaixo para executar o projeto no seu próprio computador.
    npm run dev
 
 5. Acesse no navegador
-Após iniciar o servidor, você poderá acessá-lo em http://localhost:3000.
+Após iniciar o servidor, você poderá acessá-lo em http://localhost:3001.
 
 ## 📄 **Estrutura do Projeto**
 
@@ -168,7 +170,8 @@ ModelaApp/
         ├── 📄 clear_users.js     # Limpar usuários do banco
         ├── 📄 list_progress.js   # Listar progresso
         ├── 📄 list_users.js      # Listar usuários
-        └── 📄 update_usernames.js # Atualizar usernames
+        ├── 📄 update_usernames.js # Atualizar usernames
+        └── 📄 reset_all_users_data.js # Zerar dados de todos os usuários (preserva contas)
 ```
 
 ### **Páginas Principais**
@@ -236,18 +239,30 @@ ModelaApp/
 #### **📊 Sistema de Progresso**
 - **Rastreamento automático** de aulas, exercícios e atividades práticas
 - **Estatísticas em tempo real** no dashboard
-- **Persistência no banco de dados** SQLite
+- **Persistência no banco de dados** Turso (produção) / SQLite (local)
 - **API REST completa** para gerenciar progresso
 
 Scripts Disponíveis
-npm start: Inicia o servidor em modo de produção. É este o comando que a Render utiliza.
+```
+npm start        # Inicia o servidor (produção)
+npm run dev      # Inicia o servidor com nodemon (dev)
 
-npm run dev: Inicia o servidor em modo de desenvolvimento com nodemon.
+# Scripts de manutenção
+node backend/scripts/reset_all_users_data.js   # Zera dados de todos os usuários
+node backend/scripts/list_users.js             # Lista usuários
+node backend/scripts/list_progress.js          # Lista progresso
+```
 
 ☁️ Deploy
-Este projeto é publicado automaticamente na plataforma Render. Qualquer push para a branch main do repositório no GitHub irá acionar um novo deploy, atualizando o site que está no ar.
+Este projeto é publicado automaticamente na plataforma Render. Qualquer push para a branch main aciona novo deploy.
+
+Health check:
+```
+https://modelaapp.onrender.com/health
+```
+Resposta esperada: `{ "ok": true, "db": "turso" }`
 
 👤 Autor
 Feito por do2anjos.
 
-📅 Última atualização: 26 de Outubro de 2025
+📅 Última atualização: 30 de Outubro de 2025

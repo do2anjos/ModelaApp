@@ -55,7 +55,7 @@ O ModelaApp é uma aplicação web educacional desenvolvida como protótipo para
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                BANCO DE DADOS (SQLite)                      │
+│             BANCO DE DADOS (Turso / SQLite dev)             │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │              Tabela: users                            │  │
@@ -658,7 +658,12 @@ bcrypt.compare(senha, senhaHash, (err, isValid) => {
 
 #### **CORS e Middleware**
 ```javascript
-app.use(cors());                    // Habilita CORS
+app.use(cors({                      // CORS robusto
+  origin: true,
+  credentials: true,
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization','X-Request-Id']
+}));
 app.use(bodyParser.json());         // Parser JSON
 app.use(express.static('public'));  // Servir arquivos estáticos
 ```
@@ -749,9 +754,9 @@ html[data-daltonismo="tritanopia"] {
 ### **Render.com Configuration**
 - **Build Command**: `npm install`
 - **Start Command**: `npm start`
-- **Environment**: Node.js 18+
+- **Environment**: Node.js 20.x
 - **Auto Deploy**: Push para main branch
-- **Database**: SQLite (arquivo local no servidor)
+- **Database**: Turso (libSQL) em produção; SQLite apenas no desenvolvimento local
 
 ### **Scripts Disponíveis**
 ```json
@@ -824,6 +829,6 @@ A implementação segue **melhores práticas** de desenvolvimento web moderno, c
 
 ---
 
-**📅 Última atualização**: 26 de Outubro de 2025  
+**📅 Última atualização**: 30 de Outubro de 2025  
 **👨‍💻 Desenvolvedor**: _Do2anjos  
-**📋 Versão**: 1.4.1
+**📋 Versão**: 1.5.0

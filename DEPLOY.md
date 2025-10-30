@@ -43,6 +43,7 @@ Na seção **Environment** do seu serviço no Render, adicione:
 NODE_ENV=production
 TURSO_DATABASE_URL=libsql://seu-database.turso.io
 TURSO_AUTH_TOKEN=seu-token-aqui
+ALLOWED_ORIGINS=https://modelaapp.onrender.com
 ```
 
 **⚠️ IMPORTANTE**: Nunca commite suas credenciais no repositório!
@@ -53,6 +54,16 @@ TURSO_AUTH_TOKEN=seu-token-aqui
 2. Aguarde o build e deploy (3-5 minutos)
 3. Quando aparecer "Live", clique na URL do serviço
 4. O banco de dados Turso será inicializado automaticamente na primeira execução
+
+### 6. Verificação pós-deploy
+
+1. Health check:
+```
+https://modelaapp.onrender.com/health
+```
+Deve retornar `{"ok":true,"db":"turso"}`
+
+2. Cadastro: testar `cadastro.html` e verificar logs do serviço
 
 ---
 
@@ -71,12 +82,22 @@ npm run dev
 npm start
 ```
 
-O servidor vai iniciar em `http://localhost:3001` usando SQLite local em `backend/db/modela_users.db`.
+O servidor vai iniciar em `http://localhost:3001`.
+Por padrão em desenvolvimento usa SQLite local (sem `TURSO_*`).
 
 ### Como funciona
 
 - **Local**: Sem variáveis `TURSO_*`, usa SQLite local
 - **Produção (Render)**: Com variáveis `TURSO_*`, usa Turso remoto
+
+### CORS
+
+O servidor habilita CORS amplo com:
+```
+credentials: true
+methods: GET, POST, PUT, DELETE, OPTIONS
+allowedHeaders: Content-Type, Authorization, X-Request-Id
+```
 
 ---
 
