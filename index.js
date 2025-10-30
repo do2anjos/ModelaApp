@@ -13,7 +13,12 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 // CORS amplo para front em outros domínios
-app.use(cors({ origin: true }));
+app.use(cors({ 
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-Id']
+}));
 
 // Confiança em proxy para rate limiting em produção
 app.set('trust proxy', 1);
@@ -64,6 +69,14 @@ try {
 } catch (_) {}
 
 app.use(bodyParser.json());
+
+// Tratar requisições OPTIONS (preflight)
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Request-Id');
+    res.sendStatus(200);
+});
 
 // Headers de segurança (relaxar CSP para permitir scripts inline e iframes de serviços externos)
 app.use((req, res, next) => {
