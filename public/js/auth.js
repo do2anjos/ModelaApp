@@ -45,16 +45,7 @@
   // 3. CARREGA PONTUAÇÃO DO USUÁRIO
   async function loadUserScore(userId) {
     try {
-      const reqId = 'auth-score-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-      console.log('[AUTH] ▶️ score', { reqId, userId });
-      console.time(`[AUTH] tempo ${reqId}`);
-      const response = await (window.apiFetch ? window.apiFetch(`/api/user/${userId}/total-score`, {
-        headers: { 'X-Request-Id': reqId }
-      }) : fetch(`/api/user/${userId}/total-score`, {
-        headers: { 'X-Request-Id': reqId }
-      }));
-      console.timeEnd(`[AUTH] tempo ${reqId}`);
-      console.log('[AUTH] ◀️ score response', { reqId, status: response.status, ok: response.ok });
+      const response = await fetch(`/api/user/${userId}/total-score`);
       const data = await response.json();
       
       if (data.success) {

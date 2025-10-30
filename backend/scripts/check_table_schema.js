@@ -50,3 +50,4 @@ db.all("PRAGMA table_info(user_progress)", [], (err, rows) => {
         });
     });
 });
+

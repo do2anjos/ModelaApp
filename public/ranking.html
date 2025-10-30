@@ -506,16 +506,7 @@
         // Função para carregar ranking geral
         async function loadGeneralRanking() {
             try {
-                const reqId = 'ranking-general-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-                console.log('[RANKING] ▶️ general', { reqId });
-                console.time(`[RANKING] tempo ${reqId}`);
-                const response = await (window.apiFetch ? window.apiFetch('/api/ranking?limit=10', {
-                    headers: { 'X-Request-Id': reqId }
-                }) : fetch('/api/ranking?limit=10', {
-                    headers: { 'X-Request-Id': reqId }
-                }));
-                console.timeEnd(`[RANKING] tempo ${reqId}`);
-                console.log('[RANKING] ◀️ general response', { reqId, status: response.status, ok: response.ok });
+                const response = await fetch('/api/ranking?limit=10');
                 const ranking = await response.json();
                 
                 // Ordenar por pontos (maior para menor), depois por ID (ordem de cadastro)
@@ -680,16 +671,7 @@
         // Função para carregar ranking do fórum
         async function loadForumRanking() {
             try {
-                const reqId = 'ranking-forum-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-                console.log('[RANKING] ▶️ forum', { reqId });
-                console.time(`[RANKING] tempo ${reqId}`);
-                const response = await (window.apiFetch ? window.apiFetch('/api/ranking/forum', {
-                    headers: { 'X-Request-Id': reqId }
-                }) : fetch('/api/ranking/forum', {
-                    headers: { 'X-Request-Id': reqId }
-                }));
-                console.timeEnd(`[RANKING] tempo ${reqId}`);
-                console.log('[RANKING] ◀️ forum response', { reqId, status: response.status, ok: response.ok });
+                const response = await fetch('/api/ranking/forum');
                 const ranking = await response.json();
                 
                 const listContainer = document.getElementById('forum-ranking-list');
@@ -731,7 +713,6 @@
     <script src="/js/auth.js"></script>
     <script src="/js/dark-mode.js"></script>
     <script src="/js/daltonism-mode.js"></script>
-    <script src="/js/api.js"></script>
     <script src="/js/usability.js"></script>
 </body>
 </html>

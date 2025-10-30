@@ -198,7 +198,6 @@
     <script src="/js/auth.js"></script>
     <script src="/js/dark-mode.js"></script>
     <script src="/js/daltonism-mode.js"></script>
-    <script src="/js/api.js"></script>
     <script src="/js/usability.js"></script>
     
     <script>
@@ -255,20 +254,11 @@
                 
                 try {
                     // Atualiza no backend
-                    const reqId = 'perfil-update-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-                    console.log('[PERFIL] ▶️ update', { reqId, userId: user.id, nome, username });
-                    console.time(`[PERFIL] tempo ${reqId}`);
-                    const resp = await (window.apiFetch ? window.apiFetch(`/api/user/${user.id}`, {
+                    const resp = await fetch(`/api/user/${user.id}`, {
                         method: 'PUT',
-                        headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ nome: novoNome, username: novoUsername })
-                    }) : fetch(`/api/user/${user.id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
-                        body: JSON.stringify({ nome: novoNome, username: novoUsername })
-                    }));
-                    console.timeEnd(`[PERFIL] tempo ${reqId}`);
-                    console.log('[PERFIL] ◀️ update response', { reqId, status: resp.status, ok: resp.ok });
+                    });
                     
                     const data = await resp.json();
                     
@@ -330,20 +320,11 @@
                 
                 try {
                     // Primeiro valida a senha atual via login
-                    const reqId = 'perfil-login-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-                    console.log('[PERFIL] ▶️ login', { reqId, email });
-                    console.time(`[PERFIL] tempo ${reqId}`);
-                    const loginResp = await (window.apiFetch ? window.apiFetch('/api/login', {
+                    const loginResp = await fetch('/api/login', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: user.email, senha: senhaAtual })
-                    }) : fetch('/api/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
-                        body: JSON.stringify({ email: user.email, senha: senhaAtual })
-                    }));
-                    console.timeEnd(`[PERFIL] tempo ${reqId}`);
-                    console.log('[PERFIL] ◀️ login response', { reqId, status: loginResp.status, ok: loginResp.ok });
+                    });
                     
                     if (!loginResp.ok) {
                         alert('Senha atual incorreta.');
@@ -351,20 +332,11 @@
                     }
                     
                     // Se senha atual correta, atualiza para nova senha
-                    const reqId2 = 'perfil-redefinir-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-                    console.log('[PERFIL] ▶️ redefinir', { reqId: reqId2, email });
-                    console.time(`[PERFIL] tempo ${reqId2}`);
-                    const resp = await (window.apiFetch ? window.apiFetch('/api/redefinir', {
+                    const resp = await fetch('/api/redefinir', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId2 },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: user.email, novaSenha: novaSenha })
-                    }) : fetch('/api/redefinir', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId2 },
-                        body: JSON.stringify({ email: user.email, novaSenha: novaSenha })
-                    }));
-                    console.timeEnd(`[PERFIL] tempo ${reqId2}`);
-                    console.log('[PERFIL] ◀️ redefinir response', { reqId: reqId2, status: resp.status, ok: resp.ok });
+                    });
                     
                     const data = await resp.json();
                     

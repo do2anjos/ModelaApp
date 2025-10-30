@@ -511,16 +511,7 @@
         // Função para carregar tópicos do backend
         async function loadTopics() {
             try {
-                const reqId = 'forum-topics-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-                console.log('[FORUM] ▶️ topics', { reqId });
-                console.time(`[FORUM] tempo ${reqId}`);
-                const response = await (window.apiFetch ? window.apiFetch('/api/forum/topics', {
-                    headers: { 'X-Request-Id': reqId }
-                }) : fetch('/api/forum/topics', {
-                    headers: { 'X-Request-Id': reqId }
-                }));
-                console.timeEnd(`[FORUM] tempo ${reqId}`);
-                console.log('[FORUM] ◀️ topics response', { reqId, status: response.status, ok: response.ok });
+                const response = await fetch('/api/forum/topics');
                 const topics = await response.json();
                 
                 // Renderizar tópicos na interface
@@ -584,16 +575,7 @@
         // Função para carregar detalhes do tópico
         async function loadTopicDetail(topicId) {
             try {
-                const reqId = 'forum-topic-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-                console.log('[FORUM] ▶️ topic', { reqId, topicId });
-                console.time(`[FORUM] tempo ${reqId}`);
-                const response = await (window.apiFetch ? window.apiFetch(`/api/forum/topic/${topicId}`, {
-                    headers: { 'X-Request-Id': reqId }
-                }) : fetch(`/api/forum/topic/${topicId}`, {
-                    headers: { 'X-Request-Id': reqId }
-                }));
-                console.timeEnd(`[FORUM] tempo ${reqId}`);
-                console.log('[FORUM] ◀️ topic response', { reqId, status: response.status, ok: response.ok });
+                const response = await fetch(`/api/forum/topic/${topicId}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -709,28 +691,15 @@
             const user = JSON.parse(userData);
 
             try {
-                const reqId = 'forum-reply-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-                console.log('[FORUM] ▶️ reply', { reqId, topicId });
-                console.time(`[FORUM] tempo ${reqId}`);
-                const response = await (window.apiFetch ? window.apiFetch('/api/forum/reply', {
+                const response = await fetch('/api/forum/reply', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         userId: user.id,
                         topicId,
                         content
                     })
-                }) : fetch('/api/forum/reply', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        topicId,
-                        content
-                    })
-                }));
-                console.timeEnd(`[FORUM] tempo ${reqId}`);
-                console.log('[FORUM] ◀️ reply response', { reqId, status: response.status, ok: response.ok });
+                });
 
                 let result = null;
                 let ok = response.ok;
@@ -792,30 +761,16 @@
             const user = JSON.parse(userData);
 
             try {
-                const reqId = 'forum-topic-create-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-                console.log('[FORUM] ▶️ create topic', { reqId, userId: user.id, title });
-                console.time(`[FORUM] tempo ${reqId}`);
-                const response = await (window.apiFetch ? window.apiFetch('/api/forum/topic', {
+                const response = await fetch('/api/forum/topic', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         userId: user.id,
                         title,
                         content,
                         category
                     })
-                }) : fetch('/api/forum/topic', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-Request-Id': reqId },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        title,
-                        content,
-                        category
-                    })
-                }));
-                console.timeEnd(`[FORUM] tempo ${reqId}`);
-                console.log('[FORUM] ◀️ create topic response', { reqId, status: response.status, ok: response.ok });
+                });
 
                 let result = null;
                 let ok = response.ok;
@@ -982,7 +937,6 @@
 <script src="/js/auth.js"></script>
 <script src="/js/dark-mode.js"></script>
 <script src="/js/daltonism-mode.js"></script>
-    <script src="/js/api.js"></script>
-    <script src="/js/usability.js"></script>
+<script src="/js/usability.js"></script>
 </body>
 </html>
