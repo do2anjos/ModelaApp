@@ -187,6 +187,35 @@ async function loadProgressFromBackend() {
 - **Robustez**: Sistema funciona corretamente mesmo após refresh da página
 - **Manutenibilidade**: Código organizado e bem documentado
 
+### **Sistema de Exercícios com Verificação no Final**
+**📅 Implementado em: Janeiro de 2025**
+
+O sistema de exercícios foi aprimorado para melhorar a experiência do usuário, evitando verificação prematura de respostas.
+
+#### **Características Principais:**
+- **Verificação apenas no final**: Botão "Verificar Respostas" aparece somente na última questão (questão 4)
+- **Navegação livre**: Usuários podem navegar entre questões sem verificar respostas
+- **Controle inteligente**: Sistema dinâmico que mostra/oculta botão baseado na questão atual
+- **Reset automático**: Ao reiniciar exercício, botão volta a ficar oculto
+
+#### **Implementação Técnica:**
+```javascript
+// Função que controla visibilidade do botão
+function updateFormNavigation() {
+    const exerciseActions = document.getElementById('exercise-actions');
+    const isLastQuestion = currentFormQuestionIndex === totalFormQuestionsCount - 1;
+    
+    if (exerciseActions) {
+        exerciseActions.style.display = isLastQuestion ? 'block' : 'none';
+    }
+}
+```
+
+#### **Benefícios:**
+- **Redução de confusão**: Usuários não verificam respostas uma por uma
+- **Fluxo mais claro**: Resposta de todas as questões antes da verificação
+- **Melhor aprendizado**: Foco em completar o exercício antes de ver feedback
+
 ### **Sistema de Tabs Moderno e Fluxo Sequencial**
 **📅 Implementado em: 19 de Outubro de 2025**
 
@@ -239,9 +268,15 @@ submitPracticalBtn.addEventListener('click', () => {
 
 ### **Integração com Draw.io e Navegação por Passos**
 **📅 Implementado em: 19 de Outubro de 2025**  
-**📅 Melhorado em: 23 de Janeiro de 2025**
+**📅 Melhorado em: Janeiro de 2025**
 
-A aba "Atividade Prática" contém um editor de diagramas UML embarcado (Draw.io) com conexão robusta e navegação interna por passos.
+A aba "Atividade Prática" contém um editor de diagramas UML embarcado (Draw.io) com conexão robusta e navegação interna por **5 passos sequenciais**:
+
+1. **Materiais de apoio** - Acesso a recursos e documentos (Google Docs, PDFs)
+2. **Crie seu Diagrama** - Instruções detalhadas passo a passo com exemplos
+3. **Guia Rápido do Editor** - Dicas, atalhos de teclado e workflow eficiente
+4. **Crie seu Diagrama no Editor** - Editor UML dedicado com largura otimizada (1400px)
+5. **Envie seu Trabalho** - Upload de arquivo e envio da atividade
 
 #### **Sistema de Conexão Robusta com Draw.io:**
 - **Carregamento Assíncrono**: O `iframe` é carregado dinamicamente com cache-buster
@@ -327,11 +362,13 @@ window.addEventListener('message', function(evt) {
 ```
 
 #### **Navegação por Passos:**
-A seção é dividida em três etapas, controladas por botões de avançar/voltar e atalhos de teclado (←/→).
+A seção é dividida em **5 etapas sequenciais**, controladas por botões de avançar/voltar e atalhos de teclado (←/→).
 
-1.  **Modelo Orientativo**: Apresenta um modelo para o aluno baixar.
-2.  **Crie seu Diagrama**: Contém o editor Draw.io.
-3.  **Envie seu Trabalho**: Área de upload para o arquivo exportado.
+1.  **Materiais de apoio**: Acesso a recursos e documentos (Google Docs, PDFs) para consulta
+2.  **Crie seu Diagrama**: Instruções detalhadas passo a passo com exemplos práticos
+3.  **Guia Rápido do Editor**: Dicas, atalhos de teclado e workflow eficiente para uso do editor
+4.  **Crie seu Diagrama no Editor**: Editor UML dedicado (Draw.io) com largura otimizada (1400px)
+5.  **Envie seu Trabalho**: Área de upload para o arquivo exportado do diagrama
 
 ### **Sistema de Gamificação e Conclusão Automática**
 **📅 Implementado em: 15 de Outubro de 2025**

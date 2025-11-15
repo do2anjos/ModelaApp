@@ -244,7 +244,37 @@ validateField(field, validator, inputGroup) {
 - **Padrões de interação** consistentes
 - **Hierarquia visual** clara
 
-## 🔧 **7. Funcionalidades Técnicas**
+## 🔧 **7. Melhorias Recentes de UX (v1.4.2)**
+
+### ✅ Verificação de Respostas no Final
+- **Problema resolvido**: Usuários verificavam respostas uma por uma, causando confusão
+- **Solução implementada**: Botão "Verificar Respostas" aparece apenas na última questão (questão 4)
+- **Benefícios**:
+  - Fluxo mais claro e intuitivo
+  - Usuários respondem todas as questões antes de verificar
+  - Redução de ansiedade e confusão
+  - Melhor experiência de aprendizado
+
+### ✅ Atividade Prática Reorganizada em 5 Passos
+- **Estrutura anterior**: 4 passos com editor integrado no passo 3
+- **Nova estrutura**: 5 passos com editor dedicado
+  1. **Materiais de apoio** - Acesso a recursos e documentos
+  2. **Crie seu Diagrama** - Instruções detalhadas passo a passo
+  3. **Guia Rápido do Editor** - Dicas, atalhos e workflow
+  4. **Crie seu Diagrama no Editor** - Editor UML dedicado com largura otimizada
+  5. **Envie seu Trabalho** - Upload de arquivo e envio
+- **Benefícios**:
+  - Separação clara de responsabilidades
+  - Editor UML com espaço dedicado e maior largura (1400px)
+  - Fluxo mais organizado e intuitivo
+  - Melhor aproveitamento do espaço visual
+
+### ✅ Controle Inteligente de Visibilidade
+- **Sistema dinâmico**: Botão de verificação aparece/desaparece baseado na questão atual
+- **Reset automático**: Ao reiniciar exercício, botão volta a ficar oculto
+- **Feedback visual**: Logs no console para debug e monitoramento
+
+## 🔧 **8. Funcionalidades Técnicas**
 
 ### ✅ JavaScript Modular
 - **Classe UsabilityManager** centralizada
@@ -261,7 +291,7 @@ validateField(field, validator, inputGroup) {
 - **Landmarks ARIA** apropriados
 - **Hierarquia de cabeçalhos** correta
 
-## 📊 **8. Métricas de Usabilidade (Baseadas nas Heurísticas de Nielsen)**
+## 📊 **9. Métricas de Usabilidade (Baseadas nas Heurísticas de Nielsen)**
 
 ### ✅ **Visibilidade do Status (Heurística 1)**
 - **100% das páginas** possuem breadcrumbs
@@ -340,7 +370,7 @@ validateField(field, validator, inputGroup) {
 - ✅ Mensagens de feedback
 - ✅ Tooltips informativos
 
-## 🎯 **10. Benefícios Alcançados**
+## 🎯 **10. Benefícios Alcançados (Atualizado)**
 
 ### Para Usuários:
 - ✅ **Navegação mais intuitiva** e previsível

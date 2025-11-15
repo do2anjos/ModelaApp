@@ -25,7 +25,7 @@ Integração entre teoria e prática com base em metodologias de aprendizagem si
 
 ## 🎓 **Sistema de Aprendizado**
 - **Plataforma de Cursos**: Sistema completo de aulas com vídeos do YouTube
-- **Exercícios Interativos**: Questões de concursos (CESPE, Quadrix, FGV) com feedback detalhado
+- **Exercícios Interativos**: Questões de concursos (CESPE, Quadrix, FGV) com feedback detalhado e verificação apenas no final
 - **Atividade Prática com Diagramas UML**: Editor Draw.io embarcado com conexão robusta e templates automáticos
 - **Progresso do Usuário**: Acompanhamento de aulas concluídas e exercícios realizados (salvo no banco de dados)
 - **Sistema de Certificação**: Modal interativo com visualização em tela cheia e download
@@ -197,12 +197,16 @@ ModelaApp/
 - **Exercícios de concursos** - Questões de CESPE/CEBRASPE, Quadrix e FGV com feedback detalhado
 - **Correção automática** - 4 questões corrigidas com explicações específicas para cada alternativa
 - **Botão "Ir para Atividade Prática"** - Desbloqueado após 100% de acertos no exercício
-- **Atividade prática com editor Draw.io** - Criação de diagramas UML com navegação por passos e upload de arquivo
+- **Atividade prática com editor Draw.io** - Criação de diagramas UML com navegação por 5 passos e upload de arquivo
+- **Editor UML dedicado** - Passo 4/5 com editor Draw.io em container otimizado (largura 1400px)
 - **Navegação sequencial** entre aulas com desbloqueio progressivo
 - **Sistema de bloqueio progressivo** - Aulas desbloqueadas conforme progresso
 - **Estados visuais dinâmicos** - Ícones que mudam conforme progresso (todo, play, video-watched, completed)
 - **Atalhos de teclado** - Ctrl+1 (vídeo), Ctrl+2 (exercício), Ctrl+3 (atividade)
 - **Feedback detalhado** - Explicações para cada questão com correções
+- **Verificação no final** - Botão "Verificar Respostas" aparece apenas na última questão
+- **Atividade prática em 5 passos** - Materiais → Instruções → Guia → Editor → Envio
+- **Editor UML dedicado** - Passo 4 com editor Draw.io em container otimizado
 - **Conexão robusta com Draw.io** - Sistema de retry automático, timeout de 5s, 3 tentativas
 - **Templates automáticos** - Carregamento automático de templates UML por tipo
 - **Sistema de debug** - Logs detalhados e botão de teste de conexão
@@ -265,4 +269,4 @@ Resposta esperada: `{ "ok": true, "db": "turso" }`
 👤 Autor
 Feito por do2anjos.
 
-📅 Última atualização: 30 de Outubro de 2025
+📅 Última atualização: Janeiro de 2025
