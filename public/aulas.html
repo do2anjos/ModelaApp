@@ -594,7 +594,7 @@
                         <div class="step-nav" aria-label="Navegação por passos">
                             <button class="button step-prev" aria-label="Passo anterior" disabled>◀</button>
                             <span class="step-counter" aria-live="polite">
-                                <strong>1</strong> / <span class="step-total">4</span>
+                                <strong>1</strong> / <span class="step-total">5</span>
                             </span>
                             <button class="button step-next" aria-label="Próximo passo">▶</button>
                         </div>
@@ -822,9 +822,18 @@
                                     </ul>
                                 </div>
                                                 </div>
-                                                
+                        </div>
+
+                        <!-- Passo 4: Editor UML -->
+                        <div class="practical-step" id="practical-step-4" style="max-width: 1400px; margin-left: auto; margin-right: auto; width: 100%;">
+                            <div class="step-header">
+                                <div class="step-number">4</div>
+                                <h3>Crie seu Diagrama no Editor</h3>
+                            </div>
+                            <p>Use o editor abaixo para criar seu diagrama UML. Selecione o tipo de diagrama e comece a modelar.</p>
+                            
                             <!-- Editor UML -->
-                            <div class="editor-controls">
+                            <div class="editor-controls" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; margin-top: 1.5rem;">
                                 <label class="select-group" for="uml-diagram-type" style="display:flex;align-items:center;gap:.5rem;">
                                     <span>Tipo:</span>
                                     <select id="uml-diagram-type" aria-label="Tipo de diagrama UML">
@@ -842,20 +851,20 @@
                                 </button>
                                 <span id="editor-status" class="status-indicator">Pronto</span>
                             </div>
-                            <div class="uml-editor-container">
-                                <iframe id="uml-editor-iframe" src="https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=uml;general&grid=1&nav=1&shadow=0&splash=0" width="100%" height="600"></iframe>
+                            <div class="uml-editor-container" style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 0; box-shadow: var(--shadow-soft); width: 100%;">
+                                <iframe id="uml-editor-iframe" src="https://embed.diagrams.net/?embed=1&ui=kennedy&lang=pt-BR&noSaveBtn=1&noExitBtn=1&proto=json&libs=uml;general&grid=1&nav=1&shadow=0&splash=0" width="100%" height="600" style="display:block; border: 0; border-radius: var(--radius);"></iframe>
                             </div>
                             
-                            <div id="saved-work-preview" class="saved-work-preview hidden">
+                            <div id="saved-work-preview" class="saved-work-preview hidden" style="margin-top: 1rem;">
                                 <h4>Seu trabalho salvo:</h4>
                                 <img id="diagram-thumbnail" alt="Pré-visualização do diagrama" />
                             </div>
                         </div>
 
-                        <!-- Passo 4: Envio -->
-                        <div class="practical-step" id="practical-step-4">
+                        <!-- Passo 5: Envio -->
+                        <div class="practical-step" id="practical-step-5">
                             <div class="step-header">
-                                <div class="step-number">4</div>
+                                <div class="step-number">5</div>
                                 <h3>Envie seu Trabalho</h3>
                             </div>
                             <p>Envie seu diagrama para completar esta atividade.</p>
