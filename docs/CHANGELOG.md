@@ -2,6 +2,38 @@
 
 Este arquivo documenta todas as mudanças significativas implementadas no projeto Modela App.
 
+## [v1.4.2] - Melhorias na Experiência de Exercícios e Atividade Prática
+**Data**: Janeiro de 2025
+
+### Adicionado
+- **Verificação de Respostas no Final**: Botão "Verificar Respostas" aparece apenas na última questão (questão 4)
+- **Atividade Prática com 5 Passos**: Reorganização da atividade prática em 5 etapas sequenciais
+- **Editor UML em Passo Dedicado**: Editor Draw.io separado em passo próprio (passo 4/5)
+- **Largura Aumentada do Editor**: Container do editor UML com largura otimizada (max-width: 1400px)
+
+### Modificado
+- **Fluxo de Exercícios**: Usuários agora navegam entre questões sem verificar respostas prematuramente
+- **Estrutura da Atividade Prática**: 
+  - Passo 1: Materiais de apoio
+  - Passo 2: Crie seu Diagrama (instruções)
+  - Passo 3: Guia Rápido do Editor
+  - Passo 4: Crie seu Diagrama no Editor (editor UML dedicado)
+  - Passo 5: Envie seu Trabalho
+- **Navegação de Passos**: Contador atualizado de 4 para 5 passos
+- **Estilos do Editor**: Aplicados estilos consistentes com exercicios.html (background, border, shadow)
+
+### Corrigido
+- **Confusão na Verificação**: Usuários não podem mais verificar respostas uma por uma
+- **Organização da Atividade**: Editor UML agora tem espaço dedicado e maior largura
+- **Experiência do Usuário**: Fluxo mais claro e intuitivo para criação de diagramas
+
+### Melhorias Técnicas
+- **Controle de Visibilidade**: Sistema inteligente que mostra/oculta botão baseado na questão atual
+- **Reset de Estado**: Função de reset garante que botão fique oculto ao reiniciar exercício
+- **Responsividade**: Editor mantém largura otimizada em diferentes tamanhos de tela
+
+---
+
 ## [v1.4.1] - Correção de Sincronização de Abas e Melhorias de Persistência
 **Data**: 26 de Outubro de 2025
 
@@ -419,6 +451,6 @@ function unlockNextLessonButton() {
 
 ---
 
-**📅 Última atualização**: 26 de outubro de 2025  
+**📅 Última atualização**: Janeiro de 2025  
 **👨‍💻 Desenvolvedor**: _Do2anjos  
-**📋 Versão**: 1.4.1
+**📋 Versão**: 1.4.2
