@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </fieldset>
                 </div>
                 
-                <div class="exercise-actions">
+                <div class="exercise-actions" id="exercise-actions" style="display: none;">
                     <button type="button" id="submit-exercise" class="button button-primary">Verificar Respostas</button>
                 </div>
             `;
@@ -445,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const prevBtn = document.getElementById('prev-question-form-btn');
         const nextBtn = document.getElementById('next-question-form-btn');
         const currentQuestionSpan = document.getElementById('current-question-form');
+        const exerciseActions = document.getElementById('exercise-actions');
 
         if (prevBtn) {
             prevBtn.disabled = currentFormQuestionIndex === 0;
@@ -456,6 +457,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (currentQuestionSpan) {
             currentQuestionSpan.textContent = currentFormQuestionIndex + 1;
+        }
+        
+        // Mostra o botão "Verificar Respostas" apenas na última questão
+        if (exerciseActions) {
+            const isLastQuestion = currentFormQuestionIndex === totalFormQuestionsCount - 1;
+            exerciseActions.style.display = isLastQuestion ? 'block' : 'none';
+            console.log(`🔍 Questão ${currentFormQuestionIndex + 1}/${totalFormQuestionsCount} - Botão ${isLastQuestion ? 'visível' : 'oculto'}`);
         }
     }
 
@@ -494,8 +502,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.removeEventListener('keydown', handleFormKeydown);
         document.addEventListener('keydown', handleFormKeydown);
 
-        // Atualiza estado inicial
+        // Atualiza estado inicial (incluindo visibilidade do botão)
         updateFormNavigation();
+        
+        // Garante que o botão está oculto na inicialização (primeira questão)
+        const exerciseActions = document.getElementById('exercise-actions');
+        if (exerciseActions && currentFormQuestionIndex !== totalFormQuestionsCount - 1) {
+            exerciseActions.style.display = 'none';
+        }
     }
 
     // Função para navegar entre questões do feedback
@@ -986,6 +1000,24 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackSlide.classList.remove('active');
         formSlide.classList.remove('to-left');
         formSlide.classList.add('active');
+        
+        // Reseta o índice da questão para a primeira
+        currentFormQuestionIndex = 0;
+        
+        // Mostra a primeira questão e esconde as outras
+        const questions = document.querySelectorAll('.exercise-question[data-question]');
+        questions.forEach((q, index) => {
+            q.style.display = index === 0 ? 'block' : 'none';
+        });
+        
+        // Ocultar o botão "Verificar Respostas" (volta para primeira questão)
+        const exerciseActions = document.getElementById('exercise-actions');
+        if (exerciseActions) {
+            exerciseActions.style.display = 'none';
+        }
+        
+        // Atualiza a navegação
+        updateFormNavigation();
         
         // Limpa estado do exercício usando a nova função
         if (typeof window.clearExerciseStateOnRetry === 'function') {
